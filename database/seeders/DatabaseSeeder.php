@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
 
         User::factory(10)->create();
         Village::factory(10)->create();
+        Tour::factory(10)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
