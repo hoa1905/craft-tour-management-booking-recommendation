@@ -1,0 +1,218 @@
+:root {
+	--web-color: #d82727;
+	--web-color1: #3D4196;
+	--web-btn-color: #d82727;
+	--web-btn-color-hover : #fbac09;
+}
+
+body {
+ 	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px; 
+} 
+td,th { 
+ 	line-height:18px;
+}
+
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,blockquote,pre,form,input,textarea {
+	margin: 0px;
+	padding: 0px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-size:100%;
+	font-weight:bold;
+}
+
+.clear {clear: both; font-size: 0px; line-height: 0px; height:0;}
+p {margin:0px;padding:5px 0px;}
+ol,ul {	list-style: none;}
+
+a { text-decoration:none; color:#9c1320}
+a:hover {  color:#9c1320; text-decoration: none; }
+
+img { border : 0px; max-width: 100%;}
+input {   color: #2a2a2a;}
+.input-warn {border:1px solid #FF0000;line-height:20px;	height:18px;}
+.input-ok { border:1px solid #00CC66; line-height:20px;	height:18px;}
+
+
+.div_input.has-success em {
+	display: none;
+}
+
+.div_input.has-error em {
+	position: absolute;
+	z-index: 10;
+	right: 0;
+	top: -40px;
+	background: #000;
+	color: #fff;
+	font-size: 12px;
+	font-style: italic;
+	padding: 3px 10px;
+	-webkit-border-radius:3px;
+	-moz-border-radius:3px;
+	border-radius:3px;
+}
+.div_input.has-error em::after {
+	position: absolute;
+	font-family: FontAwesome;
+	content: '\f0d7';
+	color: #000;
+	right: 15px;
+	bottom: -15px;
+}
+
+.div_input.has-error .form-control{
+	border-color: #a94442 !important;
+}
+.div_input.has-success .form-control {
+	border-color: #3c763d !important;
+}
+
+
+.div_input.has-error em {
+	position: absolute;
+	z-index: 10;
+	right: 0;
+	top: -35px;
+	background: #000;
+	color: #fff;
+	font-size: 12px;
+	font-style: italic;
+	padding: 3px 10px;
+	-webkit-border-radius:3px;
+	-moz-border-radius:3px;
+	border-radius:3px;
+}
+.div_input.has-error em::after {
+	position: absolute;
+	font-family: "Font Awesome 5 Free";
+	content: '\f0d7';
+	font-weight: 900;
+	color: #000;
+	right: 15px;
+	bottom: -13px;
+}
+
+.clearfix:after
+	{
+	content: '[DO NOT LEAVE IT IS NOT REAL]'; 
+	display: block; 
+	height: 0; 
+	clear: both; 
+	visibility: hidden;
+	}
+.clearfix{
+	display: inline;
+	position: relative;
+	}
+/*\*/
+.clearfix	{
+	display: block;
+}
+
+.fl {float:left;}
+.fr {float:right;}
+.hidden {display:none;}
+
+
+.inner-addon {
+  position: relative;
+}
+
+/* style glyph */
+.inner-addon .glyphicon {
+  position: absolute;
+  padding: 10px;
+  pointer-events: none;
+	color:#a1a1a1;
+}
+
+/* align glyph */
+.left-addon .glyphicon  { left:  0px;}
+.right-addon .glyphicon { right: 0px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 30px; }
+.left-addon textarea { padding-left:  30px;}  
+
+/**/
+.hide-on-biggest { 	display: none;} 
+
+/* -------------------------------------------------------------------
+ format text
+------------------------------------------------------------------- */
+
+.font_err {	color:#FF0000;}
+.font_err a:active , .font_err a:link , .font_err a:visited {  text-decoration: none ; color:#FF0000}
+.font_err a:hover {  color:#FF0000; text-decoration: underline; }
+
+
+/********************* CSS for box_redirect ****************************/
+#box_redirect{ border:1px solid #505050; width:70% ;margin:0px auto;  }
+#box_redirect p { line-height:18px;}
+#box_redirect .top { background:#F78600;border-bottom:1px solid #5C5C5C; color:#FFFFFF;font-size:11px;font-weight:bold;text-transform:uppercase; height:22px;padding:2px; text-align:left; }
+#box_redirect .fontMess {color:#65D700;font-size:12px; font-weight:bold;text-align:center;padding:20px 10px;}
+#box_redirect .mess { background:#383838; color:#FFFFFF;text-align:center}
+#box_redirect .bottom { background:#FFF3DD; color:#000;text-align:center;padding:5px; font-size:12px;}
+
+/********************* CSS for boxMess ****************************/
+#boxMess{  border:1px solid #F08200;padding:2px 5px; background:#FCF5CD }
+#boxMess  h4.mess { background:url(../images/icon_mess.gif) no-repeat left; padding:2px 30px; color:#FF0000; font-weight:bold; font-size:12px;}
+#boxMess  h4.err { background:url(../images/icon_warning.gif) no-repeat left; padding:6px 30px; color:#FF0000; font-weight:bold;}
+#boxMess .font_err { color:#950000;}
+
+
+
+/******************** PHAN TRANG **************/
+.pagination{ 
+	background:url(../images/hr.gif) top repeat-x;
+ 	padding-top:10px;
+  text-align:center;
+}
+.pagination .pagetotal {
+	background-color:#868686;
+	color:#FFFFFF;
+	padding:2px 3px;
+}
+.pagination a, .pagination a:visited{
+	padding: 0px 2px;
+	display:inline-block ;
+	text-decoration: none; 
+	color: #868686;
+	font-weight:bold;
+	background:url(../images/page_bg.gif) center no-repeat;
+	width:18px;
+	height:15px;
+	line-height:15px;
+}
+
+.pagination a:hover, .pagination a:active{
+	color: #3866bb;
+	text-decoration:none;
+}
+
+.pagination .pagecur{
+	font-weight: bold;
+	display:inline-block ;
+	padding: 0px 2px;
+	background:url(../images/page_on.gif) center no-repeat;
+	color: #fff;
+	width:18px;
+	height:15px;
+	line-height:15px;
+}
+
+.pagination .btnPage{
+	color:#868686;
+	text-align:center;
+	font-weight:bold;
+}
+.pagination a:visited.btnPage  {
+	color:#868686;
+	font-weight:bold;
+}

@@ -1,0 +1,310 @@
+/* <=== vntformall ===> */
+.vntformall{
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    width: 100%;
+}
+.vntformall.vchange{
+    position: static;
+    background-color: #eeeeee;
+    padding: 10px 0;
+    border-bottom: 1px solid #ffffff;
+}
+.vhformsall{
+    background: #ffffff;
+    -webkit-box-shadow: 20px 20px 20px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 20px 20px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 20px 20px 20px rgba(0, 0, 0, 0.2);
+}
+.vchange .vhformsall{
+    box-shadow:none
+}
+.box-search-lkh{
+    padding: 0;
+}
+.box-search-lkh .vhformsall{
+    box-shadow:none
+}
+.hpformsall .vvgrip{
+    display: flex;
+    flex-wrap: wrap;
+}
+.hpformsall .vvgrip .mcol{
+    width: 55.145%;
+    border-right: 1px solid #eeeeee;
+}
+.hpformsall .vvgrip .hcol{
+    width: calc(100% - 55.145%);
+}
+.tpformsall{
+    padding: 15px 20px 35px;
+}
+.tpformsall .vtitle{
+    color: #000000;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.tpformsall .frmgrip{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -5px;
+}
+.tpformsall .frmgrip > div{
+    padding: 0 5px;
+}
+.tpformsall .frmgrip .acol{
+    width: 50%;
+}
+.tpformsall .frmgrip .bcol{
+    width: calc(100% - 174px);
+}
+.tpformsall .frmgrip .ccol{
+    width: 174px;
+}
+.tpformsall .fmgroup {
+    position: relative;
+}
+.tpformsall .fmgroup select{
+    height: 40px;
+    border: none;
+    background-color: #eeeeee;
+    padding: 0 10px;
+    color: #666666;
+    width: 100%;
+    box-shadow: none;
+}
+/*
+.tpformsall .fmgroup .chosen-container{
+    height: 40px;
+    background-color: #eeeeee;
+}
+.tpformsall .fmgroup .chosen-container a{
+    border: none;
+    background-color: #eeeeee;
+    background-image: url("iselect.png")!important;
+    background-position: right 15px center!important;
+    background-repeat: no-repeat!important;
+    background-size: 6px 6px!important;
+    box-shadow: none;
+    border-radius: 0;
+}
+*/
+
+.tpformsall .fmgroup input{
+    width: 100%;
+    height: 40px;
+    border: none;
+    padding: 0 40px 0 10px;
+    background-color: #eeeeee;
+    outline: none;
+}
+.tpformsall .fmgroup.fa-calendar::before{
+    font-weight: 400;
+    font-family: "Font Awesome 5 Free";
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    pointer-events: none;
+    color: #666666;
+}
+.tpformsall .fmgroup button{
+    height: 40px;
+    width: 100%;
+    font-size: 14px;
+    line-height: 30px;
+    text-transform: uppercase;
+    color: #ffffff;
+    background-color: #d82727;
+    padding: 5px;
+    text-align: center;
+    border: 0;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    outline: 0 !important;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.tpformsall .fmgroup button i{
+    font-size: 20px;
+    line-height: 30px;
+    padding-right: 8px;
+}
+.tpformsall .fmgroup button:hover{
+    background-color: #666666;
+}
+/* <=== vntformall ===> */
+@media all and (max-width: 1200px){
+    /* <=== vntformall ===> */
+    /* <=== vntformall ===> */
+}
+@media all and (max-width: 991px){
+    /* <=== vntformall ===> */
+    .vntformall{
+        position: relative;
+        bottom: 0;
+        margin-top: -70px;
+        margin-bottom: 15px;
+    }
+    .vntformall.vchange{
+        position: static;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    .vhformsall{
+        -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+    .hpformsall .vvgrip .mcol{
+        width: 100%;
+        border-right: none;
+        margin-bottom: 10px;
+    }
+    .hpformsall .vvgrip .hcol{
+        width: 100%;
+    }
+    .hpformsall{
+        padding: 10px 15px 25px;
+    }
+    .tpformsall{
+        padding: 0;
+    }
+    .tpformsall .vtitle{
+        font-size: 14px;
+        line-height: 22px;
+    }
+    .tpformsall .fmgroup .chosen-container a{
+        padding: 7px 20px 5px 8px;
+        background-position: right 10px center;
+    }
+    /* <=== vntformall ===> */
+}
+@media all and (max-width: 767px){
+    /* <=== vntformall ===> */
+    .tpformsall .frmgrip .bcol{
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    .tpformsall .frmgrip .ccol{
+        width: 100%;
+    }
+    /* <=== vntformall ===> */
+
+    .tpformsall .frmgrip .acol {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+.vnt-banner {
+    position: relative;
+}
+.bg-search {
+    background: #eeeeee;
+    margin-bottom: 1px;
+    padding: 10px 0;
+    position: relative;
+    z-index: 90;
+}
+
+.list-search ul:after {
+    display: block;
+    content: '';
+    clear: both;
+}
+.list-search ul li {
+    float: left;
+}
+.list-search ul li a{
+    display: block;
+    height: 60px;
+    padding: 10px 12px 7px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    text-align: center;
+    font-size: 12px;
+    line-height: 20px;
+    font-weight: bold;
+}
+.list-search ul li a.active,
+.list-search ul li a:hover {
+    background: #d82727;
+}
+.list-search ul li a span {
+    display: block;
+}
+.list-search ul li a .icon {
+    font-size: 17px;
+    line-height: 20px;
+    margin: 0 5px 3px;
+}
+
+.chosen-container-single .chosen-single {
+    border: 0 !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+    height: 40px;
+    line-height: 40px;
+    background: #eeeeee !important;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+
+}
+.chosen-container-single .chosen-single div b {
+    background-position: 0 10px;
+}
+
+.chosen-container .chosen-results li.group-result {
+    color: #d82727;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.chosen-container .chosen-results li.highlighted {
+    background: #d82727;
+}
+.chosen-container-single .chosen-search input[type="text"] {
+    height: 30px !important;
+    background-color: #ffffff !important;
+}
+
+
+/*RESP*/
+
+@media screen and (max-width: 767px){
+    .list-search ul li {
+        width: 25%;
+    }
+    .list-search ul li a {
+        padding: 10px 4px 7px;
+    }
+    .list-search ul li a span.text {
+        overflow: hidden;
+        white-space: nowrap;
+        -ms-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+    }
+}
+@media screen and (max-width: 479px) {
+    .list-search ul li a {
+        font-size: 11px;
+        line-height: 20px;
+        font-weight: normal;
+    }
+}
