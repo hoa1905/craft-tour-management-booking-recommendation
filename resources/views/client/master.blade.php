@@ -48,6 +48,9 @@
   <script type="text/javascript" src="{{ asset('js/main.js') }}"></script>
   <link type="text/css" href="{{ asset('css/update.css') }}" rel="stylesheet">
   <script type="text/javascript" src="{{ asset('js/update.js') }}"></script>
+
+  <link rel="stylesheet" href="{{ asset('css/detail.css') }}" type="text/css">
+  <script type="text/javascript" src="{{ asset('js/detail.js') }}"></script>
 </head>
 
 <body>
