@@ -18,5 +18,5 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => ''], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/load-more-tours', [HomeController::class, 'loadMoreTours'])->name('tours.loadMoreTours');
-    Route::get('/tour_detail/{id}', [HomeController::class, 'showTourDetail'])->name('tour.detail');
+    Route::get('/tour-detail/{id}', [HomeController::class, 'showTourDetail'])->name('tour.detail');
 });
