@@ -8,18 +8,22 @@
   <meta http-equiv="content-language" content="vi">
   <meta name="robots" content="index, follow">
   <link rel="icon" href="{{ asset('images/hanh-trinh-vang-icon.png') }}" type="image/gif">
-  <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
-  <link href="{{ asset('css/all.min.css') }}" rel="stylesheet" type="text/css">
-  <link href="{{ asset('css/jquery.fancybox.css') }}" rel="stylesheet" type="text/css">
-  <link href="{{ asset('css/slick.css') }}" rel="stylesheet" type="text/css">
-  <link href="{{ asset('css/slick-theme.css') }}" rel="stylesheet" type="text/css">
-  <link href="{{ asset('css/jquery-ui.css') }}" type="text/css" rel="stylesheet">
-  <link href="{{ asset('css/menu.css') }}" type="text/css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ asset('css/all.min.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ asset('css/jquery.fancybox.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ asset('css/slick.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ asset('css/slick-theme.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ asset('css/jquery-ui.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ asset('css/menu.css') }}" type="text/css">
   <link rel="stylesheet" href="{{ asset('css/jquery.mCustomScrollbar.min.css') }}" type="text/css">
   <link rel="stylesheet" href="{{ asset('css/chosen.css') }}" type="text/css">
-  <link href="{{ asset('css/sweetalert2.min.css') }}" rel="stylesheet" type="text/css">
-  <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet" type="text/css">
-  <link href="{{ asset('css/screen.css') }}" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ asset('css/toastr.min.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ asset('css/screen.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ asset('css/main.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ asset('css/update.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ asset('css/detail.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ asset('css/tour-search.css') }}" type="text/css">
   <script language="javascript">
     var ROOT = "";
     var lang = "vn";
@@ -44,13 +48,10 @@
   <script type="text/javascript" src="{{ asset('js/pagination.min.js') }}"></script>
   <script type="text/javascript" src="{{ asset('js/core.js') }}"></script>
   <script type="text/javascript" src="{{ asset('js/javascript.js') }}"></script>
-  <link rel="stylesheet" href="{{ asset('css/main.css') }}" type="text/css">
   <script type="text/javascript" src="{{ asset('js/main.js') }}"></script>
-  <link type="text/css" href="{{ asset('css/update.css') }}" rel="stylesheet">
   <script type="text/javascript" src="{{ asset('js/update.js') }}"></script>
-
-  <link rel="stylesheet" href="{{ asset('css/detail.css') }}" type="text/css">
   <script type="text/javascript" src="{{ asset('js/detail.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('js/tour-search.js') }}"></script>
 </head>
 
 <body>
@@ -87,7 +88,7 @@
                                       <ul>
                                         @foreach ($provinces as $province)
                                         <li>
-                                          <a href="{{ url('/tours/' . Str::slug($province)) }}" class="d-flex justify-content-between align-items-center py-1 text-decoration-none text-dark">
+                                          <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}" class="d-flex justify-content-between align-items-center py-1 text-decoration-none text-dark">
                                             <span>{{ $province }}</span>
                                             <img src="{{ asset('images/hot.png') }}" alt="HOT">
                                           </a>
@@ -101,6 +102,7 @@
                               </div>
                             </div>
                           </div>
+                        </li>
                         <li class="submenu hassub"><a href="#" target="_self">Cách đặt tour</a>
                           <ul>
                             <li><a href="#">Hướng dẫn đặt tour</a></li>
@@ -120,9 +122,9 @@
                         </li>
                         <li>
                           <div class="vnt-search hiddenmb">
-                            <form name="formSearch" action="/tour/" method="get" class="box_search">
+                            <form name="formSearch" action="{{ route('tour.search') }}" method="get" class="box_search">
                               <div class="seponsi">
-                                <input name="keyword" type="text" class="text_search" value="" placeholder="Bạn muốn đi đâu?">
+                                <input name="destination" type="text" class="text_search" value="" placeholder="Bạn muốn đi đâu?">
                                 <button type="submit">
                                   <span><i class="fa fa-search"></i></span>
                                 </button>

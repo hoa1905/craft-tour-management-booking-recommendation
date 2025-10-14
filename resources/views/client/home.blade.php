@@ -44,14 +44,14 @@
             <ul>
               <li>
                 <a class="active" href="" target="_self">
-                  <span><i class="icon fa fa-clipboard-check"></i></span>
                   <span class="text">TOUR TRỌN GÓI</span>
+                  <span><i class="icon fa fa-clipboard-check"></i></span>
                 </a>
               </li>
             </ul>
           </div>
           <div class="vhformsall">
-            <form id="formSearch" name="formSearch" method="post" action="/tour/tour.html">
+            <form id="formSearch" name="formSearch" action="{{ route('tour.search') }}" method="get">
               <div class="hpformsall">
                 <div class="vvgrip">
                   <div class="mcol">
@@ -62,59 +62,87 @@
                           <div class="acol">
                             <div class="fmgroup">
                               <select class="form-control chosen-select" id="departure" name="departure">
-                                <option value="0">Điểm khởi hành ---</option>
-                                <option value="1">Cao Bằng</option>
-                                <option value="2">Lạng Sơn</option>
-                                <option value="3">Quảng Ninh</option>
-                                <option value="4">Bắc Ninh</option>
-                                <option value="5">Tuyên Quang</option>
-                                <option value="6">Lào Cai</option>
-                                <option value="7">Lai Châu</option>
-                                <option value="8">Điện Biên</option>
-                                <option value="9">Sơn La</option>
-                                <option value="10">Thái Nguyên</option>
-                                <option value="11">Phú Thọ</option>
-                                <option value="12">TP.Hà Nội</option>
-                                <option value="13">TP.Hải Phòng</option>
-                                <option value="14">Hưng Yên</option>
-                                <option value="15">Ninh Bình</option>
-                                <option value="16">Thanh Hóa</option>
-                                <option value="17">Nghệ An</option>
-                                <option value="18">Hà Tĩnh</option>
-                                <option value="19">Quảng Trị</option>
-                                <option value="20">TP.Huế</option>
-                                <option value="21">TP.Đà Nẵng</option>
-                                <option value="22">Quảng Ngãi</option>
-                                <option value="23">Gia Lai</option>
-                                <option value="24">Đắk Lắk</option>
-                                <option value="25">Khánh Hòa</option>
-                                <option value="26">Lâm Đồng</option>
-                                <option value="27">Đồng Nai</option>
-                                <option value="28">TP.Hồ Chí Minh</option>
-                                <option value="29">Tây Ninh</option>
-                                <option value="30">Đồng Tháp</option>
-                                <option value="31">TP.Cần Thơ</option>
-                                <option value="32">Vĩnh Long</option>
-                                <option value="33">Cà Mau</option>
-                                <option value="34">An Giang</option>
+                                <option value="">Điểm khởi hành ---</option>
+                                <option value="Cao Bằng">Cao Bằng</option>
+                                <option value="Lạng Sơn">Lạng Sơn</option>
+                                <option value="Quảng Ninh">Quảng Ninh</option>
+                                <option value="Bắc Ninh">Bắc Ninh</option>
+                                <option value="Tuyên Quang">Tuyên Quang</option>
+                                <option value="Lào Cai">Lào Cai</option>
+                                <option value="Lai Châu">Lai Châu</option>
+                                <option value="Điện Biên">Điện Biên</option>
+                                <option value="Sơn La">Sơn La</option>
+                                <option value="Thái Nguyên">Thái Nguyên</option>
+                                <option value="Phú Thọ">Phú Thọ</option>
+                                <option value="TP. Hà Nội">TP. Hà Nội</option>
+                                <option value="TP. Hải Phòng">TP. Hải Phòng</option>
+                                <option value="Hưng Yên">Hưng Yên</option>
+                                <option value="Ninh Bình">Ninh Bình</option>
+                                <option value="Thanh Hóa">Thanh Hóa</option>
+                                <option value="Nghệ An">Nghệ An</option>
+                                <option value="Hà Tĩnh">Hà Tĩnh</option>
+                                <option value="Quảng Trị">Quảng Trị</option>
+                                <option value="TP. Huế">TP. Huế</option>
+                                <option value="TP. Đà Nẵng">TP. Đà Nẵng</option>
+                                <option value="Quảng Ngãi">Quảng Ngãi</option>
+                                <option value="Gia Lai">Gia Lai</option>
+                                <option value="Đắk Lắk">Đắk Lắk</option>
+                                <option value="Khánh Hòa">Khánh Hòa</option>
+                                <option value="Lâm Đồng">Lâm Đồng</option>
+                                <option value="Đồng Nai">Đồng Nai</option>
+                                <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
+                                <option value="Tây Ninh">Tây Ninh</option>
+                                <option value="Đồng Tháp">Đồng Tháp</option>
+                                <option value="TP. Cần Thơ">TP. Cần Thơ</option>
+                                <option value="Vĩnh Long">Vĩnh Long</option>
+                                <option value="Cà Mau">Cà Mau</option>
+                                <option value="An Giang">An Giang</option>
                               </select>
                             </div>
                           </div>
                           <div class="acol">
                             <div class="fmgroup">
                               <select class="form-control chosen-select" id="destination" name="destination">
-                                <option value="0">Điểm đến ---</option>
+                                <option value="">Điểm đến ---</option>
                                 <optgroup label="Miền Bắc">
-                                  <option value="1" class="op-level2">ABC</option>
-                                  <option value="2" class="op-level2">DEF</option>
+                                  <option value="Cao Bằng" class="op-level2">Cao Bằng</option>
+                                  <option value="Lạng Sơn" class="op-level2">Lạng Sơn</option>
+                                  <option value="Quảng Ninh" class="op-level2">Quảng Ninh</option>
+                                  <option value="Bắc Ninh" class="op-level2">Bắc Ninh</option>
+                                  <option value="Tuyên Quang" class="op-level2">Tuyên Quang</option>
+                                  <option value="Lào Cai" class="op-level2">Lào Cai</option>
+                                  <option value="Lai Châu" class="op-level2">Lai Châu</option>
+                                  <option value="Điện Biên" class="op-level2">Điện Biên</option>
+                                  <option value="Sơn La" class="op-level2">Sơn La</option>
+                                  <option value="Thái Nguyên" class="op-level2">Thái Nguyên</option>
+                                  <option value="Phú Thọ" class="op-level2">Phú Thọ</option>
+                                  <option value="Hưng Yên" class="op-level2">Hưng Yên</option>
+                                  <option value="Ninh Bình" class="op-level2">Ninh Bình</option>
+                                  <option value="TP. Hà Nội" class="op-level2">TP. Hà Nội</option>
+                                  <option value="TP. Hải Phòng" class="op-level2">TP. Hải Phòng</option>
                                 </optgroup>
                                 <optgroup label="Miền Trung">
-                                  <option value="3" class="op-level2">ABC</option>
-                                  <option value="4" class="op-level2">DEF</option>
+                                  <option value="Thanh Hóa" class="op-level2">Thanh Hóa</option>
+                                  <option value="Nghệ An" class="op-level2">Nghệ An</option>
+                                  <option value="Hà Tĩnh" class="op-level2">Hà Tĩnh</option>
+                                  <option value="Quảng Trị" class="op-level2">Quảng Trị</option>
+                                  <option value="TP. Huế" class="op-level2">TP. Huế</option>
+                                  <option value="TP. Đà Nẵng" class="op-level2">TP. Đà Nẵng</option>
+                                  <option value="Quảng Ngãi" class="op-level2">Quảng Ngãi</option>
+                                  <option value="Gia Lai" class="op-level2">Gia Lai</option>
+                                  <option value="Đắk Lắk" class="op-level2">Đắk Lắk</option>
+                                  <option value="Khánh Hòa" class="op-level2">Khánh Hòa</option>
+                                  <option value="Lâm Đồng" class="op-level2">Lâm Đồng</option>
                                 </optgroup>
                                 <optgroup label="Miền Nam">
-                                  <option value="5" class="op-level2">ABC</option>
-                                  <option value="6" class="op-level2">DEF</option>
+                                  <option value="Đồng Nai" class="op-level2">Đồng Nai</option>
+                                  <option value="TP. Hồ Chí Minh" class="op-level2">TP. Hồ Chí Minh</option>
+                                  <option value="Tây Ninh" class="op-level2">Tây Ninh</option>
+                                  <option value="Đồng Tháp" class="op-level2">Đồng Tháp</option>
+                                  <option value="TP. Cần Thơ" class="op-level2">TP. Cần Thơ</option>
+                                  <option value="Vĩnh Long" class="op-level2">Vĩnh Long</option>
+                                  <option value="Cà Mau" class="op-level2">Cà Mau</option>
+                                  <option value="An Giang" class="op-level2">An Giang</option>
                                 </optgroup>
                               </select>
                             </div>
@@ -130,12 +158,12 @@
                         <div class="frmgrip">
                           <div class="bcol">
                             <div class="fmgroup fa-calendar">
-                              <input class="flatpickr-input" type="text" name="startdate" id="startdate" placeholder="Chọn ngày, tháng ---" value="">
+                              <input class="flatpickr-input" type="text" name="start_date" id="startdate" placeholder="Chọn ngày, tháng ---" value="">
                             </div>
                           </div>
                           <div class="ccol">
                             <div class="fmgroup">
-                              <button type="submit" class="btn" name="btnSearch" value="Tìm tour"><span><i class="fab fa-sistrix"></i>Tìm tour</span></button>
+                              <button type="submit" class="btn" value="Tìm tour"><span><i class="fab fa-sistrix"></i>Tìm tour</span></button>
                             </div>
                           </div>
                         </div>
@@ -146,18 +174,18 @@
               </div>
             </form>
           </div>
-          <link href="css/flatpickr.min.css" rel="stylesheet">
-          <link href="css/flatpickrcus.css" rel="stylesheet">
-          <link href="css/monthSelect.min.css" rel="stylesheet">
-          <link href="css/search.css" rel="stylesheet" type="text/css">
-          <script src="js/classList.min.js"></script>
-          <script src="js/flatpickr.min.js"></script>
-          <script src="js/rangePlugin.min.js"></script>
-          <script src="js/scrollPlugin.min.js"></script>
-          <script src="js/monthSelect.js"></script>
-          <script src="js/monthSelectindex.js"></script>
-          <script src="js/vn.js"></script>
-          <script type="text/javascript" src="js/search.js"></script>
+          <link href="{{ asset('css/flatpickr.min.css') }}" rel="stylesheet">
+          <link href="{{ asset('css/flatpickrcus.css') }}" rel="stylesheet">
+          <link href="{{ asset('css/monthSelect.min.css') }}" rel="stylesheet">
+          <link href="{{ asset('css/search.css') }}" rel="stylesheet" type="text/css">
+          <script src="{{ asset('js/classList.min.js') }}"></script>
+          <script src="{{ asset('js/flatpickr.min.js') }}"></script>
+          <script src="{{ asset('js/rangePlugin.min.js') }}"></script>
+          <script src="{{ asset('js/scrollPlugin.min.js') }}"></script>
+          <script src="{{ asset('js/monthSelect.js') }}"></script>
+          <script src="{{ asset('js/monthSelectindex.js') }}"></script>
+          <script src="{{ asset('js/vn.js') }}"></script>
+          <script type="text/javascript" src="{{ asset('js/search.js') }}"></script>
           <script type="text/javascript">
             jQuery(window).ready(function() {
               vnTSearch.init();
@@ -198,7 +226,7 @@
           <div class="col-md-3 col-sm-6">
             <div class="tour-card">
               <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
-                <div class="tour-image" style="background-image: url(images/tour.jpg);">
+                <div class="tour-image" style="background-image: url(images/banner-tour-detail-1.jpg);">
                   <span class="tour-badge">TOUR BÁN CHẠY</span>
                   <span class="tour-region"><i class="glyphicon glyphicon-map-marker"></i> {{ $tour->destination }}</span>
                 </div>
@@ -212,7 +240,7 @@
                 </h4>
 
                 <div class="tour-price">
-                  {{ number_format($tour->price, 0, ',', ',') }} <span class="currency">đ</span>
+                  {{ number_format($tour->price, 0, ',', '.') }} <span class="currency">đ</span>
                 </div>
 
                 <ul class="tour-info list-unstyled">
@@ -262,7 +290,7 @@
           <h2 class="stTitle2">Tour miền Bắc</h2>
           <ul class="ul-title">
             @foreach($regions['Tour Miền Bắc']->take(6) as $province)
-            <li><a href="{{ url('/tour/' . \Illuminate\Support\Str::slug($province)) }}">{{ $province }}</a></li>
+            <li><a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">{{ $province }}</a></li>
             @endforeach
           </ul>
         </div>
@@ -275,7 +303,7 @@
               <ul>
                 @foreach ($regions['Tour Miền Bắc'] as $province)
                 <li>
-                  <a href="{{ url('/tour/' . \Illuminate\Support\Str::slug($province)) }}">
+                  <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
                     {{ $province }}
                   </a>
                 </li>
@@ -309,7 +337,7 @@
                 </h4>
 
                 <div class="tour-price">
-                  {{ number_format($tour->price, 0, ',', ',') }} <span class="currency">đ</span>
+                  {{ number_format($tour->price, 0, ',', '.') }} <span class="currency">đ</span>
                 </div>
 
                 <ul class="tour-info list-unstyled">
@@ -361,7 +389,7 @@
           <h2 class="stTitle2">Tour miền Trung</h2>
           <ul class="ul-title">
             @foreach($regions['Tour Miền Trung']->take(6) as $province)
-            <li><a href="{{ url('/tour/' . \Illuminate\Support\Str::slug($province)) }}">{{ $province }}</a></li>
+            <li><a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">{{ $province }}</a></li>
             @endforeach
           </ul>
         </div>
@@ -374,7 +402,7 @@
               <ul>
                 @foreach ($regions['Tour Miền Trung'] as $province)
                 <li>
-                  <a href="{{ url('/tour/' . \Illuminate\Support\Str::slug($province)) }}">
+                  <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
                     {{ $province }}
                   </a>
                 </li>
@@ -409,7 +437,7 @@
                 </h4>
 
                 <div class="tour-price">
-                  {{ number_format($tour->price, 0, ',', ',') }} <span class="currency">đ</span>
+                  {{ number_format($tour->price, 0, ',', '.') }} <span class="currency">đ</span>
                 </div>
 
                 <ul class="tour-info list-unstyled">
@@ -460,7 +488,7 @@
           <h2 class="stTitle2">Tour miền Nam</h2>
           <ul class="ul-title">
             @foreach($regions['Tour Miền Nam']->take(6) as $province)
-            <li><a href="{{ url('/tour/' . \Illuminate\Support\Str::slug($province)) }}">{{ $province }}</a></li>
+            <li><a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">{{ $province }}</a></li>
             @endforeach
           </ul>
         </div>
@@ -473,7 +501,7 @@
               <ul>
                 @foreach ($regions['Tour Miền Nam'] as $province)
                 <li>
-                  <a href="{{ url('/tour/' . \Illuminate\Support\Str::slug($province)) }}">
+                  <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
                     {{ $province }}
                   </a>
                 </li>
@@ -508,7 +536,7 @@
                 </h4>
 
                 <div class="tour-price">
-                  {{ number_format($tour->price, 0, ',', ',') }} <span class="currency">đ</span>
+                  {{ number_format($tour->price, 0, ',', '.') }} <span class="currency">đ</span>
                 </div>
 
                 <ul class="tour-info list-unstyled">

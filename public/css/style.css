@@ -356,6 +356,8 @@ a:active{
 }
 .tour-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  border-color: #f44336;
 }
 
 .tour-image {
@@ -398,7 +400,7 @@ a:active{
 .tour-title {
   font-size: 15px;
   font-weight: bold;
-  height: 40px;
+  height: 45px;
   overflow: hidden;
   margin-bottom: 8px;
 }
