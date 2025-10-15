@@ -609,7 +609,7 @@
           if (data && data.length > 0) {
             data.forEach(function(tour) {
               const imageUrl = `/images/${tour.image_url}`;
-              const detailUrl = `/tour/${tour.tour_id}`; // route detail
+              const detailUrl = `/tour-detail/${tour.tour_id}`; // route detail
               const startDate = new Date(tour.start_date).toLocaleDateString('vi-VN', {
                 day: '2-digit',
                 month: '2-digit'

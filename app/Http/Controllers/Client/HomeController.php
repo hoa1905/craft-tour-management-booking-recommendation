@@ -11,30 +11,11 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $hotTours = DB::table('tours')
-            ->join('villages', 'tours.village_id', '=', 'villages.village_id')
-            ->where('tours.status', 'approved')
-            ->select('tours.*', 'villages.region', 'villages.province')
-            ->take(8)
-            ->get();
+        $hotTours = Tour::getHotTours();
 
-        // Hàm lấy 8 tour đầu tiên + tổng số tour
-        $getTours = function ($region) {
-            $query = DB::table('tours')
-                ->join('villages', 'tours.village_id', '=', 'villages.village_id')
-                ->where('villages.region', $region)
-                ->where('tours.status', 'approved')
-                ->select('tours.*', 'villages.region', 'villages.province');
-
-            return [
-                'tours' => (clone $query)->take(8)->get(),
-                'total' => (clone $query)->count()
-            ];
-        };
-
-        $north = $getTours('Tour Miền Bắc');
-        $central = $getTours('Tour Miền Trung');
-        $south = $getTours('Tour Miền Nam');
+        $north = Tour::getToursByRegion('Tour Miền Bắc');
+        $central = Tour::getToursByRegion('Tour Miền Trung');
+        $south = Tour::getToursByRegion('Tour Miền Nam');
 
         return view('client.home', [
             'hotTours' => $hotTours,
@@ -53,12 +34,10 @@ class HomeController extends Controller
         $limit = 4;
         $region = $request->get('region');
 
-        $tours = DB::table('tours')
-            ->join('villages', 'tours.village_id', '=', 'villages.village_id')
-            ->where('villages.region', $region)
-            ->where('tours.status', 'approved')
-            ->select('tours.*', 'villages.region', 'villages.province')
-            ->skip($offset) // Bỏ qua số bản ghi đã tải trước đó
+        $tours = Tour::approved()
+            ->byRegion($region)
+            ->with('village')
+            ->skip($offset)
             ->take($limit)
             ->get();
 
@@ -67,24 +46,9 @@ class HomeController extends Controller
 
     public function showTourDetail($id)
     {
-        // Lấy thông tin tour theo id
-        $tour = DB::table('tours')
-            ->join('villages', 'tours.village_id', '=', 'villages.village_id')
-            ->join('users', 'tours.partner_id', '=', 'users.user_id')
-            ->select(
-                'tours.*',
-                'villages.village_name',
-                'villages.region',
-                'villages.province',
-                'users.full_name as partner_name',
-                'users.phone as partner_phone'
-            )
-            ->where('tours.tour_id', $id)
-            ->first();
-
-        if (!$tour) {
-            abort(404, 'Tour không tồn tại');
-        }
+        $tour = Tour::with(['village', 'partner'])
+            ->where('tour_id', $id)
+            ->firstOrFail();
 
         return view('client.tour_detail', compact('tour'));
     }

@@ -7,7 +7,7 @@
       <div class="navation">
         <ul>
           <li><a href="http://127.0.0.1:8000/">Tour du lịch</a></li>
-          <li><a href="">{{ $tour->region }}</a></li>
+          <li><a href="">{{ $tour->village->region }}</a></li>
           <li class="hidden-xs"><a
               href="">{{ $tour->tour_name }}</a></li>
         </ul>
@@ -49,7 +49,7 @@
                       <td>
                         <div class="i-label fa-map-marked-alt">Tham quan:</div>
                       </td>
-                      <td><a href="/tour/tour.html/?point_id=395" target="_blank">{{ $tour->village_name }}</a>,
+                      <td><a href="/tour/tour.html/?point_id=395" target="_blank">{{ $tour->village->village_name }}</a>,
                         <a href="/tour/tour.html/?point_id=394" target="_blank">Quy Nhơn</a>
                       </td>
                     </tr>

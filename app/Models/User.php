@@ -20,4 +20,10 @@ class User extends Model
     'role',
     'status',
   ];
+
+  // Quan hệ với bảng Tours (1 partner có nhiều tours)
+  public function tours()
+  {
+    return $this->hasMany(Tour::class, 'partner_id', 'user_id');
+  }
 }

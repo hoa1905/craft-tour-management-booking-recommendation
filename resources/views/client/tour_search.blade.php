@@ -171,7 +171,7 @@
                             <div class="chtitle">Ngày khởi hành</div>
                             <div class="chconts fa-date">
                               <input class="flatpickr-input" type="text"
-                                name="startdate" id="startdate"
+                                name="start_date" id="startdate"
                                 placeholder="Chọn ngày, tháng ---" value="">
                             </div>
                           </div>

@@ -17,4 +17,10 @@ class Village extends Model
         'region',
         'province',
     ];
+
+    // Quan hệ với bảng Tours (1 village có nhiều tours)
+    public function tours()
+    {
+        return $this->hasMany(Tour::class, 'village_id', 'village_id');
+    }
 }
