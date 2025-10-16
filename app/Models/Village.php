@@ -13,14 +13,23 @@ class Village extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'province_id',
         'village_name',
-        'region',
-        'province',
     ];
 
-    // Quan hệ với bảng Tours (1 village có nhiều tours)
+    // Relationships
+    public function province()
+    {
+        return $this->belongsTo(Province::class, 'province_id');
+    }
+
+    public function tourVillages()
+    {
+        return $this->hasMany(TourVillage::class, 'village_id');
+    }
+
     public function tours()
     {
-        return $this->hasMany(Tour::class, 'village_id', 'village_id');
+        return $this->belongsToMany(Tour::class, 'tour_villages', 'village_id', 'tour_id');
     }
 }

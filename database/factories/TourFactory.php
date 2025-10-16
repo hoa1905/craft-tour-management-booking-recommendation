@@ -18,38 +18,22 @@ class TourFactory extends Factory
      */
     public function definition(): array
     {
-        $partner = User::where('role', 'partner')->inRandomOrder()->first();
-        $village = Village::inRandomOrder()->first();
-
         return [
-            'tour_name' => $this->faker->sentence(3),
-            'village_id' => $village->village_id,
-            'partner_id' => $partner->user_id,
-            'price' => $this->faker->randomFloat(3, 500000, 5000000),
-            'duration' => $this->faker->randomElement(['1 ngày', '2 ngày 1 đêm', '3 ngày 2 đêm']),
+            'tour_name' => 'Tour ' . $this->faker->city . ' khám phá làng nghề',
+            'partner_id' => User::inRandomOrder()->first()?->user_id ?? User::factory(),
+            'price_adult' => $this->faker->numberBetween(500000, 3000000),
+            'price_child' => $this->faker->numberBetween(200000, 1500000),
+            'duration' => $this->faker->randomElement(['1N', '2N1Đ', '3N2Đ', '4N3Đ']),
             'description' => $this->faker->paragraph(4),
-            'start_date' => $this->faker->dateTimeBetween('2025-11-01', '2025-12-31')->format('Y-m-d'),
-            'end_date' => $this->faker->dateTimeBetween('2026-01-01', '2026-02-01')->format('Y-m-d'),
-            'departure_point' => $this->faker->randomElement([
-                'Hà Nội',
-                'Đà Nẵng',
-                'TP. Hồ Chí Minh',
-                'Huế',
-                'Cần Thơ'
-            ]),
-            'destination' => $this->faker->randomElement([
-                'Sa Pa',
-                'Hội An',
-                'Phú Quốc',
-                'Nha Trang',
-                'Đà Lạt'
-            ]),
-            'transport' => $this->faker->randomElement([
-                'Máy bay',
-                'Xe du lịch',
-            ]),
-            'image_url' => $this->faker->randomElement(['tour1.jpg', 'tour2.png', 'tour3.jpeg']),
+            'departure_point' => $this->faker->city,
+            'destination' => $this->faker->city,
+            'transport' => $this->faker->randomElement(['Xe du lịch', 'Máy bay', 'Tàu hỏa']),
+            'image_main' => $this->faker->imageUrl(800, 600, 'tour'),
+            'image_1' => $this->faker->imageUrl(800, 600, 'village'),
+            'image_2' => $this->faker->imageUrl(800, 600, 'travel'),
             'status' => $this->faker->randomElement(['pending', 'approved', 'rejected']),
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }

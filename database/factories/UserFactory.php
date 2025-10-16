@@ -24,7 +24,7 @@ class UserFactory extends Factory
       : 'approved';
 
     return [
-      'full_name' => $this->faker->name(),
+      'user_name' => $this->faker->name(),
       'email' => $this->faker->unique()->safeEmail(),
       'password' => Hash::make('123456'), // mật khẩu mặc định
       'phone' => $this->faker->phoneNumber(),

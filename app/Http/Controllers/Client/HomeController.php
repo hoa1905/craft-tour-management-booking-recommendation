@@ -13,9 +13,9 @@ class HomeController extends Controller
     {
         $hotTours = Tour::getHotTours();
 
-        $north = Tour::getToursByRegion('Tour Miền Bắc');
-        $central = Tour::getToursByRegion('Tour Miền Trung');
-        $south = Tour::getToursByRegion('Tour Miền Nam');
+        $north = Tour::getToursByRegion('Miền Bắc');
+        $central = Tour::getToursByRegion('Miền Trung');
+        $south = Tour::getToursByRegion('Miền Nam');
 
         return view('client.home', [
             'hotTours' => $hotTours,
@@ -34,22 +34,14 @@ class HomeController extends Controller
         $limit = 4;
         $region = $request->get('region');
 
-        $tours = Tour::approved()
-            ->byRegion($region)
-            ->with('village')
-            ->skip($offset)
-            ->take($limit)
-            ->get();
+        $tours = Tour::loadMoreByRegion($region, $offset, $limit);
 
         return response()->json($tours);
     }
 
     public function showTourDetail($id)
     {
-        $tour = Tour::with(['village', 'partner'])
-            ->where('tour_id', $id)
-            ->firstOrFail();
-
+        $tour = Tour::getTourDetail($id);
         return view('client.tour_detail', compact('tour'));
     }
 }

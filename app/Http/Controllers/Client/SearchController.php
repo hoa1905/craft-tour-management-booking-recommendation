@@ -16,9 +16,8 @@ class SearchController extends Controller
             'destination' => trim($request->input('destination')),
             'start_date' => trim($request->input('start_date')),
             'duration' => trim($request->input('duration')),
-            'priceMin' => number_format((float) str_replace(',', '', $request->input('s_price_min', 0)), 3, '.', ''),
-            'priceMax' => number_format((float) str_replace(',', '', $request->input('s_price_max', 50000000)), 3, '.', ''),
-            'sort' => $request->input('sort', 0),
+            'priceMin' => $request->input('s_price_min', 0),
+            'priceMax' => $request->input('s_price_max', 50000000),
         ];
 
         // Nếu trống hết

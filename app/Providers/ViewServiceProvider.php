@@ -21,13 +21,20 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Chia sẻ biến $regions chỉ cho tất cả các view trong view client
+        // Chia sẻ biến $regions cho tất cả view trong thư mục client
+        // Chia sẻ danh sách tỉnh theo từng vùng miền cho tất cả view trong client
         View::composer('client.*', function ($view) {
-            $regions = [
-                'Tour Miền Bắc' => DB::table('villages')->where('region', 'Tour Miền Bắc')->pluck('province')->unique(),
-                'Tour Miền Trung' => DB::table('villages')->where('region', 'Tour Miền Trung')->pluck('province')->unique(),
-                'Tour Miền Nam' => DB::table('villages')->where('region', 'Tour Miền Nam')->pluck('province')->unique()
-            ];
+            $regions = DB::table('regions')
+                ->select('region_name', 'province_name')
+                ->join('provinces', 'regions.region_id', '=', 'provinces.region_id')
+                ->orderBy('regions.region_name')
+                ->orderBy('provinces.province_name')
+                ->get()
+                ->groupBy('region_name')
+                ->map(function ($group) {
+                    return $group->pluck('province_name')->unique();
+                });
+
             $view->with('regions', $regions);
         });
     }

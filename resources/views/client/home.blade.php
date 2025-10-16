@@ -240,7 +240,7 @@
                 </h4>
 
                 <div class="tour-price">
-                  {{ number_format($tour->price, 0, ',', '.') }} <span class="currency">đ</span>
+                  {{ number_format($tour->price_adult, 0, ',', '.') }} <span class="currency">đ</span>
                 </div>
 
                 <ul class="tour-info list-unstyled">
@@ -251,8 +251,15 @@
 
                 <div class="clearfix">
                   <div class="pull-left">
-                    <strong>Ngày đi:</strong> {{ \Carbon\Carbon::parse($tour->start_date)->format('d/m') }},
-                    {{ \Carbon\Carbon::parse($tour->end_date)->format('d/m') }}
+                    <strong>Ngày đi:</strong>
+                    @if($tour->schedules->isNotEmpty())
+                    {{ $tour->schedules
+        ->sortBy('start_date')
+        ->map(fn($s) => \Carbon\Carbon::parse($s->start_date)->format('d/m'))
+        ->implode(', ') }}
+                    @else
+                    Chưa có lịch khởi hành
+                    @endif
                   </div>
                   <div class="pull-right">
                     @if ($tour->transport === 'Máy bay')
@@ -261,324 +268,368 @@
                     <i class="fa fa-bus"></i>
                     @endif
                   </div>
-
                 </div>
               </div>
             </div>
           </div>
           @endforeach
         </div>
-        <!-- Nút xem thêm -->
-        <div class="viewall vcenter vfullmb html_nav" style="text-align:center; margin:20px 0;">
-          <a href="javascript:void(0)" class="load-more-hot-tours" data-offset="8">
-            <span class="fa-chevron-down">Xem thêm</span>
-          </a>
-        </div>
+      </div>
+      <!-- Nút xem thêm -->
+      <div class="viewall vcenter vfullmb html_nav" style="text-align:center; margin:20px 0;">
+        <a href="javascript:void(0)" class="load-more-hot-tours" data-offset="8">
+          <span class="fa-chevron-down">Xem thêm</span>
+        </a>
+      </div>
 
-        <!-- Thông báo khi hết tour -->
-        <div class="no-more" style="text-align:center; display:none; color:gray;">
-          <em>Đã hiển thị tất cả tour</em>
-        </div>
+      <!-- Thông báo khi hết tour -->
+      <div class="no-more" style="text-align:center; display:none; color:gray;">
+        <em>Đã hiển thị tất cả tour</em>
       </div>
     </div>
   </div>
+</div>
 
-  <div id="box_home-1" class="vnt-tintuc box-tour-home" data-id="1" data-type="zone">
-    <div class="wrapper">
-      <div class="style-title-1 lazyloading">
-        <div class="fl">
-          <h2 class="stTitle2">Tour miền Bắc</h2>
-          <ul class="ul-title">
-            @foreach($regions['Tour Miền Bắc']->take(6) as $province)
-            <li><a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">{{ $province }}</a></li>
-            @endforeach
-          </ul>
-        </div>
-        <div class="fr">
-          <div class="div-sub">
-            <div class="link-more-3 dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-              <a href="javascript:void(0)">Tất cả</a>
-            </div>
-            <div class="dropdown-menu">
-              <ul>
-                @foreach ($regions['Tour Miền Bắc'] as $province)
-                <li>
-                  <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
-                    {{ $province }}
-                  </a>
-                </li>
-                @endforeach
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="clear"></div>
-      </div>
-      <div class="vhtourkm loadBottom">
-        <div id="mien-bac-tour-list" class="row">
-          @foreach ($northTours as $tour)
-          @php
-          $imageUrl = asset('images/' . $tour->image_url);
-          @endphp
-          <div class="col-md-3 col-sm-6">
-            <div class="tour-card">
-              <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
-                <div class="tour-image" style="background-image: url('{{ $imageUrl }}')">
-                  <span class="tour-badge">TOUR BÁN CHẠY</span>
-                  <span class="tour-region"><i class="glyphicon glyphicon-map-marker"></i> {{ $tour->destination }}</span>
-                </div>
-              </a>
-
-              <div class="tour-body">
-                <h4 class="tour-title">
-                  <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
-                    {{ $tour->tour_name }}
-                  </a>
-                </h4>
-
-                <div class="tour-price">
-                  {{ number_format($tour->price, 0, ',', '.') }} <span class="currency">đ</span>
-                </div>
-
-                <ul class="tour-info list-unstyled">
-                  <li><strong>Khởi hành:</strong> {{ $tour->departure_point }}</li>
-                  <li><strong>Điểm đến:</strong> {{ $tour->destination }}</li>
-                  <li><strong>Thời gian:</strong> {{ $tour->duration }}</li>
-                </ul>
-
-                <div class="clearfix">
-                  <div class="pull-left">
-                    <strong>Ngày đi:</strong> {{ \Carbon\Carbon::parse($tour->start_date)->format('d/m') }},
-                    {{ \Carbon\Carbon::parse($tour->end_date)->format('d/m') }}
-                  </div>
-                  <div class="pull-right">
-                    @if ($tour->transport === 'Máy bay')
-                    <i class="fa fa-plane"></i>
-                    @else
-                    <i class="fa fa-bus"></i>
-                    @endif
-                  </div>
-
-                </div>
-              </div>
-            </div>
-          </div>
+<div id="box_home-1" class="vnt-tintuc box-tour-home" data-id="1" data-type="zone">
+  <div class="wrapper">
+    <div class="style-title-1 lazyloading">
+      <div class="fl">
+        <h2 class="stTitle2">Tour miền Bắc</h2>
+        <ul class="ul-title">
+          @if(!empty($regions['Miền Bắc']))
+          @foreach($regions['Miền Bắc']->take(6) as $province)
+          <li>
+            <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
+              {{ $province }}
+            </a>
+          </li>
           @endforeach
-        </div>
-        <!-- Nút xem thêm -->
-        <div class="viewall vcenter vfullmb html_nav" style="text-align:center; margin:20px 0;">
-          @if ($totalNorthTours > 8)
-          <a href="javascript:void(0)" class="loadmore" data-offset="8" data-region="Tour Miền Bắc">
-            <span><i class="fa fa-chevron-down"></i> Xem thêm</span>
-          </a>
           @endif
-        </div>
-
-        <!-- Thông báo khi hết tour -->
-        <div class="no-more" style="text-align:center; display:none; color:gray;">
-          <em>Đã hiển thị tất cả tour</em>
+        </ul>
+      </div>
+      <div class="fr">
+        <div class="div-sub">
+          <div class="link-more-3 dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <a href="javascript:void(0)">Tất cả</a>
+          </div>
+          <div class="dropdown-menu">
+            <ul>
+              @if(!empty($regions['Miền Bắc']))
+              @foreach($regions['Miền Bắc'] as $province)
+              <li>
+                <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
+                  {{ $province }}
+                </a>
+              </li>
+              @endforeach
+              @endif
+            </ul>
+          </div>
         </div>
       </div>
+      <div class="clear"></div>
     </div>
-  </div>
+    <div class="vhtourkm loadBottom">
+      <div id="mien-bac-tour-list" class="row">
+        @foreach ($northTours as $tour)
+        @php
+        $imageUrl = asset('images/' . $tour->image_main);
+        @endphp
+        <div class="col-md-3 col-sm-6">
+          <div class="tour-card">
+            <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
+              <div class="tour-image" style="background-image: url('{{ $imageUrl }}')">
+                <span class="tour-badge">TOUR BÁN CHẠY</span>
+                <span class="tour-region"><i class="glyphicon glyphicon-map-marker"></i> {{ $tour->destination }}</span>
+              </div>
+            </a>
 
-  <div id="box_home-2" class="vnt-tintuc box-tour-home" data-id="2" data-type="zone">
-    <div class="wrapper">
-      <div class="style-title-1 lazyloading">
-        <div class="fl">
-          <h2 class="stTitle2">Tour miền Trung</h2>
-          <ul class="ul-title">
-            @foreach($regions['Tour Miền Trung']->take(6) as $province)
-            <li><a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">{{ $province }}</a></li>
-            @endforeach
-          </ul>
-        </div>
-        <div class="fr">
-          <div class="div-sub">
-            <div class="link-more-3 dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-              <a href="javascript:void(0)">Tất cả</a>
-            </div>
-            <div class="dropdown-menu">
-              <ul>
-                @foreach ($regions['Tour Miền Trung'] as $province)
-                <li>
-                  <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
-                    {{ $province }}
-                  </a>
-                </li>
-                @endforeach
+            <div class="tour-body">
+              <h4 class="tour-title">
+                <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
+                  {{ $tour->tour_name }}
+                </a>
+              </h4>
+
+              <div class="tour-price">
+                {{ number_format($tour->price_adult, 0, ',', '.') }} <span class="currency">đ</span>
+              </div>
+
+              <ul class="tour-info list-unstyled">
+                <li><strong>Khởi hành:</strong> {{ $tour->departure_point }}</li>
+                <li><strong>Điểm đến:</strong> {{ $tour->destination }}</li>
+                <li><strong>Thời gian:</strong> {{ $tour->duration }}</li>
               </ul>
+
+              <div class="clearfix">
+                <div class="pull-left">
+                  <strong>Ngày đi:</strong>
+                  @if($tour->schedules->isNotEmpty())
+                  {{ $tour->schedules
+        ->sortBy('start_date')
+        ->map(fn($s) => \Carbon\Carbon::parse($s->start_date)->format('d/m'))
+        ->implode(', ') }}
+                  @else
+                  Chưa có lịch khởi hành
+                  @endif
+                </div>
+
+                <div class="pull-right">
+                  @if ($tour->transport === 'Máy bay')
+                  <i class="fa fa-plane"></i>
+                  @else
+                  <i class="fa fa-bus"></i>
+                  @endif
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
-        <div class="clear"></div>
+        @endforeach
+      </div>
+      <!-- Nút xem thêm -->
+      <div class="viewall vcenter vfullmb html_nav" style="text-align:center; margin:20px 0;">
+        @if ($totalNorthTours > 8)
+        <a href="javascript:void(0)" class="loadmore" data-offset="8" data-region="Miền Bắc">
+          <span><i class="fa fa-chevron-down"></i> Xem thêm</span>
+        </a>
+        @endif
       </div>
 
-      <div class="vhtourkm loadBottom">
-        <div id="mien-trung-tour-list" class="row">
-          @foreach ($centralTours as $tour)
-          @php
-          $imageUrl = asset('images/' . $tour->image_url);
-          @endphp
-          <div class="col-md-3 col-sm-6">
-            <div class="tour-card">
-              <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
-                <div class="tour-image" style="background-image: url('{{ $imageUrl }}')">
-                  <span class="tour-badge">TOUR BÁN CHẠY</span>
-                  <span class="tour-region"><i class="glyphicon glyphicon-map-marker"></i> {{ $tour->destination }}</span>
+      <!-- Thông báo khi hết tour -->
+      <div class="no-more" style="text-align:center; display:none; color:gray;">
+        <em>Đã hiển thị tất cả tour</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="box_home-2" class="vnt-tintuc box-tour-home" data-id="2" data-type="zone">
+  <div class="wrapper">
+    <div class="style-title-1 lazyloading">
+      <div class="fl">
+        <h2 class="stTitle2">Tour miền Trung</h2>
+        <ul class="ul-title">
+          @if(!empty($regions['Miền Trung']))
+          @foreach($regions['Miền Trung']->take(6) as $province)
+          <li>
+            <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
+              {{ $province }}
+            </a>
+          </li>
+          @endforeach
+          @endif
+        </ul>
+      </div>
+      <div class="fr">
+        <div class="div-sub">
+          <div class="link-more-3 dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <a href="javascript:void(0)">Tất cả</a>
+          </div>
+          <div class="dropdown-menu">
+            <ul>
+              @if(!empty($regions['Miền Trung']))
+              @foreach($regions['Miền Trung'] as $province)
+              <li>
+                <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
+                  {{ $province }}
+                </a>
+              </li>
+              @endforeach
+              @endif
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="clear"></div>
+    </div>
+
+    <div class="vhtourkm loadBottom">
+      <div id="mien-trung-tour-list" class="row">
+        @foreach ($centralTours as $tour)
+        @php
+        $imageUrl = asset('images/' . $tour->image_main);
+        @endphp
+        <div class="col-md-3 col-sm-6">
+          <div class="tour-card">
+            <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
+              <div class="tour-image" style="background-image: url('{{ $imageUrl }}')">
+                <span class="tour-badge">TOUR BÁN CHẠY</span>
+                <span class="tour-region"><i class="glyphicon glyphicon-map-marker"></i> {{ $tour->destination }}</span>
+              </div>
+            </a>
+
+            <div class="tour-body">
+              <h4 class="tour-title">
+                <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
+                  {{ $tour->tour_name }}
+                </a>
+              </h4>
+
+              <div class="tour-price">
+                {{ number_format($tour->price_adult, 0, ',', '.') }} <span class="currency">đ</span>
+              </div>
+
+              <ul class="tour-info list-unstyled">
+                <li><strong>Khởi hành:</strong> {{ $tour->departure_point }}</li>
+                <li><strong>Điểm đến:</strong> {{ $tour->destination }}</li>
+                <li><strong>Thời gian:</strong> {{ $tour->duration }}</li>
+              </ul>
+
+              <div class="clearfix">
+                <div class="pull-left">
+                  <strong>Ngày đi:</strong> @if($tour->schedules->isNotEmpty())
+                  {{ $tour->schedules
+        ->sortBy('start_date')
+        ->map(fn($s) => \Carbon\Carbon::parse($s->start_date)->format('d/m'))
+        ->implode(', ') }}
+                  @else
+                  Chưa có lịch khởi hành
+                  @endif
                 </div>
-              </a>
-
-              <div class="tour-body">
-                <h4 class="tour-title">
-                  <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
-                    {{ $tour->tour_name }}
-                  </a>
-                </h4>
-
-                <div class="tour-price">
-                  {{ number_format($tour->price, 0, ',', '.') }} <span class="currency">đ</span>
-                </div>
-
-                <ul class="tour-info list-unstyled">
-                  <li><strong>Khởi hành:</strong> {{ $tour->departure_point }}</li>
-                  <li><strong>Điểm đến:</strong> {{ $tour->destination }}</li>
-                  <li><strong>Thời gian:</strong> {{ $tour->duration }}</li>
-                </ul>
-
-                <div class="clearfix">
-                  <div class="pull-left">
-                    <strong>Ngày đi:</strong> {{ \Carbon\Carbon::parse($tour->start_date)->format('d/m') }},
-                    {{ \Carbon\Carbon::parse($tour->end_date)->format('d/m') }}
-                  </div>
-                  <div class="pull-right">
-                    @if ($tour->transport === 'Máy bay')
-                    <i class="fa fa-plane"></i>
-                    @else
-                    <i class="fa fa-bus"></i>
-                    @endif
-                  </div>
+                <div class="pull-right">
+                  @if ($tour->transport === 'Máy bay')
+                  <i class="fa fa-plane"></i>
+                  @else
+                  <i class="fa fa-bus"></i>
+                  @endif
                 </div>
               </div>
             </div>
           </div>
-          @endforeach
         </div>
-        <!-- Nút xem thêm -->
-        <div class="viewall vcenter vfullmb html_nav" style="text-align:center; margin:20px 0;">
-          @if ($totalCentralTours > 8)
-          <a href="javascript:void(0)" class="loadmore" data-offset="8" data-region="Tour Miền Trung">
-            <span><i class="fa fa-chevron-down"></i> Xem thêm</span>
-          </a>
-          @endif
-        </div>
+        @endforeach
+      </div>
+      <!-- Nút xem thêm -->
+      <div class="viewall vcenter vfullmb html_nav" style="text-align:center; margin:20px 0;">
+        @if ($totalCentralTours > 8)
+        <a href="javascript:void(0)" class="loadmore" data-offset="8" data-region="Miền Trung">
+          <span><i class="fa fa-chevron-down"></i> Xem thêm</span>
+        </a>
+        @endif
+      </div>
 
-        <!-- Thông báo khi hết tour -->
-        <div class="no-more" style="text-align:center; display:none; color:gray;">
-          <em>Đã hiển thị tất cả tour</em>
-        </div>
+      <!-- Thông báo khi hết tour -->
+      <div class="no-more" style="text-align:center; display:none; color:gray;">
+        <em>Đã hiển thị tất cả tour</em>
       </div>
     </div>
   </div>
+</div>
 
-  <div id="box_home-3" class="vnt-tintuc box-tour-home" data-id="3" data-type="zone">
-    <div class="wrapper">
-      <div class="style-title-1 lazyloading">
-        <div class="fl">
-          <h2 class="stTitle2">Tour miền Nam</h2>
-          <ul class="ul-title">
-            @foreach($regions['Tour Miền Nam']->take(6) as $province)
-            <li><a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">{{ $province }}</a></li>
-            @endforeach
-          </ul>
-        </div>
-        <div class="fr">
-          <div class="div-sub">
-            <div class="link-more-3 dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-              <a href="javascript:void(0)">Tất cả</a>
-            </div>
-            <div class="dropdown-menu">
-              <ul>
-                @foreach ($regions['Tour Miền Nam'] as $province)
-                <li>
-                  <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
-                    {{ $province }}
-                  </a>
-                </li>
-                @endforeach
-              </ul>
-            </div>
+<div id="box_home-3" class="vnt-tintuc box-tour-home" data-id="3" data-type="zone">
+  <div class="wrapper">
+    <div class="style-title-1 lazyloading">
+      <div class="fl">
+        <h2 class="stTitle2">Tour miền Nam</h2>
+        <ul class="ul-title">
+          @if(!empty($regions['Miền Nam']))
+          @foreach($regions['Miền Nam']->take(6) as $province)
+          <li>
+            <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
+              {{ $province }}
+            </a>
+          </li>
+          @endforeach
+          @endif
+        </ul>
+      </div>
+      <div class="fr">
+        <div class="div-sub">
+          <div class="link-more-3 dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <a href="javascript:void(0)">Tất cả</a>
+          </div>
+          <div class="dropdown-menu">
+            <ul>
+              @if(!empty($regions['Miền Nam']))
+              @foreach($regions['Miền Nam'] as $province)
+              <li>
+                <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
+                  {{ $province }}
+                </a>
+              </li>
+              @endforeach
+              @endif
+            </ul>
           </div>
         </div>
-        <div class="clear"></div>
       </div>
+      <div class="clear"></div>
+    </div>
 
-      <div class="vhtourkm loadBottom">
-        <div id="mien-nam-tour-list" class="row">
-          @foreach ($southTours as $tour)
-          @php
-          $imageUrl = asset('images/' . $tour->image_url);
-          @endphp
-          <div class="col-md-3 col-sm-6">
-            <div class="tour-card">
-              <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
-                <div class="tour-image" style="background-image: url('{{ $imageUrl }}')">
-                  <span class="tour-badge">TOUR BÁN CHẠY</span>
-                  <span class="tour-region"><i class="glyphicon glyphicon-map-marker"></i> {{ $tour->destination }}</span>
+    <div class="vhtourkm loadBottom">
+      <div id="mien-nam-tour-list" class="row">
+        @foreach ($southTours as $tour)
+        @php
+        $imageUrl = asset('images/' . $tour->image_main);
+        @endphp
+        <div class="col-md-3 col-sm-6">
+          <div class="tour-card">
+            <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
+              <div class="tour-image" style="background-image: url('{{ $imageUrl }}')">
+                <span class="tour-badge">TOUR BÁN CHẠY</span>
+                <span class="tour-region"><i class="glyphicon glyphicon-map-marker"></i> {{ $tour->destination }}</span>
+              </div>
+            </a>
+
+            <div class="tour-body">
+              <h4 class="tour-title">
+                <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
+                  {{ $tour->tour_name }}
+                </a>
+              </h4>
+
+              <div class="tour-price">
+                {{ number_format($tour->price_adult, 0, ',', '.') }} <span class="currency">đ</span>
+              </div>
+
+              <ul class="tour-info list-unstyled">
+                <li><strong>Khởi hành:</strong> {{ $tour->departure_point }}</li>
+                <li><strong>Điểm đến:</strong> {{ $tour->destination }}</li>
+                <li><strong>Thời gian:</strong> {{ $tour->duration }}</li>
+              </ul>
+
+              <div class="clearfix">
+                <div class="pull-left">
+                  <strong>Ngày đi:</strong> @if($tour->schedules->isNotEmpty())
+                  {{ $tour->schedules
+        ->sortBy('start_date')
+        ->map(fn($s) => \Carbon\Carbon::parse($s->start_date)->format('d/m'))
+        ->implode(', ') }}
+                  @else
+                  Chưa có lịch khởi hành
+                  @endif
                 </div>
-              </a>
-
-              <div class="tour-body">
-                <h4 class="tour-title">
-                  <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
-                    {{ $tour->tour_name }}
-                  </a>
-                </h4>
-
-                <div class="tour-price">
-                  {{ number_format($tour->price, 0, ',', '.') }} <span class="currency">đ</span>
-                </div>
-
-                <ul class="tour-info list-unstyled">
-                  <li><strong>Khởi hành:</strong> {{ $tour->departure_point }}</li>
-                  <li><strong>Điểm đến:</strong> {{ $tour->destination }}</li>
-                  <li><strong>Thời gian:</strong> {{ $tour->duration }}</li>
-                </ul>
-
-                <div class="clearfix">
-                  <div class="pull-left">
-                    <strong>Ngày đi:</strong> {{ \Carbon\Carbon::parse($tour->start_date)->format('d/m') }},
-                    {{ \Carbon\Carbon::parse($tour->end_date)->format('d/m') }}
-                  </div>
-                  <div class="pull-right">
-                    @if ($tour->transport === 'Máy bay')
-                    <i class="fa fa-plane"></i>
-                    @else
-                    <i class="fa fa-bus"></i>
-                    @endif
-                  </div>
+                <div class="pull-right">
+                  @if ($tour->transport === 'Máy bay')
+                  <i class="fa fa-plane"></i>
+                  @else
+                  <i class="fa fa-bus"></i>
+                  @endif
                 </div>
               </div>
             </div>
           </div>
-          @endforeach
         </div>
-        <!-- Nút xem thêm -->
-        <div class="viewall vcenter vfullmb html_nav" style="text-align:center; margin:20px 0;">
-          @if ($totalSouthTours > 8)
-          <a href="javascript:void(0)" class="loadmore" data-offset="8" data-region="Tour Miền Nam">
-            <span><i class="fa fa-chevron-down"></i> Xem thêm</span>
-          </a>
-          @endif
-        </div>
+        @endforeach
+      </div>
+      <!-- Nút xem thêm -->
+      <div class="viewall vcenter vfullmb html_nav" style="text-align:center; margin:20px 0;">
+        @if ($totalSouthTours > 2)
+        <a href="javascript:void(0)" class="loadmore" data-offset="2" data-region="Miền Nam">
+          <span><i class="fa fa-chevron-down"></i> Xem thêm</span>
+        </a>
+        @endif
+      </div>
 
-        <!-- Thông báo khi hết tour -->
-        <div class="no-more" style="text-align:center; display:none; color:gray;">
-          <em>Đã hiển thị tất cả tour</em>
-        </div>
+      <!-- Thông báo khi hết tour -->
+      <div class="no-more" style="text-align:center; display:none; color:gray;">
+        <em>Đã hiển thị tất cả tour</em>
       </div>
     </div>
   </div>
+</div>
 </div>
 <!-- (nut Xem them) Load More Tours Script -->
 <script>
@@ -608,7 +659,7 @@
         success: function(data) {
           if (data && data.length > 0) {
             data.forEach(function(tour) {
-              const imageUrl = `/images/${tour.image_url}`;
+              const imageUrl = `/images/${tour.image_main}`;
               const detailUrl = `/tour-detail/${tour.tour_id}`; // route detail
               const startDate = new Date(tour.start_date).toLocaleDateString('vi-VN', {
                 day: '2-digit',
@@ -633,7 +684,7 @@
                 </h4>
 
                 <div class="tour-price">
-                  ${Number(tour.price).toLocaleString('vi-VN').replaceAll('.', ',')} <span class="currency">đ</span>
+                  ${Number(tour.price_adult).toLocaleString('vi-VN').replaceAll('.', ',')} <span class="currency">đ</span>
                 </div>
 
                 <ul class="tour-info list-unstyled">
@@ -644,8 +695,18 @@
 
                 <div class="clearfix">
                   <div class="pull-left">
-                    <strong>Ngày đi:</strong> ${startDate},
-                    ${endDate}
+                    <strong>Ngày đi:</strong>
+    ${
+      tour.schedules && tour.schedules.length
+        ? tour.schedules
+            .sort((a, b) => new Date(a.start_date) - new Date(b.start_date))
+            .map(s => {
+              const d = new Date(s.start_date);
+              return d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }).replace(/-/g, '/');;
+            })
+            .join(', ')
+        : 'Chưa có lịch khởi hành'
+    }
                   </div>
                   <div class="pull-right">
                     ${tour.transport === 'Máy bay' ? '<i class="fa fa-plane"></i>' : '<i class="fa fa-bus"></i>'}

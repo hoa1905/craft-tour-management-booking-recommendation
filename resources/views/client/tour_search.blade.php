@@ -303,7 +303,7 @@
                   {{-- Ảnh --}}
                   <a href="{{ route('tour.detail', $tour->tour_id) }}">
                     <div class="col-md-3 position-relative">
-                      <img src="{{ asset('images/' . $tour->image_url) }}" class="img-fluid rounded" alt="{{ $tour->tour_name }}">
+                      <img src="{{ asset('images/' . $tour->image_main) }}" class="img-fluid rounded" alt="{{ $tour->tour_name }}">
                     </div>
                   </a>
 
@@ -316,7 +316,16 @@
                     <p class="mb-1"><strong>Điểm đến:</strong> {{ $tour->destination }}</p>
                     <p class="mb-1"><strong>Thời gian:</strong> {{ $tour->duration }}</p>
                     <p class="mb-0">
-                      <strong>Ngày đi:</strong> {{ \Carbon\Carbon::parse($tour->start_date)->format('d/m') }}
+                      <strong>Ngày đi:</strong> @if($tour->schedules->isNotEmpty())
+                      {{ $tour->schedules
+        ->sortBy('start_date')
+        ->map(fn($s) => \Carbon\Carbon::parse($s->start_date)->format('d/m'))
+        ->implode(', ') }}
+                      @else
+                      Chưa có lịch khởi hành
+                      @endif
+
+
                       @if ($tour->transport === 'Máy bay')
                       <i class="fa fa-plane"></i>
                       @else
@@ -327,9 +336,16 @@
 
                   {{-- Giá --}}
                   <div class="col-md-3 text-end">
-                    <p class="mb-1"><i class="fa fa-calendar"></i> {{ $tour->start_date ?? '---' }}</p>
+                    <p class="mb-1">
+                      <i class="fa fa-calendar"></i>
+                      {{ $tour->schedules->isNotEmpty() 
+      ? \Carbon\Carbon::parse($tour->schedules->min('start_date'))->format('d/m/Y') 
+      : '---' 
+  }}
+                    </p>
+
                     <p class="mb-1">Giá 1 khách</p>
-                    <h4 class="fw-bold tour-price">{{ number_format($tour->price, 0, ',', '.') }} đ</h4>
+                    <h4 class="fw-bold tour-price">{{ number_format($tour->price_adult, 0, ',', '.') }} đ</h4>
                   </div>
                 </div>
               </div>

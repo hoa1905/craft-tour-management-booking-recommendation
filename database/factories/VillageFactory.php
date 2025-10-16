@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Province;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,12 +17,9 @@ class VillageFactory extends Factory
      */
     public function definition(): array
     {
-        $regions = ['Tour Miền Bắc', 'Tour Miền Trung', 'Tour Miền Nam'];
-        $provinces = ['Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng', 'Hải Phòng', 'Cần Thơ', 'Nghệ An', 'Thừa Thiên Huế', 'Quảng Ninh', 'Bình Định', 'Phú Yên'];
         return [
-            'village_name' => $this->faker->words(2, true),
-            'region' => $this->faker->randomElement($regions),
-            'province' => $this->faker->randomElement($provinces),
+            'province_id' => Province::inRandomOrder()->first()?->province_id ?? Province::factory(),
+            'village_name' => 'Làng ' . $this->faker->lastName,
         ];
     }
 }

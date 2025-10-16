@@ -14,21 +14,20 @@ return new class extends Migration
         Schema::create('tours', function (Blueprint $table) {
             $table->id('tour_id');
             $table->string('tour_name', 150);
-            $table->unsignedBigInteger('village_id');
             $table->unsignedBigInteger('partner_id');
-            $table->decimal('price', 10, 3);
+            $table->decimal('price_adult', 10, 2);
+            $table->decimal('price_child', 10, 2);
             $table->string('duration', 20);
             $table->text('description');
-            $table->date('start_date');
-            $table->date('end_date');
             $table->string('departure_point', 100);
             $table->string('destination', 100);
             $table->string('transport', 50);
-            $table->string('image_url', 255);
+            $table->string('image_main', 255);
+            $table->string('image_1', 255);
+            $table->string('image_2', 255);
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
 
-            $table->foreign('village_id')->references('village_id')->on('villages');
             $table->foreign('partner_id')->references('user_id')->on('users');
         });
     }
