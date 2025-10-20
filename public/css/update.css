@@ -5092,3 +5092,10 @@
 .vhupgradenew .slick-next {
   right: 10px !important;
 }
+
+
+/* Khi đã đăng nhập */
+.tpaccounts .acnolog .nnconts.logged-in {
+  width: 200px;
+  padding: 10px 0px;
+}
