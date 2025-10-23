@@ -52,6 +52,7 @@
   <script type="text/javascript" src="{{ asset('js/update.js') }}"></script>
   <script type="text/javascript" src="{{ asset('js/detail.js') }}"></script>
   <script type="text/javascript" src="{{ asset('js/tour-search.js') }}"></script>
+  @yield('head')
 </head>
 
 <body>
@@ -76,7 +77,7 @@
                         <li>
                           <a href="#" target="_self">Về chúng tôi</a>
                         </li>
-                        <li class="submenu"><a href="javascript:void(0)" target="_self">Tour</a>
+                        <li class="submenu"><a href="{{ route('villages.map') }}" target="_self">Tour</a>
                           <div class="tpsubmnhead">
                             <div class="mncroll">
                               <div class="mngrip">
@@ -521,6 +522,8 @@
       </div>
     </div>
   </footer>
+
+  @yield('scripts')
 </body>
 
 </html>

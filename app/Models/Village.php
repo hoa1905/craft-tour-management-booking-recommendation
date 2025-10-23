@@ -15,6 +15,9 @@ class Village extends Model
     protected $fillable = [
         'province_id',
         'village_name',
+        'latitude',
+        'longitude',
+        'image_main',
     ];
 
     // Relationships

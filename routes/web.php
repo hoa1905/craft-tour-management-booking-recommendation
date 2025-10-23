@@ -3,6 +3,7 @@
 use App\Http\Controllers\Client\AccountController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\SearchController;
+use App\Http\Controllers\Client\VillageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,11 +19,12 @@ use Illuminate\Support\Facades\Route;
 
 // Client routes
 Route::group(['prefix' => ''], function () {
-    // Trang chính và tour
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/load-more-tours', [HomeController::class, 'loadMoreTours'])->name('tours.loadMoreTours');
     Route::get('/tour-detail/{id}', [HomeController::class, 'showTourDetail'])->name('tour.detail');
     Route::get('/tour-search', [SearchController::class, 'search'])->name('tour.search');
+    Route::get('/craft-villages-map', [VillageController::class, 'map'])->name('villages.map');
+    Route::get('/village-detail/{id}', [VillageController::class, 'showVillageDetail'])->name('villages.detail');
 
     // Đăng ký và đăng nhập
     Route::group(['prefix' => 'account'], function () {
