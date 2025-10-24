@@ -98,6 +98,7 @@
                                   @if($tour->schedules->isNotEmpty())
                                   @foreach($tour->schedules->sortBy('start_date') as $schedule)
                                   <li class="{{ $loop->first ? 'active' : '' }}"
+                                    data-schedule-id="{{ $schedule->schedule_id }}"
                                     data-date="{{ \Carbon\Carbon::parse($schedule->start_date)->format('d/m/Y') }}">
                                     {{ \Carbon\Carbon::parse($schedule->start_date)->format('d/m') }}
                                   </li>
@@ -620,7 +621,6 @@
       const priceAdult = parseFloat('{{ $tour->price_adult }}');
       const priceChild = parseFloat('{{ $tour->price_child }}');
       const tourId = parseInt('{{ $tour->tour_id }}');
-      const tourName = '{{ $tour->tour_name }}';
       const csrfToken = '{{ csrf_token() }}';
 
       // Lấy các elements
@@ -741,11 +741,11 @@
           return;
         }
 
-        // Lấy ngày đã chọn
+        // Lấy id của ngày đã chọn
         const selectedDateElement = document.querySelector('.ckchose ul li.active');
-        const selectedDate = selectedDateElement ? selectedDateElement.getAttribute('data-date') : null;
+        const scheduleId = selectedDateElement ? selectedDateElement.getAttribute('data-schedule-id') : null;
 
-        // if (!selectedDate) {
+        // if (!scheduleId) {
         //   alert('Vui lòng chọn ngày khởi hành!');
         //   return;
         // }
@@ -762,12 +762,9 @@
         // Chuẩn bị data
         const bookingData = {
           tour_id: tourId,
-          tour_name: tourName,
-          departure_date: selectedDate,
+          schedule_id: scheduleId,
           adult_quantity: result.adultQty,
           child_quantity: result.childQty,
-          price_adult: priceAdult,
-          price_child: priceChild,
           total_price: result.grandTotal,
           _token: csrfToken
         };
