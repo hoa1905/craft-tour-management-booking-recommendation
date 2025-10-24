@@ -35,27 +35,29 @@ class Tour extends Model
     {
         return $this->belongsTo(User::class, 'partner_id');
     }
+
+    // Một tour có thể có nhiều lịch khởi hành
     public function schedules()
     {
         return $this->hasMany(TourSchedule::class, 'tour_id');
     }
 
-
-    public function tourVillages()
-    {
-        return $this->hasMany(TourVillage::class, 'tour_id');
-    }
-
-    // Mỗi tour có nhiều làng nghề thông qua bảng trung gian tour_villages
+    // Mỗi tour có nhiều làng nghề thông qua bảng trung gian tour_village
     public function villages()
     {
-        return $this->belongsToMany(Village::class, 'tour_villages', 'tour_id', 'village_id');
+        return $this->belongsToMany(Village::class, 'tour_village', 'tour_id', 'village_id');
     }
 
     // Một tour có nhiều lịch trình (itineraries)
     public function itineraries()
     {
-        return $this->hasMany(TourItinerary::class, 'tour_id')->orderBy('day_number', 'asc');
+        return $this->hasMany(TourItinerary::class, 'tour_id', 'tour_id')->orderBy('day_number', 'asc');
+    }
+
+    // Một tour có thể có nhiều lượt đặt
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'tour_id', 'tour_id');
     }
 
     // Hàm scope lọc tour được duyệt
@@ -129,8 +131,8 @@ class Tour extends Model
     public static function searchTours($filters)
     {
         $query = self::query()
-            ->join('tour_villages', 'tours.tour_id', '=', 'tour_villages.tour_id')
-            ->join('villages', 'tour_villages.village_id', '=', 'villages.village_id')
+            ->join('tour_village', 'tours.tour_id', '=', 'tour_village.tour_id')
+            ->join('villages', 'tour_village.village_id', '=', 'villages.village_id')
             ->join('provinces', 'villages.province_id', '=', 'provinces.province_id')
             ->join('regions', 'provinces.region_id', '=', 'regions.region_id')
             ->leftJoin('tour_schedules', 'tours.tour_id', '=', 'tour_schedules.tour_id')

@@ -16,7 +16,6 @@ class TourVillage extends Model
         'village_id',
     ];
 
-
     // Relationships
     public function tour()
     {

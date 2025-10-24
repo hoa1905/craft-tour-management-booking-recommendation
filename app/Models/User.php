@@ -27,4 +27,10 @@ class User extends Authenticatable
   {
     return $this->hasMany(Tour::class, 'partner_id', 'user_id');
   }
+
+  // Người dùng có thể đặt nhiều tour
+  public function bookings()
+  {
+    return $this->hasMany(Booking::class, 'user_id', 'user_id');
+  }
 }

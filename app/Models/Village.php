@@ -26,13 +26,8 @@ class Village extends Model
         return $this->belongsTo(Province::class, 'province_id');
     }
 
-    public function tourVillages()
-    {
-        return $this->hasMany(TourVillage::class, 'village_id');
-    }
-
     public function tours()
     {
-        return $this->belongsToMany(Tour::class, 'tour_villages', 'village_id', 'tour_id');
+        return $this->belongsToMany(Tour::class, 'tour_village', 'village_id', 'tour_id');
     }
 }

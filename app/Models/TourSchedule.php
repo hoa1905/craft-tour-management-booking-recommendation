@@ -24,6 +24,11 @@ class TourSchedule extends Model
         return $this->belongsTo(Tour::class, 'tour_id');
     }
 
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'schedule_id', 'schedule_id');
+    }
+
     // Tự động tính end_date khi tạo schedule
     public static function boot()
     {
