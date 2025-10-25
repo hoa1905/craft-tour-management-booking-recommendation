@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('user_name', 100);
             $table->string('email', 150)->unique();
             $table->string('password', 255);
-            $table->string('phone', 20);
+            $table->string('phone_number', 15);
             $table->enum('role', ['client', 'partner', 'admin'])->default('client');
             $table->enum('status', ['pending', 'approved', 'inactive'])->default('approved');
             $table->timestamps();
