@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id('payment_id');
             $table->unsignedBigInteger('booking_id');
+            $table->string('transaction_id', 255)->nullable();
 
             $table->enum('payment_method', ['Office', 'MoMo', 'PayPal']);
             $table->decimal('amount', 10, 2);
-            $table->string('transaction_id', 255)->nullable();
+            $table->string('payper_name', 100);
+            $table->string('payper_email', 150);
             $table->enum('status', ['pending', 'success', 'failed', 'refunded'])->default('pending');
 
             $table->timestamps();
