@@ -31,7 +31,7 @@ return new class extends Migration
             // Ràng buộc khóa ngoại
             $table->foreign('user_id')->references('user_id')->on('users');
             $table->foreign('tour_id')->references('tour_id')->on('tours');
-            $table->foreign('schedule_id')->references('id')->on('tour_schedules');
+            $table->foreign('schedule_id')->references('schedule_id')->on('tour_schedules');
         });
     }
 
