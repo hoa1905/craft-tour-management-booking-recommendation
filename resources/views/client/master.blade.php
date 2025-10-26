@@ -7,6 +7,7 @@
   <title>@yield('title')</title>
   <meta http-equiv="content-language" content="vi">
   <meta name="robots" content="index, follow">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="icon" href="{{ asset('images/hanh-trinh-vang-icon.png') }}" type="image/gif">
   <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" type="text/css">
   <link rel="stylesheet" href="{{ asset('css/all.min.css') }}" type="text/css">
@@ -24,6 +25,7 @@
   <link rel="stylesheet" href="{{ asset('css/update.css') }}" type="text/css">
   <link rel="stylesheet" href="{{ asset('css/detail.css') }}" type="text/css">
   <link rel="stylesheet" href="{{ asset('css/tour-search.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ asset('css/booking.css') }}" type="text/css">
   <script language="javascript">
     var ROOT = "";
     var lang = "vn";
@@ -52,6 +54,7 @@
   <script type="text/javascript" src="{{ asset('js/update.js') }}"></script>
   <script type="text/javascript" src="{{ asset('js/detail.js') }}"></script>
   <script type="text/javascript" src="{{ asset('js/tour-search.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('js/booking.js') }}"></script>
   @yield('head')
 </head>
 
@@ -140,14 +143,6 @@
                     <div class="tptoolhead">
                       <div class="mmgrip">
                         <div class="xcol">
-                          <div class="tpcarthead">
-                            <a href="/tour/tour/booking.html">
-                              <i class="icon-icart"></i>
-                              <span class="ext_numcart hidden">0</span>
-                            </a>
-                          </div>
-                        </div>
-                        <div class="xcol">
                           <div class="tpaccounts">
                             <div class="acnolog">
                               <div class="nntitle">
@@ -164,7 +159,7 @@
                                     <div style="font-size: 13px;">Xin chào,</div>
                                     <strong style="font-size: 15px;">{{ Auth::guard('client')->user()->user_name }}</strong>
                                   </li>
-                                  <li><a href="{{ route('account.bookings') }}"><i class="fas fa-list"></i> Quản lý đặt tour</a></li>
+                                  <li><a href="{{ route('account.myBookings') }}"><i class="fas fa-list"></i> Đơn đặt tour</a></li>
                                   <li><a href="{{ route('account.info') }}"><i class="fas fa-user"></i> Thông tin tài khoản</a></li>
                                   <li><a href="{{ route('account.changePassword') }}"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
                                   <li>
@@ -394,7 +389,7 @@
         <div style="font-size: 13px;">Xin chào,</div>
         <strong style="font-size: 15px;">${username}</strong>
       </li>
-      <li><a href="{{ route('account.bookings') }}"><i class="fas fa-list"></i> Quản lý đặt tour</a></li>
+      <li><a href="{{ route('account.myBookings') }}"><i class="fas fa-list"></i> Đơn đặt tour</a></li>
       <li><a href="{{ route('account.info') }}"><i class="fas fa-user"></i> Thông tin tài khoản</a></li>
       <li><a href="{{ route('account.changePassword') }}"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
       <li>
