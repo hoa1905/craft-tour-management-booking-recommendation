@@ -64,16 +64,20 @@ class PaymentController extends Controller
             $payment->booking_id = $booking->booking_id;
             $payment->payment_method = $paymentMethod;
 
-            if ($paymentMethod === 'PayPal' && $paymentResponse) {
+            if ($paymentMethod === 'Office') {
+                // Xử lý thanh toán tại văn phòng
+                $payment->transaction_id = 'OFFICE_' . $booking->booking_id . '_' . time();
+                $payment->amount = $bookingData['total_price']; // Số tiền VND
+                $payment->payper_name = $bookingData['full_name'];
+                $payment->payper_email = $bookingData['email'];
+                $payment->status = 'pending';
+            } else if ($paymentMethod === 'PayPal' && $paymentResponse) {
                 // Xử lý thanh toán bằng PayPal
                 $payment->transaction_id = $paymentResponse['id']; // PayPal transaction ID
                 $payment->amount = $paymentResponse['amount']; // Số tiền USD
                 $payment->payper_name = $paymentResponse['payer_name'];
                 $payment->payper_email = $paymentResponse['payer_email'];
                 $payment->status = 'success';
-            } else if ($paymentMethod === 'Office') {
-                // Xử lý thanh toán tại văn phòng
-
             } else if ($paymentMethod === 'MoMo') {
                 // Xử lý khi thanh toán bằng MoMo
 
@@ -84,6 +88,36 @@ class PaymentController extends Controller
             // Trả về booking đã tạo
             return $booking;
         });
+    }
+
+    /**
+     * Xử lý thanh toán tại văn phòng
+     */
+    public function officePayment(Request $request)
+    {
+        $validator = $this->validateBookingRequest($request);
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+        }
+
+        try {
+            // Gọi hàm private để tạo Booking và Payment
+            // Trạng thái booking là 'pending' (chờ thanh toán)
+            $this->createBookingAndPayment($request->all(), 'Office', 'pending', null);
+
+            // Xóa session giỏ hàng gốc
+            session()->forget('booking_data');
+
+            // Trả về JSON thành công cho JavaScript
+            return response()->json([
+                'success' => true,
+                'message' => 'Đặt tour thành công! Vui lòng đến văn phòng để xác nhận và thanh toán.',
+                'redirect_url' => route('account.myBookings')
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Office Payment DB Error: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Lỗi máy chủ. Không thể đặt tour.']);
+        }
     }
 
     /**
