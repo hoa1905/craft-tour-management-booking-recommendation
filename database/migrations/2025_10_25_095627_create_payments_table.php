@@ -18,8 +18,8 @@ return new class extends Migration
 
             $table->enum('payment_method', ['Office', 'MoMo', 'PayPal']);
             $table->decimal('amount', 10, 2);
-            $table->string('payper_name', 100);
-            $table->string('payper_email', 150);
+            $table->string('payper_name', 100)->nullable();
+            $table->string('payper_email', 150)->nullable();
             $table->enum('status', ['pending', 'success', 'failed', 'refunded'])->default('pending');
 
             $table->timestamps();
