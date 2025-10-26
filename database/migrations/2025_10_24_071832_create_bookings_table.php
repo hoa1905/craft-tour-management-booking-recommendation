@@ -22,8 +22,10 @@ return new class extends Migration
             $table->string('phone_number', 15);
             $table->string('email', 150);
             $table->string('address', 255);
-            $table->integer('adults')->default(1);
-            $table->integer('children')->default(0);
+            $table->integer('adult_quantity')->default(1);
+            $table->integer('child_quantity')->default(0);
+            $table->decimal('price_adult_at_booking', 10, 2);
+            $table->decimal('price_child_at_booking', 10, 2);
             $table->decimal('total_price', 10, 2)->default(0);
             $table->enum('status', ['pending', 'paid', 'canceled', 'completed'])->default('pending');
             $table->timestamps();

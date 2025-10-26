@@ -20,8 +20,10 @@ class Booking extends Model
         'phone_number',
         'email',
         'address',
-        'adults',
-        'children',
+        'adult_quantity',
+        'child_quantity',
+        'price_adult_at_booking',
+        'price_child_at_booking',
         'total_price',
         'status'
     ];
