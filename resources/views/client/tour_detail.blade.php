@@ -99,7 +99,8 @@
                                   @foreach($tour->schedules->sortBy('start_date') as $schedule)
                                   <li class="{{ $loop->first ? 'active' : '' }}"
                                     data-schedule-id="{{ $schedule->schedule_id }}"
-                                    data-date="{{ \Carbon\Carbon::parse($schedule->start_date)->format('d/m/Y') }}">
+                                    end-date="{{ \Carbon\Carbon::parse($schedule->end_date)->format('d/m/Y') }}"
+                                    start-date="{{ \Carbon\Carbon::parse($schedule->start_date)->format('d/m/Y') }}">
                                     {{ \Carbon\Carbon::parse($schedule->start_date)->format('d/m') }}
                                   </li>
                                   @endforeach
@@ -621,6 +622,8 @@
       const priceAdult = parseFloat('{{ $tour->price_adult }}');
       const priceChild = parseFloat('{{ $tour->price_child }}');
       const tourId = parseInt('{{ $tour->tour_id }}');
+      const tourName = '{{ $tour->tour_name }}';
+      const tourImage = '{{ $tour->image_main }}';
       const csrfToken = '{{ csrf_token() }}';
 
       // Lấy các elements
@@ -719,7 +722,7 @@
       });
 
       // XỬ LÝ CHỌN NGÀY KHỞI HÀNH
-      const dateItems = document.querySelectorAll('.ckchose ul li[data-date]');
+      const dateItems = document.querySelectorAll('.ckchose ul li[start-date]');
       dateItems.forEach(function(item) {
         item.addEventListener('click', function() {
           dateItems.forEach(function(i) {
@@ -744,6 +747,8 @@
         // Lấy id của ngày đã chọn
         const selectedDateElement = document.querySelector('.ckchose ul li.active');
         const scheduleId = selectedDateElement ? selectedDateElement.getAttribute('data-schedule-id') : null;
+        const selectedStartDate = selectedDateElement ? selectedDateElement.getAttribute('start-date') : null;
+        const endDate = selectedDateElement ? selectedDateElement.getAttribute('end-date') : null;
 
         // if (!scheduleId) {
         //   alert('Vui lòng chọn ngày khởi hành!');
@@ -763,8 +768,14 @@
         const bookingData = {
           tour_id: tourId,
           schedule_id: scheduleId,
+          tour_name: tourName,
+          tour_image: tourImage,
+          start_date: selectedStartDate,
+          end_date: endDate,
           adult_quantity: result.adultQty,
           child_quantity: result.childQty,
+          price_adult_at_booking: priceAdult,
+          price_child_at_booking: priceChild,
           total_price: result.grandTotal,
           _token: csrfToken
         };
