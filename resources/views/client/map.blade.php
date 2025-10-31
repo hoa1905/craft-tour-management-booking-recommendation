@@ -494,7 +494,7 @@
 
   // Thêm lá cờ Việt Nam cho quần đảo Hoàng Sa và Trường Sa
   const vietnamIcon = L.icon({
-    iconUrl: "{{ asset('images/vietnam_flag.jpg') }}",
+    iconUrl: "{{ asset('images/vietnam-flag.jpg') }}",
     iconSize: [24, 24]
   });
 

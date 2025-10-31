@@ -9,7 +9,7 @@
           <li><a href="http://127.0.0.1:8000/">Tour du lịch</a></li>
           @if($tour->villages->isNotEmpty())
           <li>
-            <a href="#">
+            <a href="javascript:void(0)">
               {{ $tour->villages->first()->province->region->region_name }}
             </a>
           </li>
@@ -58,7 +58,7 @@
                       <td>
                         @if($tour->villages->isNotEmpty())
                         @foreach($tour->villages as $village)
-                        <a href="#" target="_blank">
+                        <a href="javascript:void(0)" target="_blank">
                           {{ $village->village_name }}
                         </a>@if(!$loop->last), @endif
                         @endforeach

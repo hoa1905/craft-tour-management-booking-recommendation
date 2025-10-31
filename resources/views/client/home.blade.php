@@ -43,7 +43,7 @@
           <div class="list-search">
             <ul>
               <li>
-                <a class="active" href="" target="_self">
+                <a class="active" href="javascript:void(0)" target="_self">
                   <span class="text">TOUR TRỌN GÓI</span>
                   <span><i class="icon fa fa-clipboard-check"></i></span>
                 </a>

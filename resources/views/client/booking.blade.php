@@ -2,22 +2,14 @@
 
 @section('title', 'Đơn đặt tour')
 @section('body')
-{{-- Đặt ở đâu đó gần đầu trang --}}
-
-{{-- Thông báo Thành công --}}
-@if (session('success'))
-<div class="alert alert-success" role="alert" style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-  {{ session('success') }}
-</div>
-@endif
-
-{{-- Thông báo Lỗi --}}
-@if (session('error'))
-<div class="alert alert-danger" role="alert" style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-  {{ session('error') }}
-</div>
-@endif
 <div id="vnt-content">
+  @if (session('success'))
+  <div class="alert alert-success">{{ session('success') }}</div>
+  @endif
+
+  @if (session('error'))
+  <div class="alert alert-danger">{{ session('error') }}</div>
+  @endif
   <div class="box_mid">
     <div class="wrapper">
       <div class="mid-content">
@@ -184,9 +176,9 @@
                     </label>
 
                     <label class="payment-option">
-                      <input type="radio" name="payment_method" value="momo">
+                      <input type="radio" name="payment_method" value="vnpay">
                       <div class="option-box">
-                        <img src="{{ asset('images/momo-logo.png') }}" alt="MoMo" width="20" height="20" class="me-2"> MoMo
+                        <img src="{{ asset('images/vnpay-logo.png') }}" alt="VNPAY" width="20" height="20" class="me-2"> VNPAY
                       </div>
                     </label>
                   </div>
@@ -202,9 +194,9 @@
                     Thanh toán bằng PayPal
                   </button>
 
-                  <button type="button" id="btnMomo" class="btn btn-pink px-4 py-2 hidden mt-2">
-                    <img src="{{ asset('images/momo-logo.png') }}" alt="MoMo" width="20" height="20" class="me-2">
-                    Thanh toán bằng MoMo
+                  <button type="button" id="btnVnpay" class="btn btn-vnpay px-4 py-2 hidden mt-2">
+                    <img src="{{ asset('images/vnpay-logo.png') }}" alt="VNpay" width="20" height="20" class="me-2">
+                    Thanh toán bằng VNPAY
                   </button>
                 </div>
             </form>
@@ -262,15 +254,14 @@
     background-color: #ffe6e6;
   }
 
-  .btn-pink {
-    background-color: #d82d8b !important;
-    /* Màu hồng MoMo */
+  .btn-vnpay {
+    background-color: #00509B !important;
     color: #fff !important;
     border: none !important;
   }
 
-  .btn-pink:hover {
-    background-color: #b22574 !important;
+  .btn-vnpay:hover {
+    background-color: #004080 !important;
   }
 
   @media (max-width: 768px) {
@@ -297,7 +288,7 @@
 
     const btnOffice = document.getElementById('btnOffice');
     const btnPaypal = document.getElementById('btnPaypal');
-    const btnMomo = document.getElementById('btnMomo');
+    const btnVnpay = document.getElementById('btnVnpay');
     const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
 
     //  Hàm tính tổng tiền
@@ -366,11 +357,11 @@
       radio.addEventListener('change', function() {
         btnOffice.classList.add('hidden');
         btnPaypal.classList.add('hidden');
-        btnMomo.classList.add('hidden');
+        btnVnpay.classList.add('hidden');
 
         if (this.value === 'office') btnOffice.classList.remove('hidden');
         if (this.value === 'paypal') btnPaypal.classList.remove('hidden');
-        if (this.value === 'momo') btnMomo.classList.remove('hidden');
+        if (this.value === 'vnpay') btnVnpay.classList.remove('hidden');
       });
     });
 
@@ -413,13 +404,13 @@
         const data = await res.json();
         if (data.success) {
           if (data.redirect_url) {
-            // Nếu là PayPal/Momo, chuyển hướng
+            // Nếu là PayPal/Vnpay, chuyển hướng
             window.location.href = data.redirect_url;
           } else {
             // Nếu là thanh toán tại văn phòng
             toastr.success(data.message || successMessage);
             // Thành công chuyển hướng đến trang quản lý đơn
-            // window.location.href = '{{ route("account.myBookings") }}'; 
+            window.location.href = '{{ route("account.myBookings") }}';
           }
         } else {
           toastr.error(data.message || 'Có lỗi xảy ra!');
@@ -442,10 +433,10 @@
       submitPayment('{{ route("payment.paypal") }}', 'Đang chuyển hướng đến PayPal Sandbox...');
     });
 
-    // MoMo sandbox
-    btnMomo.addEventListener('click', function() {
+    // VNPAY sandbox
+    btnVnpay.addEventListener('click', function() {
       if (!validateForm()) return;
-      submitPayment('{{ route("payment.momo") }}', 'Đang chuyển hướng đến MoMo Sandbox...');
+      submitPayment('{{ route("payment.vnpay") }}', 'Đang chuyển hướng đến Vnpay Sandbox...');
     });
   });
 </script>

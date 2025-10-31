@@ -7,7 +7,7 @@
       <div class="navation">
         <ul>
           <li><a href="http://127.0.0.1:8000/">Tour du lịch</a></li>
-          <li><a href="#">Tìm kiếm tour</a></li>
+          <li><a href="javascript:void(0)">Tìm kiếm tour</a></li>
         </ul>
       </div>
     </div>
@@ -272,16 +272,16 @@
                             <div class="vnt-box-select__list">
                               <ul>
                                 <li class="ac-sort {{ request('sort') == 0 ? 'active' : '' }}">
-                                  <a href="#" class="sort-link" data-sort="0">Mới nhất</a>
+                                  <a href="javascript:void(0)" class="sort-link" data-sort="0">Mới nhất</a>
                                 </li>
                                 <li class="ac-sort {{ request('sort') == 1 ? 'active' : '' }}">
-                                  <a href="#" class="sort-link" data-sort="1">Giá tăng dần</a>
+                                  <a href="javascript:void(0)" class="sort-link" data-sort="1">Giá tăng dần</a>
                                 </li>
                                 <li class="ac-sort {{ request('sort') == 2 ? 'active' : '' }}">
-                                  <a href="#" class="sort-link" data-sort="2">Giá giảm dần</a>
+                                  <a href="javascript:void(0)" class="sort-link" data-sort="2">Giá giảm dần</a>
                                 </li>
                                 <li class="ac-sort {{ request('sort') == 3 ? 'active' : '' }}">
-                                  <a href="#" class="sort-link" data-sort="3">Ngày khởi hành gần nhất</a>
+                                  <a href="javascript:void(0)" class="sort-link" data-sort="3">Ngày khởi hành gần nhất</a>
                                 </li>
                               </ul>
                             </div>
