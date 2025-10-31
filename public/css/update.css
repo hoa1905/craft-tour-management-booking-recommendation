@@ -4137,10 +4137,10 @@
     padding: 0 0px;
 }
 .hptoolhead .tlgrip .tlcol{
-    width: calc(100% - 160px);
+    width: calc(100% - 130px);
 }
 .hptoolhead .tlgrip .trcol{
-    width: 120px;
+    width: 50px;
 }
 .tptoolhead{
     height: 100%;
