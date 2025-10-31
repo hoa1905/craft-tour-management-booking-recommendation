@@ -30,7 +30,7 @@ class PaymentController extends Controller
             'phone' => 'required|string|max:15',
             'email' => 'required|email|max:150',
             'address' => 'required|string|max:255',
-            'payment_method' => 'required|string|in:office,paypal,momo',
+            'payment_method' => 'required|string|in:office,paypal,vnpay',
         ]);
     }
 
@@ -78,9 +78,13 @@ class PaymentController extends Controller
                 $payment->payper_name = $paymentResponse['payer_name'];
                 $payment->payper_email = $paymentResponse['payer_email'];
                 $payment->status = 'success';
-            } else if ($paymentMethod === 'MoMo') {
-                // Xử lý khi thanh toán bằng MoMo
-
+            } else if ($paymentMethod === 'VNPAY') {
+                // Đây là lúc tạo đơn pending, chưa có giao dịch
+                $payment->transaction_id = 'VNPAY_' . $booking->booking_id . '_' . time(); // ID tạm
+                $payment->amount = $bookingData['total_price']; // Lưu tiền VND
+                $payment->payper_name = $bookingData['full_name'];
+                $payment->payper_email = $bookingData['email'];
+                $payment->status = 'pending';
             }
 
             $payment->save();
@@ -91,7 +95,7 @@ class PaymentController extends Controller
     }
 
     /**
-     * Xử lý thanh toán tại văn phòng
+     * Thanh toán tại văn phòng
      */
     public function officePayment(Request $request)
     {
@@ -108,10 +112,15 @@ class PaymentController extends Controller
             // Xóa session giỏ hàng gốc
             session()->forget('booking_data');
 
+            $message = 'Đặt tour thành công! Vui lòng đến văn phòng để xác nhận và thanh toán.';
+
+            // Gửi message vào session (dự phòng nếu trang sau cần)
+            session()->flash('success', $message);
+
             // Trả về JSON thành công cho JavaScript
             return response()->json([
                 'success' => true,
-                'message' => 'Đặt tour thành công! Vui lòng đến văn phòng để xác nhận và thanh toán.',
+                'message' => $message,
                 'redirect_url' => route('account.myBookings')
             ]);
         } catch (\Exception $e) {
@@ -121,7 +130,7 @@ class PaymentController extends Controller
     }
 
     /**
-     * Bắt đầu quá trình thanh toán PayPal
+     * Thanh toán bằng PayPal
      */
     public function paypal(Request $request)
     {
@@ -203,7 +212,7 @@ class PaymentController extends Controller
                 session()->forget('booking_data'); // Xóa luôn session giỏ hàng gốc
 
                 // Chuyển hướng đến trang thành công
-                return redirect()->route('account.myBookings')->with('success', 'Đặt tour và thanh toán thành công!');
+                return redirect()->route('account.myBookings')->with('success', 'Đặt tour và thanh toán thành công bằng PayPal!');
             } catch (\Exception $e) {
                 // Nếu lỗi CSDL (đã được auto-rollback)
                 Log::error('PayPal Success DB Error: ' . $e->getMessage());
@@ -223,5 +232,206 @@ class PaymentController extends Controller
     {
         session()->forget('paypal_booking_data');
         return redirect()->route('booking')->with('error', 'Bạn đã hủy thanh toán PayPal.');
+    }
+
+
+    /**
+     * Thanh toán bằng VNPAY
+     */
+    public function vnpayPayment(Request $request)
+    {
+        $validator = $this->validateBookingRequest($request);
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+        }
+
+        // 1. Tạo đơn hàng 'pending' TẠM THỜI trong CSDL
+        try {
+            $booking = $this->createBookingAndPayment($request->all(), 'VNPAY', 'pending', null);
+        } catch (\Exception $e) {
+            Log::error('VNPAY Payment DB Error (Pre-create): ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Lỗi máy chủ khi tạo đơn hàng.']);
+        }
+
+        // 2. Chuẩn bị dữ liệu gửi sang VNPAY
+        $vnp_Url = config('vnpay.vnp_Url');
+        $vnp_Returnurl = config('vnpay.vnp_ReturnUrl');
+        $vnp_TmnCode = config('vnpay.vnp_TmnCode');
+        $vnp_HashSecret = config('vnpay.vnp_HashSecret');
+
+        $vnp_TxnRef = (string) $booking->booking_id; // Mã đơn hàng của bạn (trường vnp_TxnRef phải là chuỗi)
+        $vnp_OrderInfo = "Thanh toan don hang tour " . $booking->booking_id;
+        $vnp_OrderType = 'other';
+        $vnp_Amount = $booking->total_price * 100; // VNPAY yêu cầu nhân 100
+        $vnp_Locale = 'vn';
+        $vnp_BankCode = ''; // Trống để VNPAY hiển thị cổng chọn ngân hàng
+        $vnp_IpAddr = $request->ip();
+        $vnp_CreateDate = date('YmdHis');
+
+        // BƯỚC 1: GHI LOG BIẾN BỊ NGHI NGỜ
+        Log::info('VNPAY DEBUG - IP Address:', ['ip' => $vnp_IpAddr]);
+        Log::info('VNPAY DEBUG - Amount:', ['amount' => $vnp_Amount]);
+        // ================================================
+
+        $inputData = [
+            "vnp_Version" => "2.1.0",
+            "vnp_TmnCode" => $vnp_TmnCode,
+            "vnp_Amount" => $vnp_Amount,
+            "vnp_Command" => "pay",
+            "vnp_CreateDate" => $vnp_CreateDate,
+            "vnp_CurrCode" => "VND",
+            "vnp_IpAddr" => $vnp_IpAddr,
+            "vnp_Locale" => $vnp_Locale,
+            "vnp_OrderInfo" => $vnp_OrderInfo,
+            "vnp_OrderType" => $vnp_OrderType,
+            "vnp_ReturnUrl" => $vnp_Returnurl,
+            "vnp_TxnRef" => $vnp_TxnRef,
+        ];
+        // BƯỚC 2: GHI LOG TOÀN BỘ DỮ LIỆU SẮP GỬI
+        Log::info('VNPAY DEBUG - Input Data:', $inputData);
+        if (isset($vnp_BankCode) && $vnp_BankCode != "") {
+            $inputData['vnp_BankCode'] = $vnp_BankCode;
+        }
+
+        ksort($inputData);
+        $query = "";
+        $i = 0;
+        $hashdata = "";
+        foreach ($inputData as $key => $value) {
+            if ($i == 1) {
+                $hashdata .= '&' . urlencode($key) . "=" . urlencode($value);
+            } else {
+                $hashdata .= urlencode($key) . "=" . urlencode($value);
+                $i = 1;
+            }
+            $query .= urlencode($key) . "=" . urlencode($value) . '&';
+        }
+
+        $vnp_Url = $vnp_Url . "?" . $query;
+        $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
+        $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
+
+        return response()->json(['success' => true, 'redirect_url' => $vnp_Url]);
+    }
+
+    /**
+     * Xử lý khi VNPAY trả về (Return URL)
+     * Chỉ dùng để hiển thị thông báo cho user
+     */
+    public function vnpayReturn(Request $request)
+    {
+        $vnp_HashSecret = config('vnpay.vnp_HashSecret');
+        $inputData = $request->all();
+        $vnp_SecureHash = $inputData['vnp_SecureHash'];
+
+        unset($inputData['vnp_SecureHash']);
+        ksort($inputData);
+        $hashData = "";
+        $i = 0;
+        foreach ($inputData as $key => $value) {
+            if ($i == 1) {
+                $hashData = $hashData . '&' . urlencode($key) . "=" . urlencode($value);
+            } else {
+                $hashData = $hashData . urlencode($key) . "=" . urlencode($value);
+                $i = 1;
+            }
+        }
+
+        $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
+
+        if ($secureHash == $vnp_SecureHash) {
+            if ($request->vnp_ResponseCode == '00') {
+                // Chỉ hiển thị, không cập nhật DB ở đây
+                return redirect()->route('account.myBookings')
+                    ->with('success', 'Giao dịch VNPAY thành công! Đang chờ xác nhận cuối cùng...');
+            } else {
+                return redirect()->route('booking')
+                    ->with('error', 'Giao dịch VNPAY không thành công. Mã lỗi: ' . $request->vnp_ResponseCode);
+            }
+        } else {
+            return redirect()->route('booking')
+                ->with('error', 'Lỗi chữ ký VNPAY. Giao dịch không hợp lệ.');
+        }
+    }
+
+    /**
+     * Xử lý IPN do VNPAY Server gọi
+     * Đây là nơi duy nhất cập nhật CSDL
+     */
+    public function vnpayNotify(Request $request)
+    {
+        $vnp_HashSecret = config('vnpay.vnp_HashSecret');
+        $inputData = $request->all();
+        $vnp_SecureHash = $inputData['vnp_SecureHash'];
+
+        unset($inputData['vnp_SecureHash']);
+        ksort($inputData);
+        $hashData = "";
+        $i = 0;
+        foreach ($inputData as $key => $value) {
+            if ($i == 1) {
+                $hashData = $hashData . '&' . urlencode($key) . "=" . urlencode($value);
+            } else {
+                $hashData = $hashData . urlencode($key) . "=" . urlencode($value);
+                $i = 1;
+            }
+        }
+        $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
+
+        Log::info('VNPAY IPN Request:', $inputData);
+
+        try {
+            // 1. Kiểm tra chữ ký
+            if ($secureHash != $vnp_SecureHash) {
+                Log::warning('VNPAY IPN: Invalid Signature', $inputData);
+                return response()->json(["RspCode" => "97", "Message" => "Invalid Signature"]);
+            }
+
+            // 2. Lấy Booking và Payment
+            $booking_id = $inputData['vnp_TxnRef'];
+            $booking = Booking::find($booking_id);
+            $payment = Payment::where('booking_id', $booking_id)->first();
+
+            if (!$booking || !$payment) {
+                Log::error('VNPAY IPN: Booking or Payment not found', $inputData);
+                return response()->json(["RspCode" => "01", "Message" => "Order not found"]);
+            }
+
+            // 3. Kiểm tra trạng thái Payment (tránh IPN gọi nhiều lần)
+            if ($payment->status != 'pending') {
+                Log::info('VNPAY IPN: Order already processed', $inputData);
+                return response()->json(["RspCode" => "02", "Message" => "Order already processed"]);
+            }
+
+            // 4. Kiểm tra mã giao dịch và số tiền
+            if ($inputData['vnp_Amount'] != ($booking->total_price * 100)) {
+                Log::error('VNPAY IPN: Invalid Amount', $inputData);
+                return response()->json(["RspCode" => "04", "Message" => "Invalid Amount"]);
+            }
+
+            // 5. Cập nhật CSDL
+            DB::beginTransaction();
+            if ($inputData['vnp_ResponseCode'] == '00' && $inputData['vnp_TransactionStatus'] == '00') {
+                // Giao dịch thành công
+                $booking->status = 'paid';
+                $payment->status = 'success';
+                $payment->transaction_id = $inputData['vnp_TransactionNo']; // Mã GD của VNPAY
+            } else {
+                // Giao dịch thất bại
+                $booking->status = 'canceled';
+                $payment->status = 'failed';
+                $payment->transaction_id = $inputData['vnp_TransactionNo'] ?? $payment->transaction_id;
+            }
+            $booking->save();
+            $payment->save();
+            DB::commit();
+
+            Log::info('VNPAY IPN: Successfully processed', $inputData);
+            return response()->json(["RspCode" => "00", "Message" => "Confirm Success"]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('VNPAY IPN: DB Update Error', ['error' => $e->getMessage(), 'data' => $inputData]);
+            return response()->json(["RspCode" => "99", "Message" => "Server Error"]);
+        }
     }
 }
