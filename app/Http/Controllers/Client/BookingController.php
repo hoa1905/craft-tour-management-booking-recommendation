@@ -33,6 +33,6 @@ class BookingController extends Controller
 
     public function listBookings()
     {
-        return view('client.home');
+        return view('client.my_booking');
     }
 }
