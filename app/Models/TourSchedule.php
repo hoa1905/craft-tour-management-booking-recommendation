@@ -19,6 +19,11 @@ class TourSchedule extends Model
         'seats_available',
     ];
 
+    protected $casts = [
+        'start_date' => 'datetime',
+        'end_date'   => 'datetime',
+    ];
+
     public function tour()
     {
         return $this->belongsTo(Tour::class, 'tour_id');

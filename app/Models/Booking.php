@@ -47,4 +47,80 @@ class Booking extends Model
     {
         return $this->hasOne(Payment::class, 'booking_id', 'booking_id');
     }
+
+
+    // Lọc theo user
+    public function scopeOfUser($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+
+    // Lọc theo trạng thái kết hợp Booking + Payment
+    public function scopeFilterByStatus($query, $status)
+    {
+        if ($status === 'all') {
+            return $query;
+        }
+
+        return $query->where(function ($q) use ($status) {
+            switch ($status) {
+                case 'pending': // Chờ thanh toán
+                    $q->where('bookings.status', 'pending')
+                        ->orWhereHas('payment', fn($p) => $p->where('status', 'pending'));
+                    break;
+
+                case 'paid': // Đã thanh toán
+                    $q->whereHas('payment', fn($p) => $p->where('status', 'success'));
+                    break;
+
+                case 'active': // Tour đang hoạt động
+                    $q->where('bookings.status', 'active');
+                    break;
+
+                case 'completed': // Hoàn thành
+                    $q->where('bookings.status', 'completed');
+                    break;
+
+                case 'canceled': // Đã hủy
+                    $q->where('bookings.status', 'canceled');
+                    break;
+
+                case 'refunded': // Hoàn tiền
+                    $q->whereHas('payment', fn($p) => $p->where('status', 'refunded'));
+                    break;
+            }
+        });
+    }
+
+    /**
+     * Accessor: Kiểm tra xem đơn hàng có được phép hủy hay không.
+     *
+     * @return bool
+     */
+    public function getIsCancelableAttribute()
+    {
+        // 1. Lấy trạng thái từ payment (ưu tiên) hoặc booking
+        $paymentStatus = $this->payment?->status; // 'success', 'pending', 'failed', 'refunded'
+        $bookingStatus = $this->status; // 'pending', 'paid', 'active', 'completed', 'canceled'
+
+        // 2. Xác định trạng thái hiện tại
+        $isPending = ($bookingStatus === 'pending' || $paymentStatus === 'pending');
+        $isPaid = ($paymentStatus === 'success'); // 'paid' là khi payment đã 'success'
+
+        // 3. Chỉ cho phép hủy nếu là CHỜ THANH TOÁN hoặc ĐÃ THANH TOÁN
+        if (!$isPending && !$isPaid) {
+            return false; // Không thể hủy nếu đã 'active', 'completed', 'canceled', 'refunded'
+        }
+
+        // 4. Kiểm tra logic ngày (TRƯỚC 7 NGÀY)
+        if (!$this->schedule || !$this->schedule->start_date) {
+            return false; // Không có lịch trình
+        }
+
+        // Lấy ngày bắt đầu
+        $startDate = $this->schedule->start_date;
+
+        // Cho phép hủy nếu ngày hiện tại còn TRƯỚC 7 ngày so với ngày khởi hành
+        return now()->lt($startDate->subDays(7));
+    }
 }
