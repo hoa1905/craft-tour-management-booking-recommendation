@@ -195,6 +195,93 @@
         </div>
   </head>
 
+  <!-- Menu Mobile (Chỉ hiện trên tablet và mobile) -->
+  <div class="mobile-menu-header hidden-md hidden-lg">
+    <div class="mobile-header-wrap">
+      <div class="mobile-logo">
+        <a href="{{ url('/') }}">
+          <img src="{{ asset('images/hanh-trinh-vang-icon.png') }}" alt="Logo">
+        </a>
+      </div>
+      <div style="display: flex; align-items: center; gap: 15px;">
+        @if(Auth::guard('client')->check())
+        <a href="{{ route('account.info') }}" class="mobile-user-icon">
+          <i class="fas fa-user-circle"></i>
+        </a>
+        @else
+        <a href="javascript:void(0)" class="mobile-user-icon vnt-popup-login">
+          <i class="fas fa-user-circle"></i>
+        </a>
+        @endif
+        <button class="mobile-menu-toggle">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar Menu Mobile -->
+  <div class="mobile-menu-sidebar">
+    <div class="mobile-menu-close">
+      <button><i class="fas fa-times"></i></button>
+    </div>
+    <ul class="mobile-menu-list">
+      <li><a href="{{ url('/') }}"><i class="fas fa-home"></i> Trang chủ</a></li>
+
+      <li class="has-submenu">
+        <a href="javascript:void(0)"><i class="fas fa-map-marked-alt"></i> Tour</a>
+        <ul class="mobile-submenu">
+          @foreach ($regions as $regionName => $provinces)
+          <li class="submenu-title">{{ $regionName }}</li>
+          @foreach ($provinces as $province)
+          <li><a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">{{ $province }}</a></li>
+          @endforeach
+          @endforeach
+        </ul>
+      </li>
+
+      <li class="has-submenu">
+        <a href="javascript:void(0)"><i class="fas fa-question-circle"></i> Cách đặt tour</a>
+        <ul class="mobile-submenu">
+          <li><a href="javascript:void(0)">Hướng dẫn đặt tour</a></li>
+          <li><a href="javascript:void(0)">Hướng dẫn thanh toán</a></li>
+          <li><a href="javascript:void(0)">Điều kiện & điều khoản</a></li>
+        </ul>
+      </li>
+
+      <li><a href="{{ route('villages.map') }}"><i class="fas fa-map"></i> Bản đồ làng nghề</a></li>
+      <li><a href="javascript:void(0)"><i class="fas fa-clipboard-list"></i> Tour theo yêu cầu</a></li>
+      <li><a href="javascript:void(0)"><i class="fas fa-user-plus"></i> Đăng ký nhà cung cấp</a></li>
+
+      @if(Auth::guard('client')->check())
+      <li style="border-top: 2px solid #ddd; margin-top: 10px; padding-top: 10px;">
+        <div style="padding: 10px 20px; background: #f0f0f0;">
+          <div style="font-size: 12px; color: #666;">Xin chào,</div>
+          <strong style="font-size: 14px; color: #d82727;">{{ Auth::guard('client')->user()->user_name }}</strong>
+        </div>
+      </li>
+      <li><a href="{{ route('account.myBookings') }}"><i class="fas fa-list"></i> Đơn đặt tour</a></li>
+      <li><a href="{{ route('account.info') }}"><i class="fas fa-user"></i> Thông tin tài khoản</a></li>
+      <li><a href="{{ route('account.changePassword') }}"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
+      <li>
+        <a href="{{ route('account.logout') }}"
+          onclick="event.preventDefault(); if(confirm('Bạn có chắc muốn đăng xuất?')) document.getElementById('logout-form-mobile').submit();">
+          <i class="fas fa-sign-out-alt"></i> Đăng xuất
+        </a>
+      </li>
+      <form id="logout-form-mobile" action="{{ route('account.logout') }}" method="POST" style="display: none;">
+        @csrf
+      </form>
+      @else
+      <li><a href="javascript:void(0)" class="vnt-popup-login"><i class="fas fa-sign-in-alt"></i> Đăng nhập</a></li>
+      <li><a href="javascript:void(0)" class="vnt-popup-register"><i class="fas fa-user-plus"></i> Đăng ký</a></li>
+      @endif
+    </ul>
+  </div>
+
+  <!-- Overlay khi mở menu -->
+  <div class="mobile-menu-overlay"></div>
+
   @yield('body')
   <div id="vnt-popup-login" style="display: none">
     <div class="vnt-popup-member">
@@ -522,6 +609,48 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuToggle = document.querySelector('.mobile-menu-toggle');
+      const menuSidebar = document.querySelector('.mobile-menu-sidebar');
+      const menuClose = document.querySelector('.mobile-menu-close button');
+      const menuOverlay = document.querySelector('.mobile-menu-overlay');
+
+      // Mở menu
+      menuToggle?.addEventListener('click', function() {
+        menuSidebar.classList.add('active');
+        menuOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+
+      // Đóng menu
+      function closeMenu() {
+        menuSidebar.classList.remove('active');
+        menuOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      menuClose?.addEventListener('click', closeMenu);
+      menuOverlay?.addEventListener('click', closeMenu);
+
+      // Toggle submenu
+      document.querySelectorAll('.mobile-menu-list li.has-submenu > a').forEach(item => {
+        item.addEventListener('click', function(e) {
+          e.preventDefault();
+          const parent = this.parentElement;
+          const submenu = parent.querySelector('.mobile-submenu');
+
+          parent.classList.toggle('active');
+          if (submenu.style.display === 'block') {
+            submenu.style.display = 'none';
+          } else {
+            submenu.style.display = 'block';
+          }
+        });
+      });
+    });
+  </script>
 
   @yield('scripts')
 </body>
