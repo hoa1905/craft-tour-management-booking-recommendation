@@ -135,6 +135,10 @@
 .tpmemberbh .bhlist{
   margin-bottom: 27px;
 }
+/* khi hover vào cart thì tất cả phần tử con của a sẽ không kế thừa màu #d82727 */
+.tpmemberbh a * {
+  color: initial;
+}
 .itmemberbh{
   margin-bottom: 15px;
   padding: 14px 20px 14px 15px;
@@ -457,6 +461,43 @@
     line-height: 35px;
   }
   /* <=== vstyleall ===> */
+
+  /* Toggle dropdown */
+  .tpmemberbm .bmtitle {
+    cursor: pointer;
+  }
+
+  .tpmemberbm .bmconts {
+    border-top: 1px solid #fff;
+    display: none;
+    padding: 10px 0;
+  }
+
+  .tpmemberbm.active .bmconts {
+    display: block !important;
+  }
+
+  .tpmemberbm .bmconts ul {
+    display: block;
+  }
+
+  .tpmemberbm .bmconts li {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+
+  .tpmemberbm .bmconts li a {
+    width: 100%;
+    display: block;
+    padding: 10px 16px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .tpmemberbm .bmconts li:last-child a {
+    border-bottom: none;
+  }
+  /* Toggle dropdown */
 }
 @media all and (max-width: 767px){
   /* <=== vhmemberpg ===> */
