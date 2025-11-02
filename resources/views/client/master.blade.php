@@ -77,10 +77,7 @@
                             <i class="fas fa-map-marked-alt"></i>HanhTrinhVang
                           </a>
                         </li>
-                        <li>
-                          <a href="#" target="_self">Về chúng tôi</a>
-                        </li>
-                        <li class="submenu"><a href="{{ route('villages.map') }}" target="_self">Tour</a>
+                        <li class="submenu"><a href="javascript:void(0)" target="_self">Tour</a>
                           <div class="tpsubmnhead">
                             <div class="mncroll">
                               <div class="mngrip">
@@ -107,16 +104,19 @@
                             </div>
                           </div>
                         </li>
-                        <li class="submenu hassub"><a href="#" target="_self">Cách đặt tour</a>
+                        <li class="submenu hassub"><a href="javascript:void(0)" target="_self">Cách đặt tour</a>
                           <ul>
-                            <li><a href="#">Hướng dẫn đặt tour</a></li>
+                            <li><a href="javascript:void(0)">Hướng dẫn đặt tour</a></li>
                             <li>
-                              <a href="#">Hướng dẫn thanh toán </a>
+                              <a href="javascript:void(0)">Hướng dẫn thanh toán </a>
                               <ul>
-                                <li><a href="#">Điều kiện & điều khoản</a></li>
+                                <li><a href="javascript:void(0)">Điều kiện & điều khoản</a></li>
                               </ul>
                             </li>
                           </ul>
+                        </li>
+                        <li>
+                          <a href="{{ route('villages.map') }}" target="_self">Bản đồ làng nghề</a>
                         </li>
                         <li>
                           <a href="javascript:void(0)" target="_self">Tour theo yêu cầu</a>
@@ -164,7 +164,12 @@
                                   <li><a href="{{ route('account.changePassword') }}"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
                                   <li>
                                     <a href="{{ route('account.logout') }}"
-                                      onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                                      onclick="event.preventDefault(); 
+                if (confirm('Bạn có chắc chắn muốn đăng xuất?')) { 
+                    document.getElementById('logout-form').submit(); 
+                }">
+                                      <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                                    </a>
                                   </li>
                                 </ul>
                                 <form id="logout-form" action="{{ route('account.logout') }}" method="POST" style="display: none;">
@@ -273,7 +278,7 @@
             <div class="form-group df">
               <div class="checkbox div_input">
                 <label for="r_agree">
-                  <input type="checkbox" id="r_agree" name="r_agree" value="1" class="required">Tôi đồng ý với <a href="" target="_blank">Điều khoản dịch vụ</a> và <a href="" target="_blank">Chính sách bảo mật</a> của công ty
+                  <input type="checkbox" id="r_agree" name="r_agree" value="1" class="required">Tôi đồng ý với <a href="javascript:void(0)" target="_blank">Điều khoản dịch vụ</a> và <a href="javascript:void(0)" target="_blank">Chính sách bảo mật</a> của công ty
                 </label>
                 <div class="error-message text-danger" id="error-r_agree"></div>
               </div>
@@ -489,7 +494,7 @@
                 <div class="title-footer">DỊCH VỤ</div>
                 <div class="content-footer">
                   <div class="mb5">
-                    <div class="mb5"><a href="#" target="_self">Tour trọn gói</a></div>
+                    <div class="mb5"><a href="javascript:void(0)" target="_self">Tour trọn gói</a></div>
                   </div>
                 </div>
               </div>
