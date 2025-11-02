@@ -26,10 +26,12 @@
   <link rel="stylesheet" href="{{ asset('css/detail.css') }}" type="text/css">
   <link rel="stylesheet" href="{{ asset('css/tour-search.css') }}" type="text/css">
   <link rel="stylesheet" href="{{ asset('css/booking.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ asset('css/ai-chatbox.css') }}" type="text/css">
   <script language="javascript">
     var ROOT = "";
     var lang = "vn";
-    var API_URL = '';
+    var API_URL = "{{ route('api.chat') }}";
+    var CSRF_TOKEN = "{{ csrf_token() }}";
     var API_KEY = '';
   </script>
   <script type="text/javascript" src="{{ asset('js/jquery.min.js') }}"></script>
@@ -55,6 +57,8 @@
   <script type="text/javascript" src="{{ asset('js/detail.js') }}"></script>
   <script type="text/javascript" src="{{ asset('js/tour-search.js') }}"></script>
   <script type="text/javascript" src="{{ asset('js/booking.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('js/ai-chatbox.js') }}"></script>
+
   @yield('head')
 </head>
 
@@ -609,6 +613,45 @@
       </div>
     </div>
   </footer>
+
+  {{--Chatbox AI --}}
+  <div id="ai-chatbox-widget">
+    <button id="chatbox-toggle-button">
+      <i class="fas fa-robot"></i>
+    </button>
+
+    {{-- Khung thông báo chào mời --}}
+    <div id="chatbox-greeting" style="display: none;"> {{-- Ban đầu ẩn --}}
+      <span class="greeting-text"></span> {{-- Nơi hiển thị text --}}
+      <button class="greeting-close">&times;</button> {{-- Nút X --}}
+    </div>
+
+    {{-- Khung chatbox (ban đầu bị ẩn) --}}
+    <div id="chatbox-window" style="display: none;">
+      {{-- Header của chatbox --}}
+      <div class="chatbox-header">
+        <span>AI Assistant</span>
+        <div>
+          <button class="chatbox-toggle-fullscreen" title="Toàn màn hình">
+            <i class="fas fa-expand"></i>
+          </button>
+          <button class="chatbox-close">&times;</button>
+        </div>
+      </div>
+
+      {{-- Phần hiển thị nội dung chat --}}
+      <div class="chatbox-body" id="chatbox-message-body">
+        <p class="ai-message">Xin chào! Tôi là trợ lý AI, tôi có thể giúp gì cho bạn?</p>
+        {{-- Tin nhắn sẽ được thêm vào đây --}}
+      </div>
+
+      {{-- Phần nhập liệu và nút gửi --}}
+      <div class="chatbox-footer">
+        <input type="text" id="chatbox-input" placeholder="Nhập tin nhắn..." />
+        <button id="chatbox-send-button"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
