@@ -438,7 +438,8 @@
     });
 
   // Hiển thị các làng nghề dưới dạng node có ảnh
-  const villages = @json($villages);
+  // const villages = @json($villages); bị gạch đỏ nhưng vẫn chạy được
+  const villages = JSON.parse('@json($villages ?? [])');
 
   villages.forEach(village => {
     if (village.latitude && village.longitude) {
