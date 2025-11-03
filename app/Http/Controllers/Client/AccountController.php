@@ -7,9 +7,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
-
-use function Laravel\Prompts\confirm;
 
 class AccountController extends Controller
 {
@@ -83,6 +80,50 @@ class AccountController extends Controller
             'success' => false,
             'message' => 'Email hoặc mật khẩu không chính xác.'
         ], 401);
+    }
+
+
+    //
+    function showChangePasswordForm()
+    {
+        return view('client.change_password');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        // Bước 1: Kiểm tra hợp lệ
+        $request->validate([
+            'old_pass' => 'required|min:6',
+            'new_pass' => 'required|min:6|different:old_pass',
+            're_new_pass' => 'required|same:new_pass',
+        ], [
+            'old_pass.required' => 'Vui lòng nhập mật khẩu cũ.',
+            'old_pass.min' => 'Mật khẩu cũ phải có ít nhất 6 ký tự.',
+            'new_pass.required' => 'Vui lòng nhập mật khẩu mới.',
+            'new_pass.min' => 'Mật khẩu mới phải có ít nhất 6 ký tự.',
+            'new_pass.different' => 'Mật khẩu mới phải khác mật khẩu cũ.',
+            're_new_pass.required' => 'Vui lòng nhập lại mật khẩu mới.',
+            're_new_pass.same' => 'Mật khẩu nhập lại không trùng khớp.',
+        ]);
+
+        // Bước 2: Lấy user hiện tại
+        /** @var \App\Models\User $user */
+        $user = Auth::guard('client')->user();
+
+        // Bước 3: Kiểm tra mật khẩu cũ
+        if (!Hash::check($request->old_pass, $user->password)) {
+            return back()->withErrors(['old_pass' => 'Mật khẩu cũ không chính xác.']);
+        }
+
+        // Bước 4: Cập nhật mật khẩu mới
+        $user->password = Hash::make($request->new_pass);
+        $user->save();
+
+        // Bước 5: Logout để bảo mật
+        Auth::guard('client')->logout();
+
+        // Bước 6: Thông báo kết quả
+        return redirect('/')->with('success', 'Đổi mật khẩu thành công! Vui lòng đăng nhập lại.');
     }
 
     // Đăng xuất

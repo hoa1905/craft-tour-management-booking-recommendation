@@ -742,6 +742,13 @@
   });
 </script>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const flashSuccess = "{{ session('success') ?? '' }}";
+    if (flashSuccess) toastr.success(flashSuccess);
+  });
+</script>
+
 <script type="text/javascript" src="{{ asset('js/plusone.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('css/support_fixed.css') }}">
 <script type="text/javascript" src="{{ asset('js/support_fixed.js') }}"></script>
