@@ -19,9 +19,9 @@ class VillageController extends Controller
         $query = Village::with('province');
 
         // Lọc theo Vùng miền
-        $query->when($request->region, function ($q) use ($request) {
+        $query->when($request->region_id, function ($q) use ($request) {
             return $q->whereHas('province.region', function ($subQ) use ($request) {
-                $subQ->where('region_name', $request->region);
+                $subQ->where('region_id', $request->region_id);
             });
         });
 
@@ -33,26 +33,25 @@ class VillageController extends Controller
         // Lấy danh sách làng nghề đã lọc
         $villages = $query->get();
 
-        // Lấy tất cả dữ liệu cho bộ lọc
-        $regions = Region::all();
-        $provinces = Province::all(); // Lấy tất cả tỉnh
+        // Lấy tất cả các miền
+        // phải đặt tên biến là $region_list_filter, nếu đặt là $regions sẽ lỗi vì Ngay sau khi VillageController gửi biến $regions đến view, một file khác (ViewServiceProvider.php) đã dùng View::share('regions', ...) để ghi đè lên biến $regions bằng một biến $regions khác (dùng cho menu, là 2D Collection).
+        $region_list_filter = Region::all();
+        // Lấy tất cả tỉnh
+        $provinces = Province::all();
 
-        return view('client.map', compact(
+        return view('client.village_map', compact(
             'villages',   // Dữ liệu làng nghề (đã lọc)
-            'regions',    // Cho bộ lọc vùng
+            'region_list_filter',    // Cho bộ lọc vùng 
             'provinces',  // Cho bộ lọc tỉnh
         ));
     }
 
-    /**
-     * Display village details
-     */
     public function showVillageDetail($id)
     {
         $village = Village::with([
             'province.region',
             'tours' => function ($q) {
-                $q->where('status', 'active'); // Giả định tour có status 'active'
+                $q->where('status', 'approved');
             }
         ])->findOrFail($id);
 
