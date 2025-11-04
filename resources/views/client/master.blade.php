@@ -58,7 +58,6 @@
   <script type="text/javascript" src="{{ asset('js/tour-search.js') }}"></script>
   <script type="text/javascript" src="{{ asset('js/booking.js') }}"></script>
   <script type="text/javascript" src="{{ asset('js/ai-chatbox.js') }}"></script>
-
   @yield('head')
 </head>
 
@@ -150,9 +149,22 @@
                           <div class="tpaccounts">
                             <div class="acnolog">
                               <div class="nntitle">
-                                @if(Auth::guard('client')->check())
-                                <i class="fas fa-user-check"></i>
+                                @php
+                                $client = Auth::guard('client')->user();
+                                @endphp
+
+                                @if($client)
+                                @if($client->avatar)
+                                {{-- Nếu có avatar --}}
+                                <img src="{{ asset($client->avatar) }}"
+                                  alt="Avatar"
+                                  class="user-avatar">
                                 @else
+                                {{-- Nếu chưa có avatar --}}
+                                <i class="fas fa-user-check"></i>
+                                @endif
+                                @else
+                                {{-- Nếu chưa đăng nhập --}}
                                 <i class="icon-cuser"></i>
                                 @endif
                               </div>
@@ -202,21 +214,39 @@
   <!-- Menu Mobile (Chỉ hiện trên tablet và mobile) -->
   <div class="mobile-menu-header hidden-md hidden-lg">
     <div class="mobile-header-wrap">
+      <!-- Logo -->
       <div class="mobile-logo">
         <a href="{{ url('/') }}">
           <img src="{{ asset('images/hanh-trinh-vang-icon.png') }}" alt="Logo">
         </a>
       </div>
+
       <div style="display: flex; align-items: center; gap: 15px;">
-        @if(Auth::guard('client')->check())
-        <a href="{{ route('account.info') }}" class="mobile-user-icon">
-          <i class="fas fa-user-circle"></i>
+        @php
+        $client = Auth::guard('client')->user();
+        @endphp
+
+        {{-- Nếu người dùng đã đăng nhập --}}
+        @if($client)
+        @if($client->avatar)
+        {{-- Có avatar --}}
+        <a href="{{ route('account.info') }}">
+          <img src="{{ asset($client->avatar) }}" alt="Avatar" class="user-avatar" style="width:36px; height:36px; border-radius:50%; border:2px solid #ccc; object-fit:cover;">
         </a>
         @else
-        <a href="javascript:void(0)" class="mobile-user-icon vnt-popup-login">
-          <i class="fas fa-user-circle"></i>
+        {{-- Không có avatar --}}
+        <a href="{{ route('account.info') }}" class="mobile-user-icon">
+          <i class="fas fa-user-check"></i>
         </a>
         @endif
+        @else
+        {{-- Nếu chưa đăng nhập --}}
+        <a href="javascript:void(0)" class="mobile-user-icon vnt-popup-login">
+          <i class="icon-cuser"></i>
+        </a>
+        @endif
+
+        {{-- Nút menu mobile --}}
         <button class="mobile-menu-toggle">
           <i class="fas fa-bars"></i>
         </button>

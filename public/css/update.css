@@ -4155,7 +4155,7 @@
     align-content: center;
 }
 .tptoolhead .mmgrip > div{
-    padding: 0 13px;
+    padding: 0 0px;
 }
 .tptoolhead > div{
     width: 100%;
@@ -5410,4 +5410,21 @@ Responsive cho header menu
         font-size: 12px;
         padding: 8px 10px;
     }
+}
+
+/* avatar của header menu */
+.user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    border: 2px solid #ccc;
+    /* viền xám nhạt */
+    object-fit: cover;
+    /* hiển thị đẹp, không méo */
+    cursor: pointer;
+    transition: 0.3s;
+}
+.user-avatar:hover {
+    border-color: #ff6600;
+    /* hiệu ứng khi hover */
 }
