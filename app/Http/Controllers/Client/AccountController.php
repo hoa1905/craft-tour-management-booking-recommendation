@@ -123,7 +123,7 @@ class AccountController extends Controller
         Auth::guard('client')->logout();
 
         // Bước 6: Thông báo kết quả
-        return redirect('/')->with('success', 'Đổi mật khẩu thành công! Vui lòng đăng nhập lại.');
+        return redirect('/')->with('change_password_success', 'Đổi mật khẩu thành công! Vui lòng đăng nhập lại.');
     }
 
     public function showAccountInfo()
