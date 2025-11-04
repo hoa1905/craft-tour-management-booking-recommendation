@@ -552,7 +552,6 @@
 
 @section('scripts')
 <script src="{{ asset('js/home.js') }}"></script>
-<script src="{{ asset('js/vn.js') }}"></script>
 <script src="{{ asset('js/plusone.js') }}"></script>
 <script src="{{ asset('js/support_fixed.js') }}"></script>
 <script src="{{ asset('js/monthSelect.js') }}"></script>
@@ -562,4 +561,6 @@
 <script src="{{ asset('js/flatpickr.min.js') }}"></script>
 <script src="{{ asset('js/rangePlugin.min.js') }}"></script>
 <script src="{{ asset('js/scrollPlugin.min.js') }}"></script>
+<!-- Locale Vietnamese phải load SAU flatpickr thì lịch mới hiện tiếng việt-->
+<script src="{{ asset('js/vn.js') }}"></script>
 @endsection
