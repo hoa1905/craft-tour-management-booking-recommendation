@@ -1,32 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vn">
 
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>@yield('title')</title>
+  <!-- SEO & Cấu hình -->
   <meta http-equiv="content-language" content="vi">
   <meta name="robots" content="index, follow">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <link rel="icon" href="{{ asset('images/hanh-trinh-vang-icon.png') }}" type="image/gif">
-  <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" type="text/css">
-  <link rel="stylesheet" href="{{ asset('css/all.min.css') }}" type="text/css">
-  <link rel="stylesheet" href="{{ asset('css/jquery.fancybox.css') }}" type="text/css">
-  <link rel="stylesheet" href="{{ asset('css/slick.css') }}" type="text/css">
-  <link rel="stylesheet" href="{{ asset('css/slick-theme.css') }}" type="text/css">
-  <link rel="stylesheet" href="{{ asset('css/jquery-ui.css') }}" type="text/css">
-  <link rel="stylesheet" href="{{ asset('css/menu.css') }}" type="text/css">
-  <link rel="stylesheet" href="{{ asset('css/jquery.mCustomScrollbar.min.css') }}" type="text/css">
-  <link rel="stylesheet" href="{{ asset('css/chosen.css') }}" type="text/css">
-  <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}" type="text/css">
-  <link rel="stylesheet" href="{{ asset('css/toastr.min.css') }}" type="text/css">
-  <link rel="stylesheet" href="{{ asset('css/screen.css') }}" type="text/css">
-  <link rel="stylesheet" href="{{ asset('css/main.css') }}" type="text/css">
-  <link rel="stylesheet" href="{{ asset('css/update.css') }}" type="text/css">
-  <link rel="stylesheet" href="{{ asset('css/detail.css') }}" type="text/css">
-  <link rel="stylesheet" href="{{ asset('css/tour-search.css') }}" type="text/css">
-  <link rel="stylesheet" href="{{ asset('css/booking.css') }}" type="text/css">
-  <link rel="stylesheet" href="{{ asset('css/ai-chatbox.css') }}" type="text/css">
+  <!-- Favicon -->
+  <link rel="icon" href="{{ asset('images/hanh-trinh-vang-icon.png') }}" type="image/png">
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/jquery.fancybox.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/slick.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/slick-theme.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/jquery-ui.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/menu.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/jquery.mCustomScrollbar.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/chosen.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/toastr.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/screen.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/update.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/detail.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/tour-search.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/booking.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/ai-chatbox.css') }}">
+  <!-- JS Config (truyền biến sang JS) -->
   <script language="javascript">
     var ROOT = "";
     var lang = "vn";
@@ -34,37 +38,38 @@
     var CSRF_TOKEN = "{{ csrf_token() }}";
     var API_KEY = '';
   </script>
-  <script type="text/javascript" src="{{ asset('js/jquery.min.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/jquery-migrate.min.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/jquery.fancybox.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/slick.min.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/jquery.validate.min.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/jquery-ui.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/jquery.ui.datepicker-vi.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/menu.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/jquery.mCustomScrollbar.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/mnfixed.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/chosen.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/sweetalert2.min.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/toastr.min.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/jquery.form.min.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/pagination.min.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/core.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/javascript.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/main.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/update.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/detail.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/tour-search.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/booking.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/ai-chatbox.js') }}"></script>
+  <!-- JS Files -->
+  <script src="{{ asset('js/jquery.min.js') }}"></script>
+  <script src="{{ asset('js/jquery-migrate.min.js') }}"></script>
+  <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('js/jquery.fancybox.js') }}"></script>
+  <script src="{{ asset('js/slick.min.js') }}"></script>
+  <script src="{{ asset('js/jquery.validate.min.js') }}"></script>
+  <script src="{{ asset('js/jquery-ui.js') }}"></script>
+  <script src="{{ asset('js/jquery.ui.datepicker-vi.js') }}"></script>
+  <script src="{{ asset('js/menu.js') }}"></script>
+  <script src="{{ asset('js/jquery.mCustomScrollbar.js') }}"></script>
+  <script src="{{ asset('js/mnfixed.js') }}"></script>
+  <script src="{{ asset('js/chosen.js') }}"></script>
+  <script src="{{ asset('js/sweetalert2.min.js') }}"></script>
+  <script src="{{ asset('js/toastr.min.js') }}"></script>
+  <script src="{{ asset('js/jquery.form.min.js') }}"></script>
+  <script src="{{ asset('js/pagination.min.js') }}"></script>
+  <script src="{{ asset('js/core.js') }}"></script>
+  <script src="{{ asset('js/javascript.js') }}"></script>
+  <script src="{{ asset('js/main.js') }}"></script>
+  <script src="{{ asset('js/update.js') }}"></script>
+  <script src="{{ asset('js/detail.js') }}"></script>
+  <script src="{{ asset('js/tour-search.js') }}"></script>
+  <script src="{{ asset('js/booking.js') }}"></script>
+  <script src="{{ asset('js/ai-chatbox.js') }}"></script>
+
   @yield('head')
 </head>
 
 <body>
 
   <head>
-    <input type="hidden" name="vnt_csrf_token" id="vnt_csrf_token" value="a4ea56d767b8b7db3ab0747c0c98b553">
     <div id="vnt-wrapper">
       <div id="vnt-container">
         <div class="w-fixed-menu hidden-sm hidden-xs">
