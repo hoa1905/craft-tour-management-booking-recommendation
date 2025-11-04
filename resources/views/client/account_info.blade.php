@@ -1,7 +1,7 @@
 @extends('client.master')
 @section('title', 'Thông tin tài khoản')
 @section('head')
-<link rel="stylesheet" href="{{ asset('css/account_info.css') }}" type="text/css">
+<link rel="stylesheet" href="{{ asset('css/account-info.css') }}">
 @endsection
 
 @section('body')
