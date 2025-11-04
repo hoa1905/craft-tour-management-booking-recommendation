@@ -126,6 +126,74 @@ class AccountController extends Controller
         return redirect('/')->with('success', 'Đổi mật khẩu thành công! Vui lòng đăng nhập lại.');
     }
 
+    public function showAccountInfo()
+    {
+        $user = Auth::guard('client')->user();
+        return view('client.account_info', compact('user'));
+    }
+
+    public function updateAccountInfo(Request $request)
+    {
+        $request->validate([
+            'user_name' => 'required|string|max:100',
+            'phone_number' => 'required|string|max:15',
+            'address' => 'nullable|string|max:255',
+        ], [
+            'user_name.required' => 'Vui lòng nhập họ tên.',
+            'phone_number.required' => 'Vui lòng nhập số điện thoại.',
+        ]);
+
+        /** @var \App\Models\User $user */
+        $user = Auth::guard('client')->user();
+
+        $user->update([
+            'user_name' => $request->user_name,
+            'phone_number' => $request->phone_number,
+            'address' => $request->address,
+        ]);
+
+        return back()->with('success', 'Cập nhật thông tin thành công!');
+    }
+
+    public function updateAvatar(Request $request)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::guard('client')->user();
+
+        // Nếu người dùng bấm nút "Xóa ảnh đại diện"
+        if ($request->has('remove_avatar')) {
+            // Nếu có file cũ thì xóa file vật lý (tùy chọn)
+            if ($user->avatar && file_exists(public_path($user->avatar)) && $user->avatar !== 'images/avatar/default-avatar.jpg') {
+                unlink(public_path($user->avatar));
+            }
+
+            // Gán về null trong DB
+            $user->avatar = null;
+            $user->save();
+
+            return back()->with('success', 'Ảnh đại diện đã được xóa và đặt về mặc định!');
+        }
+
+        // Nếu người dùng tải lên ảnh mới
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        $file = $request->file('avatar');
+        $fileName = time() . '-' . $file->getClientOriginalName();
+        $file->move(public_path('images/avatar'), $fileName);
+
+        // Nếu có avatar cũ, xóa file cũ (nếu không phải ảnh mặc định)
+        if ($user->avatar && file_exists(public_path($user->avatar)) && $user->avatar !== 'images/avatar/default-avatar.jpg') {
+            unlink(public_path($user->avatar));
+        }
+
+        $user->avatar = 'images/avatar/' . $fileName;
+        $user->save();
+
+        return back()->with('success', 'Ảnh đại diện đã được cập nhật!');
+    }
+
     // Đăng xuất
     public function logout()
     {
