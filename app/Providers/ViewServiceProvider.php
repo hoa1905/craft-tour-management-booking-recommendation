@@ -27,8 +27,8 @@ class ViewServiceProvider extends ServiceProvider
             $regions = DB::table('regions')
                 ->select('region_name', 'province_name')
                 ->join('provinces', 'regions.region_id', '=', 'provinces.region_id')
-                ->orderBy('regions.region_name')
-                ->orderBy('provinces.province_name')
+                ->orderBy('regions.region_id')
+                ->orderBy('provinces.province_id')
                 ->get()
                 ->groupBy('region_name')
                 ->map(function ($group) {
