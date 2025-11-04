@@ -1,10 +1,12 @@
 @extends('client.master')
+
 @section('title', 'Thông tin tài khoản')
+
 @section('head')
 <link rel="stylesheet" href="{{ asset('css/account-info.css') }}">
 @endsection
 
-@section('body')
+@section('content')
 <div id="vnt-content">
   <div class="vhmemberpg">
     <div class="mbpadd">
@@ -115,7 +117,9 @@
     </div>
   </div>
 </div>
+@endsection
 
+@section('scripts')
 {{-- Hiển thị toastr thông báo --}}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
