@@ -26,7 +26,7 @@
                       <div class="thumb" id="id-avatar">
                         <a href="{{ $user->avatar ? asset($user->avatar) : asset('images/avatar/default-avatar.jpg') }}"
                           target="_blank" title="Xem ảnh đại diện">
-                          <img src="{{ $user->avatar ? asset($user->avatar) : asset('images/avatar/default-avatar.jpg') }}"
+                          <img src="{{ $user->avatar ? asset('images/avatar/' . $user->avatar) : asset('images/avatar/default-avatar.jpg') }}"
                             alt="Avatar" class="user-avatar" />
                         </a>
                       </div>
