@@ -14,7 +14,6 @@ class BookingController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Chuyển đến trang đặt tour...',
             'redirect_url' => route('booking'),
         ]);
     }
