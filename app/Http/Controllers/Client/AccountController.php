@@ -71,7 +71,8 @@ class AccountController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Đăng nhập thành công!',
-                'username' => $user->user_name
+                'username' => $user->user_name,
+                'avatar' => $user->avatar ? $user->avatar : null
             ]);
         }
 
@@ -81,7 +82,6 @@ class AccountController extends Controller
             'message' => 'Email hoặc mật khẩu không chính xác.'
         ], 401);
     }
-
 
     //
     function showChangePasswordForm()
@@ -180,7 +180,7 @@ class AccountController extends Controller
         ]);
 
         $file = $request->file('avatar');
-        $fileName = time() . '-' . $file->getClientOriginalName();
+        $fileName = $user->user_id . '-' . $user->user_name . '-' . $file->getClientOriginalName();
         $file->move(public_path('images/avatar'), $fileName);
 
         // Nếu có avatar cũ, xóa file cũ (nếu không phải ảnh mặc định)
@@ -188,7 +188,7 @@ class AccountController extends Controller
             unlink(public_path($user->avatar));
         }
 
-        $user->avatar = 'images/avatar/' . $fileName;
+        $user->avatar = $fileName;
         $user->save();
 
         return back()->with('success', 'Ảnh đại diện đã được cập nhật!');
