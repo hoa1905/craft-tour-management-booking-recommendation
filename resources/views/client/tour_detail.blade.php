@@ -1,6 +1,12 @@
 @extends('client.master')
+
 @section('title', 'Trang chi tiết tour')
-@section('body')
+
+@section('head')
+<link rel="stylesheet" href="{{ asset('css/tour-detail.css') }}">
+@endsection
+
+@section('content')
 <div id="vnt-content">
   <div id="vnt-navation" class="breadcrumb">
     <div class="wrapper">
@@ -84,7 +90,16 @@
               <div id="advRight" class="hidden-sm hidden-xs">
                 <div class="vbackpop"></div>
                 <div class="advRight-fixed">
-                  <div class="box-detail-tour hasBg">
+                  <!-- Đưa dữ liệu từ Blade sang JS bằng data-* attributes -->
+                  <div class="box-detail-tour hasBg"
+                    id="tourBookingBox"
+                    data-price-adult="{{ $tour->price_adult }}"
+                    data-price-child="{{ $tour->price_child }}"
+                    data-tour-id="{{ $tour->tour_id }}"
+                    data-tour-name="{{ $tour->tour_name }}"
+                    data-tour-image="{{ $tour->image_main }}"
+                    data-booking-url="{{ route('booking.create') }}"
+                    data-csrf-token="{{ csrf_token() }}">
                     <div class="vpadd">
                       <div class="vtitle">
                         <span>Ngày khởi hành và giá tour</span>
@@ -523,16 +538,6 @@
                                       data-width="100%" data-num-posts="5"
                                       data-colorscheme="light"></div>
                                     <div id="fb-root"></div>
-                                    <script>
-                                      (function(d, s, id) {
-                                        var js, fjs = d.getElementsByTagName(s)[0];
-                                        if (d.getElementById(id)) return;
-                                        js = d.createElement(s);
-                                        js.id = id;
-                                        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=1305829822896074";
-                                        fjs.parentNode.insertBefore(js, fjs);
-                                      }(document, "script", "facebook-jssdk"));
-                                    </script>
                                   </div>
                                 </div>
                               </div>
@@ -610,297 +615,12 @@
       </div>
     </div>
   </div>
-
-  <script type="text/javascript" src="{{ asset('js/plusone.js') }}"></script>
-  <link rel="stylesheet" href="{{ asset('css/support_fixed.css') }}">
-  <script type="text/javascript" src="{{ asset('js/support_fixed.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/Drog.js') }}"></script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Lấy giá từ backend
-      const priceAdult = parseFloat('{{ $tour->price_adult }}');
-      const priceChild = parseFloat('{{ $tour->price_child }}');
-      const tourId = parseInt('{{ $tour->tour_id }}');
-      const tourName = '{{ $tour->tour_name }}';
-      const tourImage = '{{ $tour->image_main }}';
-      const csrfToken = '{{ csrf_token() }}';
-
-      // Lấy các elements
-      const adultQuantityInput = document.querySelector('.adult_quantity');
-      const childQuantityInput = document.querySelector('.child_quantity');
-      const totalPriceElement = document.querySelector('.total-price');
-      const bookTourBtn = document.querySelector('.book-tour');
-
-      // Hàm format số tiền
-      function formatMoney(amount) {
-        return new Intl.NumberFormat('vi-VN').format(amount) + ' đ';
-      }
-
-      // Hàm tính tổng giá
-      function calculateTotal() {
-        const adultQty = parseInt(adultQuantityInput.value) || 0;
-        const childQty = parseInt(childQuantityInput.value) || 0;
-
-        const totalAdult = adultQty * priceAdult;
-        const totalChild = childQty * priceChild;
-        const grandTotal = totalAdult + totalChild;
-
-        totalPriceElement.textContent = formatMoney(grandTotal);
-
-        return {
-          adultQty,
-          childQty,
-          grandTotal
-        };
-      }
-
-      // XỬ LÝ NÚT TĂNG/GIẢM CHO NGƯỜI LỚN
-      const adultBtnUp = document.querySelector('.q-adult .btn-up');
-      const adultBtnDown = document.querySelector('.q-adult .btn-down');
-
-      adultBtnUp.addEventListener('click', function(e) {
-        e.preventDefault();
-        let currentValue = parseInt(adultQuantityInput.value) || 0;
-        adultQuantityInput.value = currentValue + 1;
-        calculateTotal();
-      });
-
-      adultBtnDown.addEventListener('click', function(e) {
-        e.preventDefault();
-        let currentValue = parseInt(adultQuantityInput.value) || 1;
-        if (currentValue > 1) {
-          adultQuantityInput.value = currentValue - 1;
-          calculateTotal();
-        }
-      });
-
-      // XỬ LÝ NÚT TĂNG/GIẢM CHO TRẺ EM
-      const childQuantityContainer = document.querySelectorAll('.iquan')[1];
-      const childBtnUp = childQuantityContainer.querySelector('.btn-up');
-      const childBtnDown = childQuantityContainer.querySelector('.btn-down');
-
-      childBtnUp.addEventListener('click', function(e) {
-        e.preventDefault();
-        let currentValue = parseInt(childQuantityInput.value) || 0;
-        childQuantityInput.value = currentValue + 1;
-        calculateTotal();
-      });
-
-      childBtnDown.addEventListener('click', function(e) {
-        e.preventDefault();
-        let currentValue = parseInt(childQuantityInput.value) || 0;
-        if (currentValue > 0) {
-          childQuantityInput.value = currentValue - 1;
-          calculateTotal();
-        }
-      });
-
-      // XỬ LÝ KHI NHẬP TRỰC TIẾP
-      adultQuantityInput.addEventListener('blur', function() {
-        let value = parseInt(this.value) || 1;
-        if (value < 1) value = 1;
-        this.value = value;
-        calculateTotal();
-      });
-
-      adultQuantityInput.addEventListener('input', function() {
-        // Chỉ cho phép nhập số
-        this.value = this.value.replace(/[^0-9]/g, '');
-      });
-
-      childQuantityInput.addEventListener('blur', function() {
-        let value = parseInt(this.value) || 0;
-        if (value < 0) value = 0;
-        this.value = value;
-        calculateTotal();
-      });
-
-      childQuantityInput.addEventListener('input', function() {
-        // Chỉ cho phép nhập số
-        this.value = this.value.replace(/[^0-9]/g, '');
-      });
-
-      // XỬ LÝ CHỌN NGÀY KHỞI HÀNH
-      const dateItems = document.querySelectorAll('.ckchose ul li[start-date]');
-      dateItems.forEach(function(item) {
-        item.addEventListener('click', function() {
-          dateItems.forEach(function(i) {
-            i.classList.remove('active');
-          });
-          this.classList.add('active');
-        });
-      });
-
-      // XỬ LÝ NÚT ĐẶT TOUR
-      bookTourBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-
-        const result = calculateTotal();
-
-        // Kiểm tra số lượng
-        if (result.adultQty === 0) {
-          alert('Vui lòng chọn số lượng người lớn!');
-          return;
-        }
-
-        // Lấy id của ngày đã chọn
-        const selectedDateElement = document.querySelector('.ckchose ul li.active');
-        const scheduleId = selectedDateElement ? selectedDateElement.getAttribute('data-schedule-id') : null;
-        const selectedStartDate = selectedDateElement ? selectedDateElement.getAttribute('start-date') : null;
-        const endDate = selectedDateElement ? selectedDateElement.getAttribute('end-date') : null;
-
-        // if (!scheduleId) {
-        //   alert('Vui lòng chọn ngày khởi hành!');
-        //   return;
-        // }
-
-        if (!window.isLoggedIn) {
-          if ($('.vnt-popup-login').length) {
-            $('.vnt-popup-login').trigger('click');
-          } else {
-            alert('Vui lòng đăng nhập để đặt tour!');
-          }
-          return;
-        }
-
-        // Chuẩn bị data
-        const bookingData = {
-          tour_id: tourId,
-          schedule_id: scheduleId,
-          tour_name: tourName,
-          tour_image: tourImage,
-          start_date: selectedStartDate,
-          end_date: endDate,
-          adult_quantity: result.adultQty,
-          child_quantity: result.childQty,
-          price_adult_at_booking: priceAdult,
-          price_child_at_booking: priceChild,
-          total_price: result.grandTotal,
-          _token: csrfToken
-        };
-
-        console.log(bookingData);
-
-        fetch('{{ route("booking.create") }}', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': csrfToken
-            },
-            body: JSON.stringify(bookingData)
-          })
-          .then(res => res.json())
-          .then(data => {
-            if (data.success) {
-              toastr.success(data.message);
-              window.location.href = data.redirect_url;
-            } else {
-              toastr.error(data.message || 'Có lỗi xảy ra!');
-            }
-          })
-          .catch(err => {
-            console.error(err);
-            toastr.error('Không thể đặt tour. Vui lòng thử lại!');
-          });
-      });
-
-      calculateTotal();
-    });
-  </script>
-
-  <style>
-    .iquan {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .btn-up,
-    .btn-down {
-      background: #f0f0f0;
-      border: 1px solid #ddd;
-      padding: 5px 10px;
-      cursor: pointer;
-      transition: all 0.3s;
-      border-radius: 3px;
-    }
-
-    .btn-up:hover,
-    .btn-down:hover {
-      background: #007bff;
-      color: white;
-      border-color: #007bff;
-    }
-
-    .ipt-qua {
-      width: 50px;
-      text-align: center;
-      border: 1px solid #ddd;
-      padding: 5px;
-      border-radius: 3px;
-      font-size: 14px;
-    }
-
-    .ckchose ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .ckchose ul li {
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.3s;
-      background: #fff;
-      font-size: 14px;
-    }
-
-    .ckchose ul li:hover {
-      border-color: #007bff;
-      background: #f8f9fa;
-    }
-
-    .ckchose ul li.active {
-      background: #007bff;
-      color: #fff;
-      border-color: #007bff;
-      font-weight: bold;
-    }
-
-    .total-price {
-      font-size: 22px;
-      font-weight: bold;
-      color: #e74c3c;
-    }
-
-    .book-tour {
-      background: #e74c3c;
-      color: white !important;
-      padding: 10px 20px;
-      border-radius: 5px;
-      text-decoration: none;
-      display: inline-block;
-      transition: all 0.3s;
-      border: none;
-      cursor: pointer;
-    }
-
-    .book-tour:hover {
-      background: #c0392b;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .book-tour i {
-      margin-right: 5px;
-    }
-  </style>
-
 </div>
+@endsection
+
+@section('scripts')
+<script src="{{ asset('js/tour-detail.js') }}"></script>
+<script src="{{ asset('js/plusone.js') }}"></script>
+<script src="{{ asset('js/support_fixed.js') }}"></script>
+<script src="{{ asset('js/Drog.js') }}"></script>
 @endsection
