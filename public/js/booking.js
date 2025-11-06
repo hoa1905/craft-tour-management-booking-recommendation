@@ -1,262 +1,172 @@
-﻿vnTBooking = {
+﻿document.addEventListener('DOMContentLoaded', function () {
+	const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+	const adultInput = document.querySelector('.adult_quantity');
+	const childInput = document.querySelector('.child_quantity');
+	const totalPriceEl = document.getElementById('ext_total_price');
+	const priceAdult = parseInt(document.querySelector('.i-price').dataset.price);
+	const priceChild = parseInt(document.querySelector('.i-price_child').dataset.price);
 
-	ShowWaiting: function () {
-		$("#fBooking").addClass('vnt-loading');
-	},
+	// Lấy các input hidden
+	const hiddenAdultInput = document.querySelector('.adult_quantity_hidden');
+	const hiddenChildInput = document.querySelector('.child_quantity_hidden');
+	const hiddenTotalPriceInput = document.getElementById('hidden_total_price');
 
-	HideWaiting: function () {
-		$("#fBooking").removeClass('vnt-loading');
-	},
+	const btnOffice = document.getElementById('btnOffice');
+	const btnPaypal = document.getElementById('btnPaypal');
+	const btnVnpay = document.getElementById('btnVnpay');
+	const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
 
+	// Hàm tính tổng tiền
+	function updateTotal() {
+		const adult = parseInt(adultInput.value) || 1;
+		const child = parseInt(childInput.value) || 0;
+		const total = (adult * priceAdult) + (child * priceChild);
+		totalPriceEl.textContent = total.toLocaleString('vi-VN') + ' đ';
 
-	updateCart: function ()
-	{
-
-		var ok_submit = 1;
-		var msg_err ='';
-
-		var sid = $("#sid").val() ;
-		var obj_qty = $(".adult_quantity") ;
-		var quantity = parseInt(obj_qty.val());
-		var child_quantity = parseInt($(".child_quantity").val());
-		var baby_quantity = parseInt($(".baby_quantity").val());
-
-		if(quantity==0){
-			ok_submit = 0 ;
-			msg_err = 'Vui lòng chọn số người lớn' ;
-		}
-
-		if(ok_submit)
-		{
-
-			var params =  'sid='+sid +'&quantity=' +quantity +'&child_quantity='+child_quantity +'&baby_quantity='+baby_quantity+'&lang='+lang;
-			$.ajax({
-				async: true,
-				dataType: 'json',
-				url: API_URL + "/booking/update_cart",
-				type: 'POST',
-				data: params,
-				headers: {
-					"Authorization": "Bearer "+API_KEY,
-					"csrf-token": $("#vnt_csrf_token").val()
-				},
-				beforeSend: function () {
-
-					$(".boxCart").addClass('vnt-loading');
-				},
-				success: function (rs) {
-					$(".boxCart").removeClass('vnt-loading');
-					if(rs.success)
-					{
-						let total_price = parseInt(rs.data.total_price);
-
-						let text_total_price = 'Liên hệ';
-						if(total_price>0){
-							text_total_price =  vnTRUST.numberFormat(total_price) + ' đ';
-						}
-
-						$(".total-price").html(text_total_price) ;
-						$(".ext_numcart").html(rs.data.quantity) ;
-					}else{
-						Swal.fire({icon: 'error', title: js_lang['error'], html: rs.error_msg});
-					}
-				}
-			});
-		}else{
-			Swal.fire({ icon: 'error',title: js_lang['error'],html:msg_err});
-			var quantity_prev = obj_qty.data('val');
-			obj_qty.val(quantity_prev);
-		}
-
-		return false;
-
-
-	},
-
-	do_Process: function (obj_form) {
-
-		var ok_submit = 1;
-		var msg_err ='';
-
-		if(ok_submit)
-		{
-
-			var params =  obj_form.serialize();
-			params+= '&lang='+lang;
-
-			$.ajax({
-				async: true,
-				dataType: 'json',
-				url: API_URL + "/booking/process",
-				type: 'POST',
-				data: params,
-				headers: {
-					"Authorization": "Bearer "+API_KEY,
-					"csrf-token": $("#vnt_csrf_token").val()
-				},
-				beforeSend: function () {
-					$('body').addClass('loading');
-					obj_form.find(".btn-loading").removeClass("hidden");
-					obj_form.find(".btn-submit").prop("disabled", true);
-					obj_form.find(".btn-submit span").html('Đang xử lý ...');
-
-				},
-				success: function (rs) {
-					$('body').removeClass('loading');
-					obj_form.find(".btn-loading").addClass("hidden");
-					obj_form.find(".btn-submit").prop("disabled", false);
-					obj_form.find(".btn-submit span").html(js_lang['btn_booking']);
-
-
-					if(rs.success) {
-						let token_code = rs.data.token_code;
-						location.href =  ROOT_MOD+"/booking/process.html/?vnt_code=" + token_code ;
-					}else{
-						Swal.fire({icon: 'error', title: js_lang['error'], html: rs.error_msg});
-					}
-				}
-			});
-		}else{
-			Swal.fire({ icon: 'error',title: js_lang['error'],html:msg_err});
-		}
-
-		return false;
-	},
-
-	loadJsTemplate: function (item) {
-		let html = `<div class="ifrow">
-                  <div class="ifitem">
-                    <div class="vvgrip">
-                    <div class="mcol">
-                      <div class="vroom">${item.title}</div>
-                    </div>
-                    <div class="hcol">
-                      <div class="vtime">`+js_lang['booking_duration']+` : ${row.duration} `+js_lang['hours']+`</div>
-                    </div>
-                    <div class="mcol">
-                      <div class="vmony">${row.text_price}</div>
-                    </div>
-                    </div>
-                  </div>
-                </div>`;
-
-		return html ;
-	},
-
-	ShowCart: function (data)
-	{
-
-		//load data
-		var boxCart = $("#boxCart");
-		var objShow = $("#ext_item").html('');
-
-
-
-		//console.log(data);
-		var num_item = parseInt(data.num_item) ;
-		if(num_item>0)
-		{
-
-			var items = data.items;
-			var total_price =0;
-			items.forEach(function(item)
-			{
-
-				total_price += parseInt(item.price);
-
-				let text_price = js_lang['no_price'] ;
-				if(parseInt(item.price) > 0){
-					text_price = vnTRUST.format_number(item.price)+' USD' ;
-				}
-
-				item.text_price = text_price ;
-				item.text_item_price = vnTRUST.format_number(item.item_price)+' USD' ;
-				let html = vnTBooking .loadJsTemplate(item) ;
-
-				objShow.append(html);
-
-			});
-
-			let text_total_price = vnTRUST.format_number(total_price)+' USD' ;
-
-			boxCart.find('.total_price').html(text_total_price);
-
-			$(".ext_numcart").html(num_item) ;
-		}
-
-	},
-
-
-
-	initCart: function () {
-
-
-		var data_cart = {};
-		var local_cart = localStorage.getItem("vnt_cart");
-		var isload = false;
-		if (!vnTRUST.isJson(local_cart)) {
-			isload = true;
-		}
-		isload = true;
-		if (isload || !local_cart || mem_id>0)
-		{
-			var params = 'sid='+sid+'&lang='+lang;
-			$.ajax({
-				async: true,
-				dataType: 'json',
-				url: API_URL + "/info_cart",
-				type: 'GET',
-				data: params,
-				headers: {
-					"Authorization": "Bearer "+API_KEY,
-					"csrf-token": $("#vnt_csrf_token").val()
-				},
-				success: function (rs) {
-					data_cart =  rs.data ;
-					localStorage.setItem("vnt_cart", JSON.stringify(data_cart));
-					vnTBooking.ShowCart(data_cart);
-				}
-			});
-
-		}else{
-			data_cart = JSON.parse(localStorage.getItem("vnt_cart"));
-			vnTBooking.ShowCart(data_cart);
-		}
-
-	},
-
-
-	init:function()
-	{
-		$this = this;
-
-		$("html").on("change", ".ipt-qua", function(e){
-			setTimeout(function () {
-				$this.updateCart();
-			}, 100);
-		});
-
-
-		$(".iquan .btn-down").click(function() {
-
-			var obj_qty = $(this).parents(".iquan") ;
-			var $value = parseInt(obj_qty.find(".ipt-qua").val());
-			let min_val = 0;
-			if(obj_qty.hasClass('q-adult')) {
-				min_val = 1;
-			}
-			if (parseInt($value) > min_val) {
-				$value = parseInt($value) - 1;
-				obj_qty.find(".ipt-qua").val($value).trigger('change');
-			}
-		});
-
-		$(".iquan .btn-up").click(function() {
-			var $value = parseInt($(this).parents(".iquan").find(".ipt-qua").val());
-			$value = parseInt($value) + 1;
-			$(this).parents(".iquan").find(".ipt-qua").val($value).trigger('change');
-		});
-
-
+		// Thêm cập nhật cho các trường input hidden
+		hiddenAdultInput.value = adult;
+		hiddenChildInput.value = child;
+		hiddenTotalPriceInput.value = total;
 	}
-};
+
+	// Giới hạn chỉ nhập số & xử lý khi nhập 0
+	function validateInput(input, minValue = 0) {
+		input.addEventListener('input', function () {
+			// Loại bỏ ký tự không phải số
+			this.value = this.value.replace(/[^0-9]/g, '');
+			// Nếu trống thì đặt lại giá trị tối thiểu
+			if (this.value === '') this.value = minValue;
+			// Nếu nhập 0 ở số lượng người lớn => đặt về 1
+			if (this.classList.contains('adult_quantity') && parseInt(this.value) < 1) {
+				this.value = 1;
+			}
+			updateTotal();
+		});
+	}
+
+	// Nút tăng giảm
+	function setupQuantityButtons(container, input, minValue = 0) {
+		const btnDown = container.querySelector('.btn-down');
+		const btnUp = container.querySelector('.btn-up');
+
+		btnUp.addEventListener('click', function () {
+			let value = parseInt(input.value) || minValue;
+			value++;
+			input.value = value;
+			updateTotal();
+		});
+
+		btnDown.addEventListener('click', function () {
+			let value = parseInt(input.value) || minValue;
+			value = Math.max(value - 1, minValue);
+			// số lượng người lớn phải >= 1
+			if (input.classList.contains('adult_quantity') && value < 1) value = 1;
+			input.value = value;
+			updateTotal();
+		});
+	}
+
+	validateInput(adultInput, 1);
+	validateInput(childInput, 0);
+	setupQuantityButtons(document.querySelector('.q-adult'), adultInput, 1);
+	setupQuantityButtons(childInput.closest('.iquan'), childInput, 0);
+	updateTotal();
+
+	// Ẩn/hiện nút thanh toán theo phương thức được chọn
+	paymentRadios.forEach(radio => {
+		radio.addEventListener('change', function () {
+			btnOffice.classList.add('hidden');
+			btnPaypal.classList.add('hidden');
+			btnVnpay.classList.add('hidden');
+
+			if (this.value === 'office') btnOffice.classList.remove('hidden');
+			if (this.value === 'paypal') btnPaypal.classList.remove('hidden');
+			if (this.value === 'vnpay') btnVnpay.classList.remove('hidden');
+		});
+	});
+
+	// Kiểm tra form trước khi gửi
+	function validateForm() {
+		let valid = true;
+		const requiredFields = ['full_name', 'phone', 'email', 'address'];
+
+		// Kiểm tra các trường bắt buộc (required)
+		// (Kiểm tra xem có trường nào bị rỗng không)
+		requiredFields.forEach(id => {
+			const field = document.getElementById(id);
+			if (!field.value.trim()) {
+				field.classList.add('is-invalid'); // CSS Làm đỏ field
+				valid = false;
+			} else {
+				field.classList.remove('is-invalid');
+			}
+		});
+
+		// Nếu có trường bắt buộc bị trống, hiển thị lỗi chung
+		if (!valid) {
+			toastr.error('Vui lòng nhập đầy đủ thông tin bắt buộc trước khi thanh toán!');
+			return false;
+		}
+
+		// Nếu tất cả đã được điền, kiểm tra logic riêng cho SĐT
+		const phone = document.getElementById('phone');
+
+		// Kiểm tra xem có đúng 10 số không
+		if (!/^\d{10}$/.test(phone.value)) {
+			phone.classList.add('is-invalid');
+			toastr.error('Số điện thoại phải gồm đúng 10 chữ số!');
+			return false;
+		}
+
+		return true;
+	}
+
+	// Gửi dữ liệu từ form đến server
+	// dữ liệu từ các trường input (cả hidden và visible)
+	async function submitPayment(url, successMessage) {
+		const formData = new FormData(document.getElementById('fBooking'));
+		try {
+			const res = await fetch(url, {
+				method: 'POST',
+				headers: {
+					'X-CSRF-TOKEN': csrfToken,
+					'Accept': 'application/json'
+				},
+				body: formData
+			});
+			const data = await res.json();
+			if (data.success) {
+				if (data.redirect_url) {
+					// Nếu là PayPal/Vnpay, chuyển hướng
+					window.location.href = data.redirect_url;
+				} else {
+					// Nếu là thanh toán tại văn phòng
+					toastr.success(data.message || successMessage);
+					// Thành công chuyển hướng đến trang quản lý đơn
+					window.location.href = '/account/my-bookings';
+				}
+			} else {
+				toastr.error(data.message || 'Có lỗi xảy ra!');
+			}
+		} catch (error) {
+			toastr.error('Không thể gửi yêu cầu. Vui lòng thử lại!');
+			console.error(error);
+		}
+	}
+
+	// Gắn sự kiện click cho nút thanh toán
+	btnOffice.addEventListener('click', function () {
+		if (!validateForm()) return;
+		submitPayment('/payment/office', 'Đặt tour thành công tại văn phòng!');
+	});
+
+	btnPaypal.addEventListener('click', function () {
+		if (!validateForm()) return;
+		submitPayment('/payment/paypal', 'Đang chuyển hướng đến PayPal Sandbox...');
+	});
+
+	btnVnpay.addEventListener('click', function () {
+		if (!validateForm()) return;
+		submitPayment('/payment/vnpay', 'Đang chuyển hướng đến VNPAY Sandbox...');
+	});
+});

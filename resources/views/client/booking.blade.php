@@ -1,7 +1,12 @@
 @extends('client.master')
 
 @section('title', 'Đơn đặt tour')
-@section('body')
+
+@section('head')
+<link rel="stylesheet" href="{{ asset('css/booking.css') }}">
+@endsection
+
+@section('content')
 <div id="vnt-content">
   @if (session('success'))
   <div class="alert alert-success">{{ session('success') }}</div>
@@ -120,7 +125,7 @@
               <input type="hidden" name="price_child_at_booking" class="price_child_at_booking_hidden" value="{{ $bookingData['price_child_at_booking'] }}">
               <input type="hidden" name="total_price" id="hidden_total_price" value="{{ $bookingData['total_price'] }}">
 
-              {{-- ... (Phần còn lại của form: Họ tên, SĐT, Email...) --}}
+              {{-- ... (Phần còn lại của form: Họ tên, SĐT, Email, Địa chỉ) --}}
               <div class="box-detail">
                 <div class="hTitle large">Thông tin đặt tour</div>
                 <div class="mb15">
@@ -135,8 +140,14 @@
                     <div class="mb15">
                       <label>Số điện thoại <span class="color1">*</span></label>
                       <div class="div_input">
-                        <input type="tel" class="form-control required" id="phone" name="phone"
-                          value="{{ Auth::guard('client')->user()->phone_number }}" maxlength="15" />
+                        <input type="tel" class="form-control required"
+                          id="phone"
+                          name="phone"
+                          inputmode="numeric"
+                          pattern="[0-9]+"
+                          oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                          value="{{ Auth::guard('client')->user()->phone_number }}"
+                          maxlength="10" />
                       </div>
                     </div>
                   </div>
@@ -153,7 +164,10 @@
 
                 <div class="mb15">
                   <label>Địa chỉ <span class="color1">*</span></label>
-                  <div class="div_input"><input type="text" class="form-control" id="address" name="address" /></div>
+                  <div class="div_input">
+                    <input type="text" class="form-control" id="address" name="address"
+                      value="{{ Auth::guard('client')->user()->address }}" />
+                  </div>
                 </div>
 
                 <!-- Phương thức thanh toán -->
@@ -186,7 +200,8 @@
 
                 <!-- Nút hành động -->
                 <div class="text-center mt-4">
-                  <button type="button" id="btnOffice" class="btn btn-primary px-4 py-2"><i class="fa fa-building me-2"></i> Xác nhận đặt tour
+                  <button type="button" id="btnOffice" class="btn btn-primary px-4 py-2">
+                    <i class="fa fa-building me-2"></i> Xác nhận đặt tour
                   </button>
 
                   <button type="button" id="btnPaypal" class="btn btn-warning px-4 py-2 hidden mt-2">
@@ -207,238 +222,8 @@
   </div>
 </div>
 </div>
-<style>
-  .payment-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 30px;
-  }
+@endsection
 
-  .payment-option {
-    flex: 1 1 30%;
-    min-width: 200px;
-    cursor: pointer;
-    position: relative;
-  }
-
-  .payment-option input[type="radio"] {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-  }
-
-  .option-box {
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    padding: 10px 15px;
-    text-align: center;
-    transition: all 0.3s ease;
-    background-color: #f9f9f9;
-    font-weight: 500;
-  }
-
-  .payment-option input[type="radio"]:checked+.option-box {
-    border-color: #007bff;
-    background-color: #e9f3ff;
-    color: #007bff;
-    box-shadow: 0 2px 6px rgba(0, 123, 255, 0.2);
-  }
-
-  .payment-option:hover .option-box {
-    border-color: #007bff;
-  }
-
-  .is-invalid {
-    border-color: red !important;
-    background-color: #ffe6e6;
-  }
-
-  .btn-vnpay {
-    background-color: #00509B !important;
-    color: #fff !important;
-    border: none !important;
-  }
-
-  .btn-vnpay:hover {
-    background-color: #004080 !important;
-  }
-
-  @media (max-width: 768px) {
-    .payment-option {
-      flex: 1 1 100%;
-    }
-  }
-</style>
-
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    const adultInput = document.querySelector('.adult_quantity');
-    const childInput = document.querySelector('.child_quantity');
-    const totalPriceEl = document.getElementById('ext_total_price');
-    const priceAdult = parseInt("{{ $bookingData['price_adult_at_booking'] }}");
-    const priceChild = parseInt("{{ $bookingData['price_child_at_booking'] }}");
-
-    // Lấy các input hidden
-    const hiddenAdultInput = document.querySelector('.adult_quantity_hidden');
-    const hiddenChildInput = document.querySelector('.child_quantity_hidden');
-    const hiddenTotalPriceInput = document.getElementById('hidden_total_price');
-
-    const btnOffice = document.getElementById('btnOffice');
-    const btnPaypal = document.getElementById('btnPaypal');
-    const btnVnpay = document.getElementById('btnVnpay');
-    const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
-
-    //  Hàm tính tổng tiền
-    function updateTotal() {
-      const adult = parseInt(adultInput.value) || 1;
-      const child = parseInt(childInput.value) || 0;
-      const total = (adult * priceAdult) + (child * priceChild);
-      totalPriceEl.textContent = total.toLocaleString('vi-VN') + ' đ';
-
-      // Thêm cập nhật cho các trường input hidden
-      hiddenAdultInput.value = adult;
-      hiddenChildInput.value = child;
-      hiddenTotalPriceInput.value = total;
-    }
-
-    // Giới hạn chỉ nhập số & xử lý khi nhập 0
-    function validateInput(input, minValue = 0) {
-      input.addEventListener('input', function() {
-        // Loại bỏ ký tự không phải số
-        this.value = this.value.replace(/[^0-9]/g, '');
-
-        // Nếu trống thì đặt lại giá trị tối thiểu
-        if (this.value === '') this.value = minValue;
-
-        // Nếu nhập 0 ở người lớn => đặt về 1
-        if (this.classList.contains('adult_quantity') && parseInt(this.value) < 1) {
-          this.value = 1;
-        }
-
-        updateTotal();
-      });
-    }
-
-    // Nút tăng giảm
-    function setupQuantityButtons(container, input, minValue = 0) {
-      const btnDown = container.querySelector('.btn-down');
-      const btnUp = container.querySelector('.btn-up');
-
-      btnUp.addEventListener('click', function() {
-        let value = parseInt(input.value) || minValue;
-        value++;
-        input.value = value;
-        updateTotal();
-      });
-
-      btnDown.addEventListener('click', function() {
-        let value = parseInt(input.value) || minValue;
-        value = Math.max(value - 1, minValue);
-        if (input.classList.contains('adult_quantity') && value < 1) value = 1; // người lớn >= 1
-        input.value = value;
-        updateTotal();
-      });
-    }
-
-    // Gọi hàm setup
-    validateInput(adultInput, 1);
-    validateInput(childInput, 0);
-
-    setupQuantityButtons(document.querySelector('.q-adult'), adultInput, 1);
-    setupQuantityButtons(childInput.closest('.iquan'), childInput, 0);
-
-    updateTotal();
-
-    // Ẩn/hiện nút thanh toán theo phương thức được chọn
-    paymentRadios.forEach(radio => {
-      radio.addEventListener('change', function() {
-        btnOffice.classList.add('hidden');
-        btnPaypal.classList.add('hidden');
-        btnVnpay.classList.add('hidden');
-
-        if (this.value === 'office') btnOffice.classList.remove('hidden');
-        if (this.value === 'paypal') btnPaypal.classList.remove('hidden');
-        if (this.value === 'vnpay') btnVnpay.classList.remove('hidden');
-      });
-    });
-
-    // Hàm kiểm tra form trước khi thanh toán
-    function validateForm() {
-      let valid = true;
-      const requiredFields = ['full_name', 'phone', 'email', 'address'];
-
-      requiredFields.forEach(id => {
-        const field = document.getElementById(id);
-        if (!field.value.trim()) {
-          field.classList.add('is-invalid');
-          valid = false;
-        } else {
-          field.classList.remove('is-invalid');
-        }
-      });
-
-      if (!valid) {
-        alert('Vui lòng nhập đầy đủ thông tin bắt buộc trước khi thanh toán!');
-      }
-
-      return valid;
-    }
-
-    // Hàm gửi form đến server (Laravel route)
-    // dữ liệu từ các trường input (cả hidden và visible)
-    async function submitPayment(url, successMessage) {
-      const formData = new FormData(document.getElementById('fBooking'));
-      try {
-        const res = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'X-CSRF-TOKEN': csrfToken,
-            // Báo cho Laravel biết ta muốn nhận JSON
-            'Accept': 'application/json'
-          },
-          body: formData
-        });
-        const data = await res.json();
-        if (data.success) {
-          if (data.redirect_url) {
-            // Nếu là PayPal/Vnpay, chuyển hướng
-            window.location.href = data.redirect_url;
-          } else {
-            // Nếu là thanh toán tại văn phòng
-            toastr.success(data.message || successMessage);
-            // Thành công chuyển hướng đến trang quản lý đơn
-            window.location.href = '{{ route("account.myBookings") }}';
-          }
-        } else {
-          toastr.error(data.message || 'Có lỗi xảy ra!');
-        }
-      } catch (error) {
-        toastr.error('Không thể gửi yêu cầu. Vui lòng thử lại!');
-        console.error(error);
-      }
-    }
-
-    // Thanh toán tại văn phòng
-    btnOffice.addEventListener('click', function() {
-      if (!validateForm()) return;
-      submitPayment('{{ route("payment.officePayment") }}', 'Đặt tour thành công tại văn phòng!');
-    });
-
-    // PayPal sandbox
-    btnPaypal.addEventListener('click', function() {
-      if (!validateForm()) return;
-      submitPayment('{{ route("payment.paypal") }}', 'Đang chuyển hướng đến PayPal Sandbox...');
-    });
-
-    // VNPAY sandbox
-    btnVnpay.addEventListener('click', function() {
-      if (!validateForm()) return;
-      submitPayment('{{ route("payment.vnpay") }}', 'Đang chuyển hướng đến Vnpay Sandbox...');
-    });
-  });
-</script>
-
+@section('scripts')
+<script src="{{ asset('js/booking.js') }}"></script>
 @endsection
