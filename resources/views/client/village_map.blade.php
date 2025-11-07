@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="{{ asset('css/village-map.css') }}">
 @endsection
 
-@section('body')
+@section('content')
 <div class="map-container">
   <!-- Loading Overlay -->
   <div id="loading" class="loading-overlay" style="display: none;">
@@ -34,7 +34,6 @@
           @endforeach
         </select>
       </div>
-
 
       <div class="filter-group">
         <label for="provinceFilter">Tỉnh/Thành phố</label>

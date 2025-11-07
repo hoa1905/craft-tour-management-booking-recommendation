@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{{ asset('css/change-password.css') }}">
 @endsection
 
-@section('body')
+@section('content')
 <div id="vnt-content">
   @if ($errors->any())
   <div class="alert alert-danger">
