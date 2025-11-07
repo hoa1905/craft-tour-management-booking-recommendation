@@ -3,10 +3,10 @@
 @section('title', 'Đơn đặt tour của bạn')
 
 @section('head')
-<link rel="stylesheet" href="{{ asset('css/my-booking.css') }}" type="text/css">
+<link rel="stylesheet" href="{{ asset('css/my-booking.css') }}">
 @endsection
 
-@section('body')
+@section('content')
 <div id="vnt-content">
   @if (session('success'))
   <div class="alert alert-success">{{ session('success') }}</div>
@@ -27,12 +27,13 @@
                 <div class="bmconts">
                   <ul id="statusTabs">
                     <li class="{{ $status == 'all' ? 'active' : '' }}"><a href="#" data-status="all">Tất cả</a></li>
-                    <li class="{{ $status == 'pending' ? 'active' : '' }}"><a href="#" data-status="pending">Chờ thanh toán</a></li>
+                    <li class="{{ $status == 'waiting_payment' ? 'active' : '' }}"><a href="#" data-status="waiting_payment">Chờ thanh toán</a></li>
                     <li class="{{ $status == 'paid' ? 'active' : '' }}"><a href="#" data-status="paid">Đã thanh toán</a></li>
                     <li class="{{ $status == 'active' ? 'active' : '' }}"><a href="#" data-status="active">Đang hoạt động</a></li>
                     <li class="{{ $status == 'completed' ? 'active' : '' }}"><a href="#" data-status="completed">Hoàn thành</a></li>
                     <li class="{{ $status == 'canceled' ? 'active' : '' }}"><a href="#" data-status="canceled">Đã hủy</a></li>
-                    <li class="{{ $status == 'refunded' ? 'active' : '' }}"><a href="#" data-status="refunded">Hoàn tiền</a></li>
+                    <li class="{{ $status == 'pending_refund' ? 'active' : '' }}"><a href="#" data-status="pending_refund">Chờ hoàn tiền</a></li>
+                    <li class="{{ $status == 'refunded' ? 'active' : '' }}"><a href="#" data-status="refunded">Đã hoàn tiền</a></li>
                   </ul>
                 </div>
               </div>
@@ -97,7 +98,7 @@
                               <div class="vstatus" style="border:1px solid #ec1d25;color:#ec1d25;">
                                 @if ($booking->payment && $booking->payment->status === 'success')
                                 Đã thanh toán
-                                @elseif ($booking->payment && $booking->payment->status === 'pending')
+                                @elseif ($booking->payment && $booking->payment->status === 'waiting_payment')
                                 Chờ thanh toán
                                 @elseif ($booking->status === 'completed')
                                 Hoàn thành
@@ -106,7 +107,7 @@
                                 @elseif ($booking->status === 'canceled')
                                 Đã hủy
                                 @elseif ($booking->payment && $booking->payment->status === 'refunded')
-                                Hoàn tiền
+                                Đã hoàn tiền
                                 @else
                                 Đang xử lý
                                 @endif
@@ -153,7 +154,7 @@
     tab.addEventListener('click', function(e) {
       e.preventDefault();
       const status = this.getAttribute('data-status');
-      const statusText = this.textContent; // Lấy text của tab được click ("Tất cả", "Đã hoàn thành", v.v.)
+      const statusText = this.textContent; // Lấy text của tab được click ("Tất cả", "Đã hoàn thành",...)
       fetch(`{{ route('account.myBookings') }}?status=${status}`, {
           headers: {
             'X-Requested-With': 'XMLHttpRequest'

@@ -48,15 +48,15 @@ class PaymentController extends Controller
                 'tour_id' => $bookingData['tour_id'],
                 'schedule_id' => $bookingData['schedule_id'],
                 'full_name' => $bookingData['full_name'],
-                'phone_number' => $bookingData['phone'], // Map 'phone' từ form
+                'phone_number' => $bookingData['phone'],
                 'email' => $bookingData['email'],
                 'address' => $bookingData['address'],
-                'adult_quantity' => $bookingData['adult_quantity'], // Map 'adult_quantity' từ form
-                'child_quantity' => $bookingData['child_quantity'], // Map 'child_quantity'
-                'price_adult_at_booking' => $bookingData['price_adult_at_booking'], // MỚI
-                'price_child_at_booking' => $bookingData['price_child_at_booking'], // MỚI
+                'adult_quantity' => $bookingData['adult_quantity'],
+                'child_quantity' => $bookingData['child_quantity'],
+                'price_adult_at_booking' => $bookingData['price_adult_at_booking'],
+                'price_child_at_booking' => $bookingData['price_child_at_booking'],
                 'total_price' => $bookingData['total_price'], // Tiền VND
-                'status' => $bookingStatus, // 'pending' hoặc 'paid'
+                'status' => $bookingStatus, // 'waiting_payment' hoặc 'paid'
             ]);
 
             // 2. Tạo Payment
@@ -70,7 +70,7 @@ class PaymentController extends Controller
                 $payment->amount = $bookingData['total_price']; // Số tiền VND
                 $payment->payper_name = $bookingData['full_name'];
                 $payment->payper_email = $bookingData['email'];
-                $payment->status = 'pending';
+                $payment->status = 'waiting_payment';
             } else if ($paymentMethod === 'PayPal' && $paymentResponse) {
                 // Xử lý thanh toán bằng PayPal
                 $payment->transaction_id = $paymentResponse['id']; // PayPal transaction ID
@@ -79,12 +79,12 @@ class PaymentController extends Controller
                 $payment->payper_email = $paymentResponse['payer_email'];
                 $payment->status = 'success';
             } else if ($paymentMethod === 'VNPAY') {
-                // Đây là lúc tạo đơn pending, chưa có giao dịch
+                // Đây là lúc tạo đơn waiting_payment, chưa có giao dịch
                 $payment->transaction_id = 'VNPAY_' . $booking->booking_id . '_' . time(); // ID tạm
                 $payment->amount = $bookingData['total_price']; // Lưu tiền VND
                 $payment->payper_name = $bookingData['full_name'];
                 $payment->payper_email = $bookingData['email'];
-                $payment->status = 'pending';
+                $payment->status = 'waiting_payment';
             }
 
             $payment->save();
@@ -106,8 +106,8 @@ class PaymentController extends Controller
 
         try {
             // Gọi hàm private để tạo Booking và Payment
-            // Trạng thái booking là 'pending' (chờ thanh toán)
-            $this->createBookingAndPayment($request->all(), 'Office', 'pending', null);
+            // Trạng thái booking là 'waiting_payment' (chờ thanh toán)
+            $this->createBookingAndPayment($request->all(), 'Office', 'waiting_payment', null);
 
             // Xóa session giỏ hàng gốc
             session()->forget('booking_data');
@@ -245,9 +245,9 @@ class PaymentController extends Controller
             return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
         }
 
-        // 1. Tạo đơn hàng 'pending' TẠM THỜI trong CSDL
+        // 1. Tạo đơn hàng 'waiting_payment' TẠM THỜI trong CSDL
         try {
-            $booking = $this->createBookingAndPayment($request->all(), 'VNPAY', 'pending', null);
+            $booking = $this->createBookingAndPayment($request->all(), 'VNPAY', 'waiting_payment', null);
         } catch (\Exception $e) {
             Log::error('VNPAY Payment DB Error (Pre-create): ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Lỗi máy chủ khi tạo đơn hàng.']);
@@ -398,7 +398,7 @@ class PaymentController extends Controller
             }
 
             // 3. Kiểm tra trạng thái Payment (tránh IPN gọi nhiều lần)
-            if ($payment->status != 'pending') {
+            if ($payment->status != 'waiting_payment') {
                 Log::info('VNPAY IPN: Order already processed', $inputData);
                 return response()->json(["RspCode" => "02", "Message" => "Order already processed"]);
             }

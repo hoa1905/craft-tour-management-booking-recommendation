@@ -64,28 +64,32 @@ class Booking extends Model
 
         return $query->where(function ($q) use ($status) {
             switch ($status) {
-                case 'pending': // Chờ thanh toán
-                    $q->where('bookings.status', 'pending')
-                        ->orWhereHas('payment', fn($p) => $p->where('status', 'pending'));
+                case 'waiting_payment':
+                    $q->where('bookings.status', 'waiting_payment')
+                        ->orWhereHas('payment', fn($p) => $p->where('status', 'waiting_payment'));
                     break;
 
-                case 'paid': // Đã thanh toán
+                case 'paid':
                     $q->whereHas('payment', fn($p) => $p->where('status', 'success'));
                     break;
 
-                case 'active': // Tour đang hoạt động
+                case 'active':
                     $q->where('bookings.status', 'active');
                     break;
 
-                case 'completed': // Hoàn thành
+                case 'completed':
                     $q->where('bookings.status', 'completed');
                     break;
 
-                case 'canceled': // Đã hủy
+                case 'canceled':
                     $q->where('bookings.status', 'canceled');
                     break;
 
-                case 'refunded': // Hoàn tiền
+                case 'pending_refund':
+                    $q->whereHas('payment', fn($p) => $p->where('status', 'pending_refund'));
+                    break;
+
+                case 'refunded':
                     $q->whereHas('payment', fn($p) => $p->where('status', 'refunded'));
                     break;
             }
@@ -100,15 +104,15 @@ class Booking extends Model
     public function getIsCancelableAttribute()
     {
         // 1. Lấy trạng thái từ payment (ưu tiên) hoặc booking
-        $paymentStatus = $this->payment?->status; // 'success', 'pending', 'failed', 'refunded'
-        $bookingStatus = $this->status; // 'pending', 'paid', 'active', 'completed', 'canceled'
+        $paymentStatus = $this->payment?->status; // 'success', 'waiting_payment', 'failed', 'pending_refund', 'refunded'
+        $bookingStatus = $this->status; // 'waiting_payment', 'paid', 'active', 'completed', 'canceled'
 
         // 2. Xác định trạng thái hiện tại
-        $isPending = ($bookingStatus === 'pending' || $paymentStatus === 'pending');
+        $isWaitingPayment = ($bookingStatus === 'waiting_payment' || $paymentStatus === 'waiting_payment');
         $isPaid = ($paymentStatus === 'success'); // 'paid' là khi payment đã 'success'
 
         // 3. Chỉ cho phép hủy nếu là CHỜ THANH TOÁN hoặc ĐÃ THANH TOÁN
-        if (!$isPending && !$isPaid) {
+        if (!$isWaitingPayment && !$isPaid) {
             return false; // Không thể hủy nếu đã 'active', 'completed', 'canceled', 'refunded'
         }
 

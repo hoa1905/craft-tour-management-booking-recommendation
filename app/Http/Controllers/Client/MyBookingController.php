@@ -54,29 +54,24 @@ class MyBookingController extends Controller
         try {
             DB::beginTransaction();
 
-            // Cập nhật trạng thái Booking
-            $booking->status = 'canceled';
-            $booking->save();
-
-            $message = '';
-
-            // Xử lý logic Payment
+            // Nếu đã thanh toán chuyển sang trạng thái chờ xử lý hoàn tiền
             if ($isPaid) {
-                // Tour đã thanh toán -> Cần hoàn tiền
-                // Ghi chú: Đây là đánh dấu 'refunded', Admin sẽ phải xử lý hoàn tiền thủ công.
-                $booking->payment->status = 'refunded';
+                $booking->status = 'pending_refund';
+                $booking->payment->status = 'pending_refund';
                 $booking->payment->save();
 
-                $message = 'Hủy tour thành công. Yêu cầu hoàn tiền của bạn đã được ghi lại. CSKH sẽ liên hệ với bạn trong 24h.';
+                $message = 'Hủy tour thành công. Yêu cầu hoàn tiền của bạn đang được xử lý.';
             } else {
-                // Tour chờ thanh toán -> Chỉ cần hủy
+                // Nếu chưa thanh toán hủy bình thường
+                $booking->status = 'canceled';
                 if ($booking->payment) {
-                    $booking->payment->status = 'failed'; // Hoặc 'canceled' nếu enum của bạn có
+                    $booking->payment->status = 'failed';
                     $booking->payment->save();
                 }
                 $message = 'Hủy tour thành công.';
             }
 
+            $booking->save();
             DB::commit();
             return back()->with('success', $message);
         } catch (\Exception $e) {

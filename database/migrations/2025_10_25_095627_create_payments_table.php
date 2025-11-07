@@ -16,11 +16,11 @@ return new class extends Migration
             $table->unsignedBigInteger('booking_id');
             $table->string('transaction_id', 255)->nullable();
 
-            $table->enum('payment_method', ['Office', 'MoMo', 'Vnpay']);
+            $table->enum('payment_method', ['Office', 'Paypal', 'Vnpay']);
             $table->decimal('amount', 10, 2);
             $table->string('payper_name', 100)->nullable();
             $table->string('payper_email', 150)->nullable();
-            $table->enum('status', ['pending', 'success', 'failed', 'refunded'])->default('pending');
+            $table->enum('status', ['waiting_payment', 'success', 'failed', 'pending_refund', 'refunded'])->default('waiting_payment');
 
             $table->timestamps();
 
