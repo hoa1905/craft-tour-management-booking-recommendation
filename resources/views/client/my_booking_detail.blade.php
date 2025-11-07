@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{{ asset('css/my-booking-detail.css') }}">
 @endsection
 
-@section('body')
+@section('content')
 <div id="vnt-content">
   <div class="vhmemberpg">
     <div class="mbpadd">
@@ -19,15 +19,15 @@
 
         {{-- Xử lý trạng thái --}}
         @php
-        $statusText = 'Đang xử lý';
+        $statusText = 'Chờ hoàn tiền - Đang xử lý';
         $statusClass = 'status-processing';
 
         if ($booking->payment && $booking->payment->status === 'success') {
         $statusText = 'Đã thanh toán';
         $statusClass = 'status-success';
-        } elseif ($booking->payment && $booking->payment->status === 'pending') {
+        } elseif ($booking->payment && $booking->payment->status === 'waiting_payment') {
         $statusText = 'Chờ thanh toán';
-        $statusClass = 'status-pending';
+        $statusClass = '.status-waiting-payment';
         } elseif ($booking->status === 'completed') {
         $statusText = 'Hoàn thành';
         $statusClass = 'status-completed';
@@ -78,17 +78,24 @@
         <div class="detail-box">
           <div class="detail-box-header">Thông tin Tour</div>
           <div class="detail-box-body">
-            <div class="tour-info">
-              <img src="{{ asset('images/' . $booking->tour->image_main) }}"
-                alt="{{ $booking->tour->tour_name }}"
-                class="tour-image">
-              <div class="tour-info-text">
-                <h3>{{ $booking->tour->tour_name }}</h3>
-                <p>Mã tour: {{ $booking->tour->tour_id }}</p>
-                <p>Khởi hành: <strong>{{ $booking->schedule->start_date?->format('d/m/Y') }}</strong></p>
-                <p>Ngày về: <strong>{{ $booking->schedule->end_date?->format('d/m/Y') }}</strong></p>
+            <a href="{{ route('tour.detail', ['id' => $booking->tour->tour_id]) }}">
+              <div class="tour-info">
+                <img src="{{ asset('images/' . $booking->tour->image_main) }}"
+                  alt="{{ $booking->tour->tour_name }}"
+                  class="tour-image">
+                <div class="tour-info-text">
+                  <h3>{{ $booking->tour->tour_name }}</h3>
+                  <p>Mã tour: {{ $booking->tour->tour_id }}</p>
+                  <p>Khởi hành: <strong>{{ $booking->schedule->start_date?->format('d/m/Y') }}</strong></p>
+                  <p>Ngày về: <strong>{{ $booking->schedule->end_date?->format('d/m/Y') }}</strong></p>
+                  <p>Phương tiện: <strong> @if ($booking->tour->transport === 'Máy bay')
+                      <i class="fa fa-plane"></i>
+                      @else
+                      <i class="fa fa-bus"></i>
+                      @endif</strong></p>
+                </div>
               </div>
-            </div>
+            </a>
           </div>
         </div>
 
