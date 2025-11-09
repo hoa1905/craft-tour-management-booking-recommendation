@@ -26,9 +26,6 @@
   <link rel="stylesheet" href="{{ asset('css/screen.css') }}">
   <link rel="stylesheet" href="{{ asset('css/main.css') }}">
   <link rel="stylesheet" href="{{ asset('css/update.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/detail.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/tour-search.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/booking.css') }}">
   <link rel="stylesheet" href="{{ asset('css/ai-chatbox.css') }}">
   <!-- JS Config (truyền biến sang JS) -->
   <script language="javascript">
@@ -37,6 +34,9 @@
     var API_URL = "{{ route('api.chat') }}";
     var CSRF_TOKEN = "{{ csrf_token() }}";
     var API_KEY = '';
+
+    var authStatusString = "{{ Auth::guard('client')->check() ? 'true' : 'false' }}";
+    window.isLoggedIn = (authStatusString === 'true');
   </script>
   <!-- JS Files -->
   <script src="{{ asset('js/jquery.min.js') }}"></script>
@@ -59,9 +59,6 @@
   <script src="{{ asset('js/javascript.js') }}"></script>
   <script src="{{ asset('js/main.js') }}"></script>
   <script src="{{ asset('js/update.js') }}"></script>
-  <script src="{{ asset('js/detail.js') }}"></script>
-  <script src="{{ asset('js/tour-search.js') }}"></script>
-  <script src="{{ asset('js/booking.js') }}"></script>
   <script src="{{ asset('js/ai-chatbox.js') }}"></script>
 
   @yield('head')
@@ -135,6 +132,8 @@
                         <li>
                           <div class="vnt-search hiddenmb">
                             <form name="formSearch" action="{{ route('tour.search') }}" method="get" class="box_search">
+                              <!-- Tham số phân biệt form -->
+                              <input type="hidden" name="search_type" value="fuzzy">
                               <div class="seponsi">
                                 <input name="destination" type="text" class="text_search" value="" placeholder="Bạn muốn đi đâu?">
                                 <button type="submit">
@@ -161,7 +160,7 @@
                                 @if($client)
                                 @if($client->avatar)
                                 {{-- Nếu có avatar --}}
-                                <img src="{{ asset($client->avatar) }}"
+                                <img src="{{ asset('images/avatar/' . $client->avatar) }}"
                                   alt="Avatar"
                                   class="user-avatar">
                                 @else
@@ -236,7 +235,7 @@
         @if($client->avatar)
         {{-- Có avatar --}}
         <a href="{{ route('account.info') }}">
-          <img src="{{ asset($client->avatar) }}" alt="Avatar" class="user-avatar" style="width:36px; height:36px; border-radius:50%; border:2px solid #ccc; object-fit:cover;">
+          <img src="{{ asset('images/avatar/' . $client->avatar) }}" alt="Avatar" class="user-avatar">
         </a>
         @else
         {{-- Không có avatar --}}
@@ -321,7 +320,8 @@
   <!-- Overlay khi mở menu -->
   <div class="mobile-menu-overlay"></div>
 
-  @yield('body')
+  @yield('content')
+
   <div id="vnt-popup-login" style="display: none">
     <div class="vnt-popup-member">
       <div class="content">
@@ -414,138 +414,6 @@
             </div>
           </div>
         </form>
-        <script>
-          $(document).ready(function() {
-            // Đăng ký
-            $('#formPopupReg').on('submit', function(e) {
-              e.preventDefault();
-
-              // Ẩn toàn bộ lỗi cũ
-              $('.error-message').text('');
-
-              $.ajax({
-                url: "{{ route('account.register.post') }}",
-                type: "POST",
-                data: {
-                  _token: "{{ csrf_token() }}",
-                  rName: $('#rName').val(),
-                  rEmail: $('#rEmail').val(),
-                  rPassWord: $('#rPassWord').val(),
-                  rConfirm_PassWord: $('#rConfirm_PassWord').val(),
-                  r_agree: $('#r_agree').is(':checked') ? 1 : 0
-                },
-                success: function(res) {
-                  if (res.success) {
-                    toastr.success(res.message);
-                    $('#formPopupReg')[0].reset();
-                    $('.error-message').text('');
-                    $('.vnt-popup-login').trigger('click');
-                  }
-                },
-                error: function(xhr) {
-                  if (xhr.status === 422) {
-                    const errors = xhr.responseJSON.errors;
-
-                    // Hiển thị lỗi cho input tương ứng
-                    $.each(errors, function(key, val) {
-                      $('#error-' + key).text(val[0]);
-                    });
-                  }
-                }
-              });
-            });
-
-            // Xóa lỗi khi người dùng bắt đầu nhập lại trong form
-            $('input').on('input change', function() {
-              const inputId = $(this).attr('id');
-              $('#error-' + inputId).text('');
-            });
-
-            // Đăng nhập
-            $('#vnt-login').on('click', function(e) {
-              e.preventDefault();
-
-              // Xóa lỗi cũ trước khi gửi request
-              $('.error-message').html('');
-
-              $.ajax({
-                url: "{{ route('account.login.post') }}",
-                type: "POST",
-                data: {
-                  _token: "{{ csrf_token() }}",
-                  login_user: $('#popup-login-user').val(),
-                  login_pass: $('#popup-login-password').val(),
-                  ch_remember: $('#ch_remember').is(':checked') ? 1 : 0
-                },
-                success: function(res) {
-                  if (res.success) {
-                    // Chủ động cập nhật trạng thái đăng nhập toàn cục ngay trong trình duyệt, không phụ thuộc vào việc reload lại trang sau khi đăng nhập
-                    window.isLoggedIn = true;
-                    toastr.success(res.message);
-                    $.fancybox.close(); // Đóng FancyBox chuẩn
-                    // Thay đổi giao diện user ngay sau đăng nhập
-                    updateUserHeader(res.username);
-                  }
-                },
-                error: function(xhr) {
-                  if (xhr.status === 422) {
-                    let errors = xhr.responseJSON.errors;
-                    if (errors.login_user) {
-                      $('.error-login-user').html(errors.login_user[0]);
-                    }
-                    if (errors.login_pass) {
-                      $('.error-login-pass').html(errors.login_pass[0]);
-                    }
-                  }
-                  // Lỗi xác thực sai email hoặc mật khẩu (401)
-                  else if (xhr.status === 401) {
-                    $('.error-login').html(xhr.responseJSON.message);
-                  }
-                }
-              });
-            });
-
-            // Xóa lỗi khi người dùng bắt đầu nhập lại trong form đăng nhập
-            $('#popup-login-user, #popup-login-password').on('input', function() {
-              const name = $(this).attr('name');
-              if (name === 'login_user') $('.error-login-user').html('');
-              if (name === 'login_pass') $('.error-login-pass').html('');
-            });
-
-
-            function updateUserHeader(username) {
-              const content = `
-    <ul>
-      <li class="text-center">
-        <div style="font-size: 13px;">Xin chào,</div>
-        <strong style="font-size: 15px;">${username}</strong>
-      </li>
-      <li><a href="{{ route('account.myBookings') }}"><i class="fas fa-list"></i> Đơn đặt tour</a></li>
-      <li><a href="{{ route('account.info') }}"><i class="fas fa-user"></i> Thông tin tài khoản</a></li>
-      <li><a href="{{ route('account.changePassword') }}"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
-      <li>
-        <a href="{{ route('account.logout') }}"
-           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-           <i class="fas fa-sign-out-alt"></i> Đăng xuất
-        </a>
-      </li>
-    </ul>
-    <form id="logout-form" action="{{ route('account.logout') }}" method="POST" style="display: none;">
-      @csrf
-    </form>
-  `;
-
-              // Cập nhật nội dung và thêm class 'logged-in' để áp CSS
-              $('.tpaccounts .acnolog .nnconts')
-                .html(content)
-                .addClass('logged-in');
-
-              // Thay icon bên trên
-              $('.tpaccounts .acnolog .nntitle').html('<i class="fas fa-user-check"></i>');
-            }
-          });
-        </script>
-
       </div>
     </div>
   </div>
@@ -687,6 +555,152 @@
       </div>
     </div>
   </div>
+
+
+  <script>
+    $(document).ready(function() {
+      // Đăng ký
+      $('#formPopupReg').on('submit', function(e) {
+        e.preventDefault();
+
+        // Ẩn toàn bộ lỗi cũ
+        $('.error-message').text('');
+
+        $.ajax({
+          url: "{{ route('account.register.post') }}",
+          type: "POST",
+          data: {
+            _token: "{{ csrf_token() }}",
+            rName: $('#rName').val(),
+            rEmail: $('#rEmail').val(),
+            rPassWord: $('#rPassWord').val(),
+            rConfirm_PassWord: $('#rConfirm_PassWord').val(),
+            r_agree: $('#r_agree').is(':checked') ? 1 : 0
+          },
+          success: function(res) {
+            if (res.success) {
+              toastr.success(res.message);
+              $('#formPopupReg')[0].reset();
+              $('.error-message').text('');
+              $('.vnt-popup-login').trigger('click');
+            }
+          },
+          error: function(xhr) {
+            if (xhr.status === 422) {
+              const errors = xhr.responseJSON.errors;
+
+              // Hiển thị lỗi cho input tương ứng
+              $.each(errors, function(key, val) {
+                $('#error-' + key).text(val[0]);
+              });
+            }
+          }
+        });
+      });
+
+      // Xóa lỗi khi người dùng bắt đầu nhập lại trong form
+      $('input').on('input change', function() {
+        const inputId = $(this).attr('id');
+        $('#error-' + inputId).text('');
+      });
+
+      // Đăng nhập
+      $('#vnt-login').on('click', function(e) {
+        e.preventDefault();
+
+        // Xóa lỗi cũ trước khi gửi request
+        $('.error-message').html('');
+
+        $.ajax({
+          url: "{{ route('account.login.post') }}",
+          type: "POST",
+          data: {
+            _token: "{{ csrf_token() }}",
+            login_user: $('#popup-login-user').val(),
+            login_pass: $('#popup-login-password').val(),
+            ch_remember: $('#ch_remember').is(':checked') ? 1 : 0
+          },
+          success: function(res) {
+            if (res.success) {
+              /* Chủ động cập nhật trạng thái đăng nhập toàn cục ngay trong trình duyệt, không phụ thuộc vào việc reload lại trang sau khi đăng nhập
+               */
+              window.isLoggedIn = true;
+              toastr.success(res.message);
+              $.fancybox.close(); // Đóng FancyBox chuẩn
+              /* 
+               * Thay đổi giao diện user ngay sau đăng nhập
+               * Truyền username và avatar từ AcountController của hàm postLogin
+               */
+              updateUserHeader(res.username, res.avatar);
+            }
+          },
+          error: function(xhr) {
+            if (xhr.status === 422) {
+              let errors = xhr.responseJSON.errors;
+              if (errors.login_user) {
+                $('.error-login-user').html(errors.login_user[0]);
+              }
+              if (errors.login_pass) {
+                $('.error-login-pass').html(errors.login_pass[0]);
+              }
+            }
+            // Lỗi xác thực sai email hoặc mật khẩu (401)
+            else if (xhr.status === 401) {
+              $('.error-login').html(xhr.responseJSON.message);
+            }
+          }
+        });
+      });
+
+      // Xóa lỗi khi người dùng bắt đầu nhập lại trong form đăng nhập
+      $('#popup-login-user, #popup-login-password').on('input', function() {
+        const name = $(this).attr('name');
+        if (name === 'login_user') $('.error-login-user').html('');
+        if (name === 'login_pass') $('.error-login-pass').html('');
+      });
+
+
+      function updateUserHeader(username, avatarUrl) {
+        const content = `
+    <ul>
+      <li class="text-center">
+        <div style="font-size: 13px;">Xin chào,</div>
+        <strong style="font-size: 15px;">${username}</strong>
+      </li>
+      <li><a href="{{ route('account.myBookings') }}"><i class="fas fa-list"></i> Đơn đặt tour</a></li>
+      <li><a href="{{ route('account.info') }}"><i class="fas fa-user"></i> Thông tin tài khoản</a></li>
+      <li><a href="{{ route('account.changePassword') }}"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
+      <li>
+        <a href="{{ route('account.logout') }}"
+           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+           <i class="fas fa-sign-out-alt"></i> Đăng xuất
+        </a>
+      </li>
+    </ul>
+    <form id="logout-form" action="{{ route('account.logout') }}" method="POST" style="display: none;">
+      @csrf
+    </form>
+  `;
+        // Tạo HTML cho avatar
+        let avatarHtml = '';
+        if (avatarUrl) {
+          // Nếu có avatar, tạo thẻ <img>
+          avatarHtml = `<img src="{{ asset('images/avatar/${avatarUrl}') }}" alt="Avatar" class="user-avatar">`;
+
+        } else {
+          // Nếu không, dùng icon mặc định
+          avatarHtml = '<i class="fas fa-user-check"></i>';
+        }
+        // Cập nhật nội dung dropdown và thêm class 'logged-in' để áp CSS
+        $('.tpaccounts .acnolog .nnconts')
+          .html(content)
+          .addClass('logged-in');
+
+        // Cập nhật avatar/icon
+        $('.tpaccounts .acnolog .nntitle').html(avatarHtml);
+      }
+    });
+  </script>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
