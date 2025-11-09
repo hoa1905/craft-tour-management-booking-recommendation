@@ -1,85 +1,121 @@
 @extends('client.master')
 
 @section('title', $village->village_name)
+<link rel="stylesheet" href="{{ asset('css/village-detail.css') }}">
+@section('head')
 
-@section('body')
-<div class="container mx-auto px-4 py-8" style="height: 400px;">
-  <h1>
-    {{ $village->village_name }}
-  </h1>
-</div>
-<!-- <div class="container mx-auto px-4 py-8">
-  <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-    <img src="{{ $village->image_main }}" alt="{{ $village->village_name }}"
-      class="w-full h-96 object-cover">
+@endsection
 
-    <div class="p-8">
-      <div class="flex items-center justify-between mb-4">
-        <h1 class="text-4xl font-bold text-gray-900">
-          {{ $village->village_name }}
-        </h1>
+@section('content')
+<div id="vnt-content">
+  <div class="village-detail">
+    <div class="wrapper">
+      <div class="village-header">
+        <h1>{{ $village->village_name }}</h1>
+        @if(isset($village->province->province_name))
+        <p><i class="fa fa-map-marker-alt"></i> {{ $village->province->province_name }}</p>
+        @endif
       </div>
 
-      <div class="flex items-center text-gray-600 mb-6">
-        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
-        </svg>
-        {{ $village->province->province_name }}, {{ $village->province->region->region_name }}
+      @php
+      $villageImage = $village->image_main
+      ? asset('images/' . $village->image_main)
+      : asset('images/banner-1.jpg'); // Fallback
+      @endphp
+
+      <div class="village-image"
+        style="background-image: url('{{ $villageImage }}');">
       </div>
 
-      @if($village->history)
-      <div class="mb-6">
+      <div class="village-content">
         <h2 class="text-2xl font-bold mb-3">Lịch sử làng nghề</h2>
-        <p class="text-gray-700 leading-relaxed">
-          {{ $village->history }}
-        </p>
+        <p class="text-gray-700 leading-relaxed">{{ $village->history }}</p>
       </div>
-      @endif
 
-      @if($village->main_product)
-      <div class="mb-6">
-        <h2 class="text-2xl font-bold mb-3">Sản phẩm chính</h2>
-        <p class="text-gray-700">
-          {{ $village->main_product }}
-        </p>
-      </div>
-      @endif
-
-      <div class="mb-6">
-        <h2 class="text-2xl font-bold mb-3">Vị trí</h2>
-        <div id="detailMap" style="height: 300px; border-radius: 8px;"></div>
-      </div>
+      <ul class="village-info mt-4">
+        <li><i class="fa fa-gem"></i> <strong>Giá trị truyền thống:</strong> {{ $village->traditional_value }}</li>
+        <li><i class="fa fa-industry"></i> <strong>Ngành nghề chính:</strong> {{ $village->main_product }}</li>
+      </ul>
     </div>
   </div>
 
-  @if($village->tours->count() > 0)
-  <div class="bg-white rounded-lg shadow-lg p-8">
-    <h2 class="text-2xl font-bold mb-6">Tours tham quan {{ $village->village_name }}</h2>
+  <div class="vnt-tintuc vnt-tour-load box-tour" data-id="0" data-type="focus">
+    <div class="wrapper">
+      <div class="style-title-1 lazyloading">
+        <div class="fl">
+          <h2 class="stTitle">Tour liên quan</h2>
+        </div>
+        <div class="clear"></div>
+      </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      @foreach($village->tours as $tour)
-      <div class="border rounded-lg overflow-hidden hover:shadow-lg transition">
-        <img src="{{ $tour->image_main }}" alt="{{ $tour->tour_name }}"
-          class="w-full h-48 object-cover">
-        <div class="p-4">
-          <h3 class="font-bold text-lg mb-2">{{ $tour->tour_name }}</h3>
-          <p class="text-gray-600 text-sm mb-3">{{ $tour->duration }}</p>
-          <div class="flex justify-between items-center">
-            <span class="text-blue-600 font-bold">
-              {{ number_format($tour->price_adult) }}đ
-            </span>
-            <a href="/tours/{{ $tour->tour_id }}"
-              class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm">
-              Xem tour
-            </a>
+      <div class="vhtourkm loadBottom">
+        <div id="related-tour-list" class="row g-4">
+          @forelse ($village->tours as $tour)
+          @php
+          $tourImage = asset('images/' . $tour->image_main);
+          @endphp
+          <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="tour-card">
+              <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
+                <div class="tour-image"
+                  style="background-image: url('{{ $tourImage }}');">
+                  <span class="tour-region">
+                    <i class="fa fa-map-marker-alt"></i> {{ $tour->destination }}
+                  </span>
+                </div>
+              </a>
+
+              <div class="tour-body">
+                <h4 class="tour-title">
+                  <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
+                    {{ $tour->tour_name }}
+                  </a>
+                </h4>
+                <div class="tour-price">
+                  {{ number_format($tour->price_adult, 0, ',', '.') }} <span class="currency">đ</span>
+                </div>
+
+                <ul class="tour-info list-unstyled">
+                  <li><strong>Khởi hành:</strong> {{ $tour->departure_point }}</li>
+                  <li><strong>Điểm đến:</strong> {{ $tour->destination }}</li>
+                  <li><strong>Thời gian:</strong> {{ $tour->duration }}</li>
+                </ul>
+                <div class="clearfix">
+                  <div class="pull-left">
+                    <strong>Ngày đi:</strong>
+                    @if($tour->schedules->isNotEmpty())
+                    {{ $tour->schedules
+        ->sortBy('start_date')
+        ->map(fn($s) => \Carbon\Carbon::parse($s->start_date)->format('d/m'))
+        ->implode(', ') }}
+                    @else
+                    Chưa có lịch khởi hành
+                    @endif
+                  </div>
+
+                  <div class="pull-right">
+                    @if ($tour->transport === 'Máy bay')
+                    <i class="fa fa-plane"></i>
+                    @else
+                    <i class="fa fa-bus"></i>
+                    @endif
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+          @empty
+          <div class="col-12 text-center text-muted">Chưa có tour liên quan.</div>
+          @endforelse
         </div>
       </div>
-      @endforeach
+
+      @if($village->tours->count() > 8)
+      <div class="viewall">
+        <a href="#" class="btn btn-outline-primary px-4">Xem thêm</a>
+      </div>
+      @endif
     </div>
   </div>
-  @endif
-</div> -->
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</div>
 @endsection
