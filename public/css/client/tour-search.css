@@ -501,7 +501,7 @@
   height: 40px;
 }
 .itfindtour .chosen-container-single .chosen-single{
-  background-image: url('../images/iselect.png')!important;
+  background-image: url('../../images/iselect.png')!important;
   background-size: 13px 8px!important;
   background-repeat: no-repeat!important;
   background-position: calc(100% - 10px) 17px!important;

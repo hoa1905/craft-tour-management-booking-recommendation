@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
-<link rel="stylesheet" href="{{ asset('css/village-map.css') }}">
+<link rel="stylesheet" href="{{ asset('css/client/village-map.css') }}">
 @endsection
 
 @section('content')
@@ -76,5 +76,5 @@
   window.villageData = JSON.parse('@json($villages ?? [])');
 </script>
 
-<script src="{{ asset('js/village-map.js') }}"></script>
+<script src="{{ asset('js/client/village-map.js') }}"></script>
 @endsection

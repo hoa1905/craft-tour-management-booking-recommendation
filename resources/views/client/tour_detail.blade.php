@@ -3,7 +3,7 @@
 @section('title', 'Trang chi tiết tour')
 
 @section('head')
-<link rel="stylesheet" href="{{ asset('css/tour-detail.css') }}">
+<link rel="stylesheet" href="{{ asset('css/client/tour-detail.css') }}">
 @endsection
 
 @section('content')
@@ -619,8 +619,8 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('js/tour-detail.js') }}"></script>
-<script src="{{ asset('js/plusone.js') }}"></script>
-<script src="{{ asset('js/support_fixed.js') }}"></script>
-<script src="{{ asset('js/Drog.js') }}"></script>
+<script src="{{ asset('js/client/tour-detail.js') }}"></script>
+<script src="{{ asset('js/client/plusone.js') }}"></script>
+<script src="{{ asset('js/client/support_fixed.js') }}"></script>
+<script src="{{ asset('js/client/Drog.js') }}"></script>
 @endsection

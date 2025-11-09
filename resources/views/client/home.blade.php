@@ -5,11 +5,11 @@
 @section('head')
 <!-- Truyền giá trị session vào HTML. Khi đó, home.js sẽ đọc được để hiện thông báo toastr -->
 <meta name="flash-success" content="{{ session('change_password_success') ?? '' }}">
-<link rel="stylesheet" href="{{ asset('css/search.css') }}">
-<link rel="stylesheet" href="{{ asset('css/support_fixed.css') }}">
-<link rel="stylesheet" href="{{ asset('css/flatpickr.min.css') }}">
-<link rel="stylesheet" href="{{ asset('css/flatpickrcus.css') }}">
-<link rel="stylesheet" href="{{ asset('css/monthSelect.min.css') }}">
+<link rel="stylesheet" href="{{ asset('css/client/search.css') }}">
+<link rel="stylesheet" href="{{ asset('css/client/support_fixed.css') }}">
+<link rel="stylesheet" href="{{ asset('css/client/flatpickr.min.css') }}">
+<link rel="stylesheet" href="{{ asset('css/client/flatpickrcus.css') }}">
+<link rel="stylesheet" href="{{ asset('css/client/monthSelect.min.css') }}">
 @endsection
 
 @section('content')
@@ -553,16 +553,16 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('js/home.js') }}"></script>
-<script src="{{ asset('js/plusone.js') }}"></script>
-<script src="{{ asset('js/support_fixed.js') }}"></script>
-<script src="{{ asset('js/monthSelect.js') }}"></script>
-<script src="{{ asset('js/monthSelectindex.js') }}"></script>
-<script src="{{ asset('js/Drog.js') }}"></script>
-<script src="{{ asset('js/classList.min.js') }}"></script>
-<script src="{{ asset('js/flatpickr.min.js') }}"></script>
-<script src="{{ asset('js/rangePlugin.min.js') }}"></script>
-<script src="{{ asset('js/scrollPlugin.min.js') }}"></script>
+<script src="{{ asset('js/client/home.js') }}"></script>
+<script src="{{ asset('js/client/plusone.js') }}"></script>
+<script src="{{ asset('js/client/support_fixed.js') }}"></script>
+<script src="{{ asset('js/client/monthSelect.js') }}"></script>
+<script src="{{ asset('js/client/monthSelectindex.js') }}"></script>
+<script src="{{ asset('js/client/Drog.js') }}"></script>
+<script src="{{ asset('js/client/classList.min.js') }}"></script>
+<script src="{{ asset('js/client/flatpickr.min.js') }}"></script>
+<script src="{{ asset('js/client/rangePlugin.min.js') }}"></script>
+<script src="{{ asset('js/client/scrollPlugin.min.js') }}"></script>
 <!-- Locale Vietnamese phải load SAU flatpickr thì lịch mới hiện tiếng việt-->
-<script src="{{ asset('js/vn.js') }}"></script>
+<script src="{{ asset('js/client/vn.js') }}"></script>
 @endsection

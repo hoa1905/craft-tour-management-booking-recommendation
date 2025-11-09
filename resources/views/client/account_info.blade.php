@@ -3,7 +3,7 @@
 @section('title', 'Thông tin tài khoản')
 
 @section('head')
-<link rel="stylesheet" href="{{ asset('css/account-info.css') }}">
+<link rel="stylesheet" href="{{ asset('css/client/account-info.css') }}">
 @endsection
 
 @section('content')

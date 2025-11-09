@@ -162,15 +162,15 @@ input {   color: #2a2a2a;}
 
 /********************* CSS for boxMess ****************************/
 #boxMess{  border:1px solid #F08200;padding:2px 5px; background:#FCF5CD }
-#boxMess  h4.mess { background:url(../images/icon_mess.gif) no-repeat left; padding:2px 30px; color:#FF0000; font-weight:bold; font-size:12px;}
-#boxMess  h4.err { background:url(../images/icon_warning.gif) no-repeat left; padding:6px 30px; color:#FF0000; font-weight:bold;}
+#boxMess  h4.mess { background:url(../../images/icon_mess.gif) no-repeat left; padding:2px 30px; color:#FF0000; font-weight:bold; font-size:12px;}
+#boxMess  h4.err { background:url(../../images/icon_warning.gif) no-repeat left; padding:6px 30px; color:#FF0000; font-weight:bold;}
 #boxMess .font_err { color:#950000;}
 
 
 
 /******************** PHAN TRANG **************/
 .pagination{ 
-	background:url(../images/hr.gif) top repeat-x;
+	background:url(../../../../images/hr.gif) top repeat-x;
  	padding-top:10px;
   text-align:center;
 }
@@ -185,7 +185,7 @@ input {   color: #2a2a2a;}
 	text-decoration: none; 
 	color: #868686;
 	font-weight:bold;
-	background:url(../images/page_bg.gif) center no-repeat;
+	background:url(../../../../images/page_bg.gif) center no-repeat;
 	width:18px;
 	height:15px;
 	line-height:15px;
@@ -200,7 +200,7 @@ input {   color: #2a2a2a;}
 	font-weight: bold;
 	display:inline-block ;
 	padding: 0px 2px;
-	background:url(../images/page_on.gif) center no-repeat;
+	background:url(../../../../images/page_on.gif) center no-repeat;
 	color: #fff;
 	width:18px;
 	height:15px;

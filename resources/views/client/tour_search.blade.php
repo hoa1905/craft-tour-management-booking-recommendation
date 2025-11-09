@@ -3,10 +3,10 @@
 @section('title', 'Trang tìm kiếm tour')
 
 @section('head')
-<link rel="stylesheet" href="{{ asset('css/tour-search.css') }}">
-<link rel="stylesheet" href="css/flatpickr.min.css">
-<link rel="stylesheet" href="css/flatpickrcus.css">
-<link rel="stylesheet" href="css/monthSelect.min.css">
+<link rel="stylesheet" href="{{ asset('css/client/tour-search.css') }}">
+<link rel="stylesheet" href="{{ asset('css/client/flatpickr.min.css') }}">
+<link rel="stylesheet" href="{{ asset('css/client/flatpickrcus.css') }}">
+<link rel="stylesheet" href="{{ asset('css/client/monthSelect.min.css') }}">
 @endsection
 
 @section('content')
@@ -300,16 +300,16 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('js/tour-search.js') }}"></script>
-<script src="{{ asset('js/classList.min.js') }}"></script>
-<script src="{{ asset('js/jquery.number.min.js') }}"></script>
-<script src="{{ asset('js/flatpickr.min.js') }}"></script>
-<script src="{{ asset('js/rangePlugin.min.js') }}"></script>
-<script src="{{ asset('js/scrollPlugin.min.js') }}"></script>
-<script src="{{ asset('js/monthSelect.js') }}"></script>
-<script src="{{ asset('js/monthSelectindex.js') }}"></script>
+<script src="{{ asset('js/client/tour-search.js') }}"></script>
+<script src="{{ asset('js/client/classList.min.js') }}"></script>
+<script src="{{ asset('js/client/jquery.number.min.js') }}"></script>
+<script src="{{ asset('js/client/flatpickr.min.js') }}"></script>
+<script src="{{ asset('js/client/rangePlugin.min.js') }}"></script>
+<script src="{{ asset('js/client/scrollPlugin.min.js') }}"></script>
+<script src="{{ asset('js/client/monthSelect.js') }}"></script>
+<script src="{{ asset('js/client/monthSelectindex.js') }}"></script>
 <!-- Locale Vietnamese phải load SAU flatpickr thì lịch mới hiện tiếng việt-->
-<script src="{{ asset('js/vn.js') }}"></script>
+<script src="{{ asset('js/client/vn.js') }}"></script>
 <!-- Các JS custom gọi flatpickr -->
 <script>
   // Khởi tạo lịch và Price slider

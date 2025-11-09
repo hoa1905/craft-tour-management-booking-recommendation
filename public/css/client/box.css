@@ -15,7 +15,7 @@ a.classic-popup-close:hover{text-decoration:none;color:#4f2d00}
 .classic-popup-content{width:100%;background:#fff; }
 #bannerPopup { position:relative;}
 .close-popup { text-align:right; margin-bottom:5px;}
-.close-popup a { display:inline-block; background:url(../images/close-popup.gif) no-repeat; color:#FFF; font-size:12px; text-decoration:none; padding-left:20px;}
+.close-popup a { display:inline-block; background:url(../../images/close-popup.gif) no-repeat; color:#FFF; font-size:12px; text-decoration:none; padding-left:20px;}
 .bannerPopupContent { background:#fff;}
 /* fix for bold in FF4 win 64bit */
 b{font-weight:bold}
@@ -150,7 +150,7 @@ b{font-weight:bold}
 .box_category  ul {list-style:none;}
 .box_category  li { }
 .box_category  li a {
-	background:url(../images/icon_cat.gif) 0px 9px no-repeat;
+	background:url(../../images/icon_cat.gif) 0px 9px no-repeat;
 	display:block;  
 	font-weight:bold;
 	padding-left:10px;	
@@ -169,7 +169,7 @@ b{font-weight:bold}
 	padding:2px;
 }
 .box_category ul ul li a {
-	background:url(../images/icon_li.gif) 0px 9px no-repeat;
+	background:url(../../images/icon_li.gif) 0px 9px no-repeat;
 	font-weight:normal;
 	padding-left:10px; 	
 }
@@ -423,14 +423,14 @@ b{font-weight:bold}
     color: transparent;
     width: 20px;
     height: 22px;
-    background: url(../images/icon-home.png) no-repeat 50% -2px;
+    background: url(../../images/icon-home.png) no-repeat 50% -2px;
 }
 /*===================END: BREADCRUMB=========================*/
 /*===================BEGIN: SHARE NEWS TO SOCIAL NETWORK =========================*/
 .like_share{
     margin: 0 0 20px 0;
     padding: 10px;
-    /*background: url("../images/weblink/bg-social.png") repeat 0 0;*/
+    /*background: url("../../images/weblink/bg-social.png") repeat 0 0;*/
     background: #f2f2f2;
     /*border-top: 1px solid #eeeeee;*/
     /*border-bottom: 1px solid #eeeeee;*/
@@ -497,32 +497,32 @@ b{font-weight:bold}
 .feedback .link-feedback{
     padding-left: 20px ;
     padding-right: 15px;
-    background: url(../images/weblink/feedback.png) no-repeat left;
+    background: url(../../images/weblink/feedback.png) no-repeat left;
 }
 .feedback .link-comeback{
     padding-left: 20px ;
     padding-right: 15px;
-    background: url(../images/weblink/comeback.png) no-repeat left;
+    background: url(../../images/weblink/comeback.png) no-repeat left;
 }
 .link-email{
     padding-left: 20px ;
     padding-right: 15px;
-    background: url(../images/weblink/email.png) no-repeat left;
+    background: url(../../images/weblink/email.png) no-repeat left;
 }
 .feedback .link-email{
     padding-left: 20px ;
     padding-right: 15px;
-    background: url(../images/weblink/email.png) no-repeat left;
+    background: url(../../images/weblink/email.png) no-repeat left;
 }
 .link-print{
     padding-left: 20px ;
     padding-right: 15px;
-    background: url(../images/weblink/print.png) no-repeat left;
+    background: url(../../images/weblink/print.png) no-repeat left;
 }
 .feedback .link-print{
     padding-left: 25px ;
     padding-right: 15px;
-    background: url(../images/weblink/print.png) no-repeat left;
+    background: url(../../images/weblink/print.png) no-repeat left;
 }
 /*===================END: SHARE NEWS TO SOCIAL NETWORK =========================*/
 /*===================END: TAG =========================*/
@@ -610,7 +610,7 @@ b{font-weight:bold}
     right: 0;
     height: 12px;
     content: '';
-    /*background: url(../images/pattern-title.png) repeat;*/
+    /*background: url(../../images/pattern-title.png) repeat;*/
 }
 .news_related_title{
     border-bottom: 2px solid #000000;
@@ -749,7 +749,7 @@ b{font-weight:bold}
     line-height:34px;
     color: #ffffff;
     padding: 10px 50px 10px 10px;
-    background: url(../images/bg-arrow.png)no-repeat 100% 50% #9c1320;
+    background: url(../../images/bg-arrow.png)no-repeat 100% 50% #9c1320;
     cursor: pointer;
     display: none;
 }
@@ -874,7 +874,7 @@ b{font-weight:bold}
 /*}*/
 /*.row-form .input-group .input-group-text .refresh{*/
     /*padding-left: 25px;*/
-    /*background: url("../images/contact/icon-refresh.png") no-repeat 0 50%;*/
+    /*background: url("../../images/contact/icon-refresh.png") no-repeat 0 50%;*/
 /*}*/
 /*.row-form .form-control#staff{*/
     /*padding-left:5px;*/

@@ -1071,7 +1071,7 @@ a.underline:hover {
     left: 0;
     right: 0;
     height: 198px;
-    background: url("../images/mask.png") repeat-x;
+    background: url("../../images/mask.png") repeat-x;
 }
 .item-diadiem .i-img .i-text {
     pointer-events: none;
@@ -1167,7 +1167,7 @@ a.underline:hover {
     left: 0;
     right: 0;
     height: 200px;
-    background: url("../images/mask2_1.png") repeat-x;
+    background: url("../../images/mask2_1.png") repeat-x;
 }
 .item-luachon .i-text {
     pointer-events: none;
@@ -2030,7 +2030,7 @@ a.color1:hover {
     right: 0;
     width: 120px;
     height: 50px;
-    background: url("../images/bg-km.png") no-repeat;
+    background: url("../../images/bg-km.png") no-repeat;
     color: #ffffff;
     font-size: 12px;
     line-height: 25px;

@@ -3,7 +3,7 @@
 @section('title', 'Đơn đặt tour')
 
 @section('head')
-<link rel="stylesheet" href="{{ asset('css/booking.css') }}">
+<link rel="stylesheet" href="{{ asset('css/client/booking.css') }}">
 @endsection
 
 @section('content')
@@ -225,5 +225,5 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('js/booking.js') }}"></script>
+<script src="{{ asset('js/client/booking.js') }}"></script>
 @endsection

@@ -1,7 +1,7 @@
 @extends('client.master')
 
 @section('title', $village->village_name)
-<link rel="stylesheet" href="{{ asset('css/village-detail.css') }}">
+<link rel="stylesheet" href="{{ asset('css/client/village-detail.css') }}">
 @section('head')
 
 @endsection

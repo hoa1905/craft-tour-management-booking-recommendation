@@ -12,21 +12,21 @@
   <!-- Favicon -->
   <link rel="icon" href="{{ asset('images/hanh-trinh-vang-icon.png') }}" type="image/png">
   <!-- CSS Files -->
-  <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/jquery.fancybox.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/slick.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/slick-theme.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/jquery-ui.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/menu.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/jquery.mCustomScrollbar.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/chosen.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/toastr.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/screen.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/main.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/update.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/ai-chatbox.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/client/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/client/all.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/client/jquery.fancybox.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/client/slick.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/client/slick-theme.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/client/jquery-ui.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/client/menu.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/client/jquery.mCustomScrollbar.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/client/chosen.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/client/sweetalert2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/client/toastr.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/client/screen.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/client/main.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/client/update.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/client/ai-chatbox.css') }}">
   <!-- JS Config (truyền biến sang JS) -->
   <script language="javascript">
     var ROOT = "";
@@ -39,27 +39,27 @@
     window.isLoggedIn = (authStatusString === 'true');
   </script>
   <!-- JS Files -->
-  <script src="{{ asset('js/jquery.min.js') }}"></script>
-  <script src="{{ asset('js/jquery-migrate.min.js') }}"></script>
-  <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-  <script src="{{ asset('js/jquery.fancybox.js') }}"></script>
-  <script src="{{ asset('js/slick.min.js') }}"></script>
-  <script src="{{ asset('js/jquery.validate.min.js') }}"></script>
-  <script src="{{ asset('js/jquery-ui.js') }}"></script>
-  <script src="{{ asset('js/jquery.ui.datepicker-vi.js') }}"></script>
-  <script src="{{ asset('js/menu.js') }}"></script>
-  <script src="{{ asset('js/jquery.mCustomScrollbar.js') }}"></script>
-  <script src="{{ asset('js/mnfixed.js') }}"></script>
-  <script src="{{ asset('js/chosen.js') }}"></script>
-  <script src="{{ asset('js/sweetalert2.min.js') }}"></script>
-  <script src="{{ asset('js/toastr.min.js') }}"></script>
-  <script src="{{ asset('js/jquery.form.min.js') }}"></script>
-  <script src="{{ asset('js/pagination.min.js') }}"></script>
-  <script src="{{ asset('js/core.js') }}"></script>
-  <script src="{{ asset('js/javascript.js') }}"></script>
-  <script src="{{ asset('js/main.js') }}"></script>
-  <script src="{{ asset('js/update.js') }}"></script>
-  <script src="{{ asset('js/ai-chatbox.js') }}"></script>
+  <script src="{{ asset('js/client/jquery.min.js') }}"></script>
+  <script src="{{ asset('js/client/jquery-migrate.min.js') }}"></script>
+  <script src="{{ asset('js/client/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('js/client/jquery.fancybox.js') }}"></script>
+  <script src="{{ asset('js/client/slick.min.js') }}"></script>
+  <script src="{{ asset('js/client/jquery.validate.min.js') }}"></script>
+  <script src="{{ asset('js/client/jquery-ui.js') }}"></script>
+  <script src="{{ asset('js/client/jquery.ui.datepicker-vi.js') }}"></script>
+  <script src="{{ asset('js/client/menu.js') }}"></script>
+  <script src="{{ asset('js/client/jquery.mCustomScrollbar.js') }}"></script>
+  <script src="{{ asset('js/client/mnfixed.js') }}"></script>
+  <script src="{{ asset('js/client/chosen.js') }}"></script>
+  <script src="{{ asset('js/client/sweetalert2.min.js') }}"></script>
+  <script src="{{ asset('js/client/toastr.min.js') }}"></script>
+  <script src="{{ asset('js/client/jquery.form.min.js') }}"></script>
+  <script src="{{ asset('js/client/pagination.min.js') }}"></script>
+  <script src="{{ asset('js/client/core.js') }}"></script>
+  <script src="{{ asset('js/client/javascript.js') }}"></script>
+  <script src="{{ asset('js/client/main.js') }}"></script>
+  <script src="{{ asset('js/client/update.js') }}"></script>
+  <script src="{{ asset('js/client/ai-chatbox.js') }}"></script>
 
   @yield('head')
 </head>

@@ -581,7 +581,7 @@ ul.js-pagination li.disabled {
     z-index: 901;
     width: 150px;
     height: 150px;
-    background: url(../images/loading.svg) no-repeat center center;
+    background: url(../../images/loading.svg) no-repeat center center;
     background-size: cover;
     opacity: 1;
 }
@@ -613,7 +613,7 @@ ul.js-pagination li.disabled {
     z-index: 1000;
     width: 100px;
     height: 100px;
-    background: url(../images/loading.svg) no-repeat center center;
+    background: url(../../images/loading.svg) no-repeat center center;
     background-size: cover;
     opacity: 0.6;
 }
@@ -625,7 +625,7 @@ ul.js-pagination li.disabled {
     float: left;
     width: 100%;
     height: 40px;
-    background: url(../images/preloader.gif) no-repeat 50% 50%;
+    background: url(../../images/preloader.gif) no-repeat 50% 50%;
 }
 
 

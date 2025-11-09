@@ -355,11 +355,11 @@
   height: 100%;
   background-position: center;
   background-repeat: no-repeat;
-  background-image: url("../images/itat.png");
+  background-image: url("../../images/itat.png");
   background-size: 24px 10px;
 }
 .vformall .vchange .vshive a::before{
-  background-image: url("../images/imo.png");
+  background-image: url("../../images/imo.png");
   background-size: 22px 14px;
 }
 /* <=== vstyleall ===> */

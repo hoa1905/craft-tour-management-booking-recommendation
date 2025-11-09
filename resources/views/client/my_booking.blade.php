@@ -3,7 +3,7 @@
 @section('title', 'Đơn đặt tour của bạn')
 
 @section('head')
-<link rel="stylesheet" href="{{ asset('css/my-booking.css') }}">
+<link rel="stylesheet" href="{{ asset('css/client/my-booking.css') }}">
 @endsection
 
 @section('content')

@@ -3,7 +3,7 @@
 @section('title', 'Đổi mật khẩu')
 
 @section('head')
-<link rel="stylesheet" href="{{ asset('css/change-password.css') }}">
+<link rel="stylesheet" href="{{ asset('css/client/change-password.css') }}">
 @endsection
 
 @section('content')
