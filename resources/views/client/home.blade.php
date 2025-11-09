@@ -64,6 +64,8 @@
           </div>
           <div class="vhformsall">
             <form id="formSearch" name="formSearch" action="{{ route('tour.search') }}" method="get">
+              <!-- Tham số phân biệt form -->
+              <input type="hidden" name="search_type" value="exact">
               <div class="hpformsall">
                 <div class="vvgrip">
                   <div class="mcol">
