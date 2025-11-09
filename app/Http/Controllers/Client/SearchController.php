@@ -11,20 +11,26 @@ class SearchController extends Controller
 {
     public function search(Request $request)
     {
+        // Lấy và làm sạch các tham số
         $filters = [
-            'departure' => trim($request->input('departure')),
-            'destination' => trim($request->input('destination')),
-            'start_date' => trim($request->input('start_date')),
-            'duration' => trim($request->input('duration')),
-            'priceMin' => $request->input('s_price_min', 0),
-            'priceMax' => $request->input('s_price_max', 50000000),
+            'departure' => trim($request->input('departure', '')),
+            'destination' => trim($request->input('destination', '')),
+            'start_date' => trim($request->input('start_date', '')),
+            'duration' => trim($request->input('duration', '')),
+            'priceMin' => $request->input('s_price_min'),
+            'priceMax' => $request->input('s_price_max'),
+            'search_type' => $request->input('search_type'),
+            'sort' => $request->input('sort'),
         ];
 
-        // Nếu trống hết
-        if (
-            empty($filters['departure']) && empty($filters['destination']) && empty($filters['start_date']) && empty($filters['duration']) &&
-            empty($request->input('s_price_min')) && empty($request->input('s_price_max'))
-        ) {
+        // Kiểm tra nếu không có tham số nào
+        $hasFilters = !empty($filters['departure']) ||
+            !empty($filters['destination']) ||
+            !empty($filters['start_date']) ||
+            !empty($filters['duration']) ||
+            ($filters['priceMin'] !== null && $filters['priceMax'] !== null);
+
+        if (!$hasFilters) {
             $emptyPaginator = new LengthAwarePaginator(collect([]), 0, 10, 1, [
                 'path' => $request->url(),
                 'query' => $request->query(),
@@ -36,7 +42,9 @@ class SearchController extends Controller
             ]);
         }
 
+        // Thực hiện tìm kiếm
         $tours = Tour::searchTours($filters)->paginate(10)->appends($request->query());
+
         $message = $tours->isEmpty() ? 'Không tìm thấy tour phù hợp.' : '';
 
         return view('client.tour_search', compact('tours', 'message'));

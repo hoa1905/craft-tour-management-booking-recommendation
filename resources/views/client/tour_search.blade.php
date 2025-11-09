@@ -79,6 +79,8 @@
               <div class="pmClose"><i class="fa fa-times"></i></div>
               <div class="pmContent">
                 <form id="formModSearch" name="formModSearch" action="{{ route('tour.search') }}" method="get">
+                  <!-- Tham số phân biệt form -->
+                  <input type="hidden" name="search_type" value="exact">
                   <div class="box-filter">
                     <div class="filter-title">TÌM KIẾM TOUR</div>
                     <div class="item-filter">
