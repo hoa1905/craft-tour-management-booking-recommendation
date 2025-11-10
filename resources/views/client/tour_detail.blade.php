@@ -48,14 +48,14 @@
                       <td>
                         <div class="i-label fa-map-marker-alt">Điểm đi:</div>
                       </td>
-                      <td><a href="/tour/tour.html/?departure=1" target="_blank">{{ $tour->departure_point }}</a>
+                      <td>{{ $tour->departure_point }}</a>
                       </td>
                     </tr>
                     <tr>
                       <td>
                         <div class="i-label fa-route"><strong>Điểm Đến:</strong></div>
                       </td>
-                      <td><a href="/tour/mien-trung.html" target="_blank">{{ $tour->destination }}</a></td>
+                      <td>{{ $tour->destination }}</a></td>
                     </tr>
                     <tr>
                       <td>
@@ -64,7 +64,7 @@
                       <td>
                         @if($tour->villages->isNotEmpty())
                         @foreach($tour->villages as $village)
-                        <a href="javascript:void(0)" target="_blank">
+                        <a href="{{ route('villages.detail', ['id' => $village->village_id]) }}" target="_blank">
                           {{ $village->village_name }}
                         </a>@if(!$loop->last), @endif
                         @endforeach
