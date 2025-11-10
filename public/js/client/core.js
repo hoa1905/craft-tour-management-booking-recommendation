@@ -85,7 +85,7 @@ window.rwt = function (obj, type, id) {
       delayOver: 150,
       delayOut: 0
     };
-    cfg = $.extend(cfg, g ? {over: f, out: g} : f);
+    cfg = $.extend(cfg, g ? { over: f, out: g } : f);
     var cX, cY, pX, pY;
 
     var track = function (ev) {
@@ -96,7 +96,7 @@ window.rwt = function (obj, type, id) {
     var compare = function (ev, ob) {
       ob.hoverDelay_t = clearTimeout(ob.hoverDelay_t);
 
-      if (( Math.abs(pX - cX) + Math.abs(pY - cY) ) < cfg.sensitivity) {
+      if ((Math.abs(pX - cX) + Math.abs(pY - cY)) < cfg.sensitivity) {
         $(ob).unbind("mousemove", track);
 
         ob.hoverDelay_s = 1;
@@ -158,19 +158,19 @@ window.rwt = function (obj, type, id) {
  by ThaiSon
  ***********************************************/
 var vnTRUST = {};
-vnTRUST.is_ff  = function(){ return (/Firefox/).test(navigator.userAgent) };
-vnTRUST.is_ie  = function() { return (/MSIE/).test(navigator.userAgent) };
-vnTRUST.is_ie6 = function() { return (/MSIE 6/).test(navigator.userAgent) };
-vnTRUST.is_ie7 = function() { return (/MSIE 7/).test(navigator.userAgent) };
-vnTRUST.is_ie8 = function() { return (/MSIE 8/).test(navigator.userAgent) };
-vnTRUST.is_chrome = function(){ return (/Chrome/).test(navigator.userAgent) };
-vnTRUST.is_opera = function() { return (/Opera/).test(navigator.userAgent) };
-vnTRUST.is_safari = function(){ return (/Safari/).test(navigator.userAgent) };
+vnTRUST.is_ff = function () { return (/Firefox/).test(navigator.userAgent) };
+vnTRUST.is_ie = function () { return (/MSIE/).test(navigator.userAgent) };
+vnTRUST.is_ie6 = function () { return (/MSIE 6/).test(navigator.userAgent) };
+vnTRUST.is_ie7 = function () { return (/MSIE 7/).test(navigator.userAgent) };
+vnTRUST.is_ie8 = function () { return (/MSIE 8/).test(navigator.userAgent) };
+vnTRUST.is_chrome = function () { return (/Chrome/).test(navigator.userAgent) };
+vnTRUST.is_opera = function () { return (/Opera/).test(navigator.userAgent) };
+vnTRUST.is_safari = function () { return (/Safari/).test(navigator.userAgent) };
 
-vnTRUST.util_trim = function(str) {return (/string/).test(typeof str) ? str.replace(/^\s+|\s+$/g, "") : ""};
-vnTRUST.util_random = function(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a };
-vnTRUST.get_ele = function(id) { return document.getElementById(id) };
-vnTRUST.get_uuid = function() { return (new Date().getTime() + Math.random().toString().substring(2))};
+vnTRUST.util_trim = function (str) { return (/string/).test(typeof str) ? str.replace(/^\s+|\s+$/g, "") : "" };
+vnTRUST.util_random = function (a, b) { return Math.floor(Math.random() * (b - a + 1)) + a };
+vnTRUST.get_ele = function (id) { return document.getElementById(id) };
+vnTRUST.get_uuid = function () { return (new Date().getTime() + Math.random().toString().substring(2)) };
 
 vnTRUST.is_phone = function (num) {
   return (/^(01([0-9]{2})|09[0-9])(\d{7})$/i).test(num);
@@ -179,7 +179,7 @@ vnTRUST.is_phone = function (num) {
 vnTRUST.is_email = function (str) {
   return (/^[a-z-_0-9\.]+@[a-z-_=>0-9\.]+\.[a-z]{2,3}$/i).test(vnTRUST.util_trim(str))
 };
-vnTRUST.isJson = function (str) {  try {  JSON.parse(str);  } catch (e) {    return false;  }  return true;}
+vnTRUST.isJson = function (str) { try { JSON.parse(str); } catch (e) { return false; } return true; }
 
 vnTRUST.numberFormat = function (number, decimals, dec_point, thousands_sep) {
   var n = number, prec = decimals;
@@ -326,7 +326,7 @@ vnTRUST.auto_scroll = function (anchor) {
   target = target.length && target || jQuery('[name=' + anchor.slice(1) + ']');
   if (target.length) {
     var targetOffset = target.offset().top;
-    jQuery('html,body').animate({scrollTop: targetOffset}, 1000);
+    jQuery('html,body').animate({ scrollTop: targetOffset }, 1000);
     return false;
   }
   return true;
@@ -335,7 +335,7 @@ vnTRUST.auto_scroll = function (anchor) {
 vnTRUST.moveScrollTo = function (ob) {
   if (ob.length) {
     var targetOffset = ob.offset().top;
-    jQuery('html,body').animate({scrollTop: targetOffset}, 1000);
+    jQuery('html,body').animate({ scrollTop: targetOffset }, 1000);
     return false;
   }
 };
@@ -383,12 +383,12 @@ vnTRUST.vntTabs = function (obj) {
 /**  vnTAdvFixed
  **************************************************************** **/
 vnTRUST.vnTAdvFixed = function (obj) {
-  var $div_scroll = $("#"+obj);
-  $div_scroll.css({position:"relative"});
-  var $scroll_fixed = $("."+obj+"-fixed");
+  var $div_scroll = $("#" + obj);
+  $div_scroll.css({ position: "relative" });
+  var $scroll_fixed = $("." + obj + "-fixed");
   var $h_active_scroll = 40;
-  $(window).scroll(function(){
-    if(! (typeof $div_scroll.offset() == 'object')){
+  $(window).scroll(function () {
+    if (!(typeof $div_scroll.offset() == 'object')) {
       return false;
     }
     var $heightContent = $scroll_fixed.parents(".wrap-scroll").innerHeight();
@@ -399,17 +399,17 @@ vnTRUST.vnTAdvFixed = function (obj) {
     var $window_scroll = $(window).scrollTop();
     var $heigth_window = $(window).innerHeight();
     var height1 = $heightContent + $offset_ws - $offset_st - $height_sf - $h_active_scroll;
-    if($window_scroll > $offset_st && $window_scroll + $heigth_window < $heightContent + $offset_ws){
-      $scroll_fixed.css({position:"fixed",width:$width_st,top: $h_active_scroll}); //$window_scroll - $offset_st
-    }else{
-      if($window_scroll + $heigth_window > $heightContent + $offset_ws){
-        if(height1 > $window_scroll - $offset_st){
-          $scroll_fixed.css({position:"relative",top:($window_scroll - $offset_st)});
-        }else{
-          $scroll_fixed.css({position:"relative",top:(height1)});
+    if ($window_scroll > $offset_st && $window_scroll + $heigth_window < $heightContent + $offset_ws) {
+      $scroll_fixed.css({ position: "fixed", width: $width_st, top: $h_active_scroll }); //$window_scroll - $offset_st
+    } else {
+      if ($window_scroll + $heigth_window > $heightContent + $offset_ws) {
+        if (height1 > $window_scroll - $offset_st) {
+          $scroll_fixed.css({ position: "relative", top: ($window_scroll - $offset_st) });
+        } else {
+          $scroll_fixed.css({ position: "relative", top: (height1) });
         }
-      }else{
-        $scroll_fixed.css({position:"relative", top:0});
+      } else {
+        $scroll_fixed.css({ position: "relative", top: 0 });
       }
     }
   });
@@ -531,9 +531,9 @@ vnTRUST.ZoomImage = function () {
 
 };
 
-vnTRUST.updateQueryStringParameter  = function (uri, key, value) {
+vnTRUST.updateQueryStringParameter = function (uri, key, value) {
   var re = new RegExp("([?&])" + key + "=.*?(&|#|$)", "i");
-  if( value === undefined ) {
+  if (value === undefined) {
     if (uri.match(re)) {
       return uri.replace(re, '$1$2').replace(/[?&]$/, '').replaceAll(/([?&])&+/g, '$1').replace(/[?&]#/, '#');
     } else {
@@ -543,8 +543,8 @@ vnTRUST.updateQueryStringParameter  = function (uri, key, value) {
     if (uri.match(re)) {
       return uri.replace(re, '$1' + key + "=" + value + '$2');
     } else {
-      var hash =  '';
-      if( uri.indexOf('#') !== -1 ){
+      var hash = '';
+      if (uri.indexOf('#') !== -1) {
         hash = uri.replace(/.*#/, '#');
         uri = uri.replace(/#.*/, '');
       }
@@ -627,63 +627,55 @@ vnTRUST.show_popupBanner = function (times) {
 
 /** registerMaillist
  ******************************************************************/
-vnTRUST.registerMaillist = function (objform)
-{
+vnTRUST.registerMaillist = function (objform) {
 
   var name = objform.find("input[name='fname']").val();
   var femail = objform.find("input[name='femail']").val();
   var ok_send = 1;
-  var msg_err ='';
+  var msg_err = '';
 
-  if(femail =='') {
+  if (femail == '') {
     msg_err = js_lang['err_email_empty'];
-    ok_send=0;
-  }else{
-    if(!vnTRUST.is_email(femail)) {
-      msg_err = js_lang['err_email_invalid'] ;
-      ok_send=0;
+    ok_send = 0;
+  } else {
+    if (!vnTRUST.is_email(femail)) {
+      msg_err = js_lang['err_email_invalid'];
+      ok_send = 0;
     }
   }
 
 
-  if (ok_send){
-    var mydata =  "email="+femail+ "&name="+name +'&lang='+lang ;
+  if (ok_send) {
+    var mydata = "email=" + femail + "&name=" + name + '&lang=' + lang;
     $.ajax({
       async: true,
       dataType: 'json',
-      url: ROOT+'remote/regMaillist',
+      url: ROOT + 'remote/regMaillist',
       type: 'POST',
-      data: mydata ,
-      success: function (data)
-      {
-        if(data.ok){
-          if(objform.attr('id')=='formPopupNewsletter') {
+      data: mydata,
+      success: function (data) {
+        if (data.ok) {
+          if (objform.attr('id') == 'formPopupNewsletter') {
             $.fancybox.close();
           }
 
-          Swal.fire({ icon: 'success',title: js_lang['announce'],html: data.mess}) ;
-        }else {
-          Swal.fire({icon: 'error', title: js_lang['error'], html: data.mess});
+          Swal.fire({ icon: 'success', title: js_lang['announce'], html: data.mess });
+        } else {
+          Swal.fire({ icon: 'error', title: js_lang['error'], html: data.mess });
         }
 
       }
-    }) ;
-  }else{
-    Swal.fire({icon: 'error', title: js_lang['error'], html: msg_err});
+    });
+  } else {
+    Swal.fire({ icon: 'error', title: js_lang['error'], html: msg_err });
   }
-  return false ;
+  return false;
 
 };
 
 
 /*--------------- doLogout ----------------*/
-vnTRUST.doLogout = function()
-{
-
-  if($(".menu_mobile").hasClass('showmenu')) {
-    $('.close-mmenu').trigger('click');
-  }
-
+vnTRUST.doLogout = function () {
   Swal.fire({
     title: js_lang['are_you_sure_logout'],
     icon: 'question',
@@ -696,12 +688,12 @@ vnTRUST.doLogout = function()
 
       $.ajax({
         dataType: 'json',
-        url: ROOT+'remote/ajax_logout',
+        url: ROOT + 'remote/ajax_logout',
         type: 'POST',
         success: function (rs) {
           location.reload(true);
         }
-      }) ;
+      });
     }
 
   });

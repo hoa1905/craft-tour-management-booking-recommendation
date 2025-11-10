@@ -458,27 +458,6 @@ a:active{
 /*===========END: TOUR=============*/
 
 /*==BEGIN: HEADER==*/
-#vnt-header {
-    position: relative;
-    z-index: 100;
-}
-#vnt-header .logo {
-    float: left;
-    width: 171px;
-    height: 70px;
-    padding: 10px 0;
-    margin-right: 20px;
-}
-#vnt-header .logo img {
-    max-width: 100%;
-    max-height: 50px;
-}
-#vnt-header  .vnt-menutop {
-    float: left;
-}
-#vnt-header .vnt-menubar {
-    float: left;
-}
 .vnt-menubar {
     position: relative;
 }
@@ -529,117 +508,6 @@ a:active{
 }
 .vnt-menubar ul li a::before {
     content: '';
-}
-.vnt-menutop > ul:after {
-    display: block;
-    content: '';
-    clear: both;
-}
-.vnt-menutop > ul > li {
-    float: left;
-    margin: 0 15px;
-    position: relative;
-}
-.vnt-menutop > ul > li > a {
-    display: block;
-    font-size: 15px;
-    line-height: 20px;
-    font-weight: bold;
-    color: #333333;
-    padding: 25px 0;
-}
-.vnt-menutop > ul > li > a:hover ,
-.vnt-menutop > ul > li.current > a {
-    color: #d82727;
-}
-.vnt-menutop > ul > li.submenu ul {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 210px;
-    background: #ffffff;
-    border: 1px solid #ededed;
-    -webkit-box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.05);
-    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.05);
-    opacity: 0;
-    visibility: hidden;
-    -webkit-transition:all 0.4s ease;
-    -moz-transition:all 0.4s ease;
-    -o-transition:all 0.4s ease;
-    transition:all 0.4s ease;
-}
-.vnt-menutop > ul > li.submenu:hover > ul {
-    opacity: 1;
-    visibility: visible;
-    z-index: 1;
-}
-.vnt-menutop > ul > li.submenu ul ul {
-    top: 0;
-    left: 100%;
-    margin-top: -1px;
-}
-.vnt-menutop > ul > li.submenu ul li:hover > ul {
-    opacity: 1;
-    visibility: visible;
-    z-index: 1;
-}
-.vnt-menutop > ul > li.submenu ul li {
-    border-bottom: 1px solid #ededed;
-    position: relative;
-}
-.vnt-menutop > ul > li.submenu ul li:last-child {
-    border-bottom: 0;
-}
-.vnt-menutop > ul > li.submenu ul li a {
-    display: block;
-    font-size: 15px;
-    line-height: 25px;
-    padding: 10px 15px;
-    color: #333333;
-    position: relative;
-}
-.vnt-menutop > ul > li.submenu ul li.hasIcon > a {
-    padding-right: 40px;
-}
-.vnt-menutop > ul > li.submenu ul li.hasIcon > a:after {
-    position: absolute;
-    top: 50%;
-    right: 15px;
-    font-family: "Font Awesome 5 Free";
-    font-weight: bold;
-    content: '\f105';
-    font-size: 15px;
-    line-height: 20px;
-    -webkit-transform: translate(0, -50%);
-    -moz-transform: translate(0, -50%);
-    -ms-transform: translate(0, -50%);
-    -o-transform: translate(0, -50%);
-    transform: translate(0, -50%);
-}
-.vnt-menutop > ul > li.submenu ul li:hover > a {
-    background: #f6f6f6;
-}
-.vnt-menutop > ul > li.megamenu .mega-link {
-    width: 870px;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: #ffffff;
-    border: 1px solid #ededed;
-    -webkit-box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.05);
-    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.05);
-    opacity: 0;
-    visibility: hidden;
-    -webkit-transition:all 0.4s ease;
-    -moz-transition:all 0.4s ease;
-    -o-transition:all 0.4s ease;
-    transition:all 0.4s ease;
-}
-.vnt-menutop > ul > li.megamenu:hover > .mega-link {
-    opacity: 1;
-    visibility: visible;
 }
 .mega-link:after {
     position: absolute;
@@ -711,14 +579,6 @@ a:active{
     opacity: 0;
     visibility: hidden;
 }
-.vnt-menutop > ul > li.megamenu:hover > .mega-link .sub2 .sub-mega.active {
-    position: relative;
-    top: auto;
-    left: auto;
-    right: auto;
-    opacity: 1;
-    visibility: visible;
-}
 .sub-mega ul {
     -webkit-column-count: 4;
     -moz-column-count: 4;
@@ -726,9 +586,6 @@ a:active{
 }
 .sub-mega ul li {
     margin-bottom: 5px;
-}
-#vnt-header .vnt-tool {
-    float: right;
 }
 .vnt-tool .vnt-login {
     float: left;
@@ -2169,35 +2026,16 @@ a.color1:hover {
     color: #999999;
 }
 @media screen and (max-width: 1100px){
-    .vnt-menutop > ul > li {
-        margin: 0 10px;
-    }
-    .vnt-menutop > ul > li > a {
-        font-size: 13px;
-        line-height: 20px;
-    }
     .ul-title li a {
         font-size: 16px;
         line-height: 30px;
     }
 }
 @media screen and (max-width: 1024px) {
-    #vnt-header .vnt-menubar,
-    #vnt-header .vnt-menutop,
     .vnt-tool .vnt-login,
     .vnt-tool .vnt-logined,
     .vnt-tool .vnt-vn {
         display: none;
-    }
-    #vnt-header .logo {
-        float: left;
-        width: 140px;
-        height: 60px;
-        padding: 10px 0;
-        margin-right: 20px;
-    }
-    #vnt-header .logo img {
-        max-height: 40px;
     }
     .vnt-support .s-title {
         height: 40px;

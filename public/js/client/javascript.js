@@ -4,7 +4,7 @@ var vnTAccout = function () {
     init: function () {
       var $this = this;
 
-      $("html").on("click",".vnt-popup-login",function(){
+      $("html").on("click", ".vnt-popup-login", function () {
         $this.popupLogin();
       });
 
@@ -59,18 +59,16 @@ var vnTAccout = function () {
       });
     },
 
-    doLogin: function (obj_form)
-    {
+    doLogin: function (obj_form) {
       var ok_login = 1;
       var msg_err = '';
 
-      if (ok_login)
-      {
+      if (ok_login) {
 
-        var params =  obj_form.serialize();
+        var params = obj_form.serialize();
         $.ajax({
           async: true,
-          url: API_URL + '/login' ,
+          url: API_URL + '/login',
           dataType: 'json',
           type: "post",
           data: params,
@@ -82,25 +80,24 @@ var vnTAccout = function () {
           },
           success: function (rs) {
             obj_form.removeClass('vnt-loading');
-            if(rs.success)
-            {
+            if (rs.success) {
               //obj_form[0].reset();
 
               //reset cart
               localStorage.removeItem("vnt_cart");
               let link_ref = obj_form.find(".login_ref").val();
-              if(link_ref){
+              if (link_ref) {
                 location.href = ROOT + link_ref;
-              }else{
-                 location.reload();
+              } else {
+                location.reload();
               }
             } else {
-              Swal.fire({ timer: 3000, icon: 'error',title: js_lang['error'],html: rs.error_msg, showConfirmButton: false});
+              Swal.fire({ timer: 3000, icon: 'error', title: js_lang['error'], html: rs.error_msg, showConfirmButton: false });
             }
           }
         });
       } else {
-        Swal.fire({icon: 'error', title: js_lang['error'], html: msg_err});
+        Swal.fire({ icon: 'error', title: js_lang['error'], html: msg_err });
       }
       return false;
     },
@@ -142,7 +139,7 @@ var vnTAccout = function () {
             obj_form.find('.forget_email').val('');
             if (data.ok) {
               $.fancybox.close();
-              Swal.fire({icon: 'success', title: js_lang['announce'], html: data.mess});
+              Swal.fire({ icon: 'success', title: js_lang['announce'], html: data.mess });
 
               //obj_form.find(".account-err").html('<div class="alert alert-success">' + data.mess + '</div>');
             } else {
@@ -168,8 +165,7 @@ var vnTAccout = function () {
     },
 
 
-    doRegister: function (obj_form)
-    {
+    doRegister: function (obj_form) {
       var url_register = ROOT_MOD + '/ajax/ajax_register.html';
       if (obj_form.find('.url_register').val()) {
         url_register = obj_form.find('.url_register').val();
@@ -178,10 +174,10 @@ var vnTAccout = function () {
       var params = obj_form.serialize();
       $.ajax({
         async: true,
-        url: url_register ,
+        url: url_register,
         dataType: 'json',
         type: "post",
-        data: params ,
+        data: params,
         success: function (rs) {
           obj_form.removeClass('vnt-loading');
           if (rs.ok == 1) {
@@ -196,14 +192,14 @@ var vnTAccout = function () {
             if (rs.link_ref) {
               location.href = rs.link_ref;
             } else {
-              Swal.fire({timer: 1000, icon: 'success', title: rs.mess}).then(() => {
+              Swal.fire({ timer: 1000, icon: 'success', title: rs.mess }).then(() => {
                 location.reload(true);
               });
             }
 
 
           } else {
-            Swal.fire({icon: 'error', title: js_lang['error'], html: rs.mess});
+            Swal.fire({ icon: 'error', title: js_lang['error'], html: rs.mess });
             //$(".error-register").html('<div class="alert alert-danger">' + rs.mess + '</div>');
           }
         }
@@ -211,14 +207,10 @@ var vnTAccout = function () {
       return false;
 
     },
-    doLogout: function ()
-    {
-      if($(".menu_mobile").hasClass('showmenu')) {
-        $('.close-mmenu').trigger('click');
-      }
-      if(lang=="vn"){
+    doLogout: function () {
+      if (lang == "vn") {
         mess = 'Bạn có muốn thoát khỏi hệ thống không ?'
-      }else{
+      } else {
         mess = 'Do you want to logout account ?';
       }
 
@@ -231,18 +223,18 @@ var vnTAccout = function () {
         if (result.isConfirmed) {
 
           $.ajax({
-            url: API_URL + '/logout' ,
+            url: API_URL + '/logout',
             dataType: "json",
             type: "GET",
             headers: {
-              "Authorization": "Bearer "+ API_KEY,
+              "Authorization": "Bearer " + API_KEY,
               "csrf-token": $("#vnt_csrf_token").val()
             },
             success: function (rs) {
-              if(rs.success){
-                location.reload() ;
-              }else {
-                Swal.fire({position:"top-end", icon: 'error',title: js_lang['error'],html: rs.error_msg});
+              if (rs.success) {
+                location.reload();
+              } else {
+                Swal.fire({ position: "top-end", icon: 'error', title: js_lang['error'], html: rs.error_msg });
               }
             }
           });
@@ -304,36 +296,6 @@ vnTRUST.initLocalStorage = function () {
 /** Top Nav
  **************************************************************** **/
 vnTRUST.topNav = function () {
-  $(".vnt-menutop > ul > li.submenu").each(function () {
-    $(this).find("ul li").each(function () {
-      if ($(this).find("li").size() > 0) {
-        $(this).addClass("hasIcon");
-      }
-    })
-  });
-  $(".vnt-menutop > ul > li.megamenu").each(function () {
-    var _selector = $(this).find(".mega-link .sub1 li:first");
-    _selector.addClass("active");
-    $(this).find(".mega-link .sub2 .sub-mega").each(function () {
-      if ($(this).data("sub") === _selector.data("sub")) {
-        $(this).addClass("active");
-      }
-    });
-  });
-  $(".vnt-menutop > ul > li.megamenu .mega-link .sub1 li").hover(function () {
-    var _this = $(this);
-    _this.siblings('li').removeClass("active");
-    _this.addClass("active");
-    $(this).parents(".megamenu").find(".mega-link .sub2 .sub-mega").removeClass("active");
-    $(this).parents(".megamenu").find(".mega-link .sub2 .sub-mega").each(function () {
-      if ($(this).data("sub") === _this.data("sub")) {
-        $(this).addClass("active");
-      }
-    });
-  });
-
-
-  /*2021*/
   $(window).scroll(function (e) {
     var _scroll = $(window).scrollTop();
     if (_scroll > $(".w-fixed-menu").offset().top) {
@@ -483,12 +445,6 @@ vnTRUST.init = function () {
   });
 
   $('.chosen-select').chosen();
-
-
-  $(".menu_mobile").my_menu({
-    type: 2,
-    show_position: 'left'
-  });
 
   $('#vnt_banner').slick({
     slidesToShow: 1,

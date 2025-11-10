@@ -57,7 +57,6 @@
   <script src="{{ asset('js/client/pagination.min.js') }}"></script>
   <script src="{{ asset('js/client/core.js') }}"></script>
   <script src="{{ asset('js/client/javascript.js') }}"></script>
-  <script src="{{ asset('js/client/main.js') }}"></script>
   <script src="{{ asset('js/client/update.js') }}"></script>
   <script src="{{ asset('js/client/ai-chatbox.js') }}"></script>
 
