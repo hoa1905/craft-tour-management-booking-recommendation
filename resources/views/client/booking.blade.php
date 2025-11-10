@@ -25,7 +25,7 @@
               <div class="box-info-item">
                 <div class="tDetal">
                   <div class="tImg">
-                    <img src="{{ asset('images/' . $bookingData['tour_image']) }}" alt="Tour Image">
+                    <img src="{{ asset('images/client/' . $bookingData['tour_image']) }}" alt="Tour Image">
                   </div>
                   <div class="tTitle">{{ $bookingData['tour_name'] }}</div>
                   <div class="clear"></div>
@@ -185,14 +185,14 @@
                     <label class="payment-option">
                       <input type="radio" name="payment_method" value="paypal">
                       <div class="option-box">
-                        <img src="{{ asset('images/paypal-logo.png') }}" alt="Paypal" width="20" height="20" class="me-2"> PayPal
+                        <img src="{{ asset('images/client/paypal-logo.png') }}" alt="Paypal" width="20" height="20" class="me-2"> PayPal
                       </div>
                     </label>
 
                     <label class="payment-option">
                       <input type="radio" name="payment_method" value="vnpay">
                       <div class="option-box">
-                        <img src="{{ asset('images/vnpay-logo.png') }}" alt="VNPAY" width="20" height="20" class="me-2"> VNPAY
+                        <img src="{{ asset('images/client/vnpay-logo.png') }}" alt="VNPAY" width="20" height="20" class="me-2"> VNPAY
                       </div>
                     </label>
                   </div>
@@ -205,12 +205,12 @@
                   </button>
 
                   <button type="button" id="btnPaypal" class="btn btn-warning px-4 py-2 hidden mt-2">
-                    <img src="{{ asset('images/paypal-logo.png') }}" alt="PayPal" width="20" height="20" class="me-2">
+                    <img src="{{ asset('images/client/paypal-logo.png') }}" alt="PayPal" width="20" height="20" class="me-2">
                     Thanh toán bằng PayPal
                   </button>
 
                   <button type="button" id="btnVnpay" class="btn btn-vnpay px-4 py-2 hidden mt-2">
-                    <img src="{{ asset('images/vnpay-logo.png') }}" alt="VNpay" width="20" height="20" class="me-2">
+                    <img src="{{ asset('images/client/vnpay-logo.png') }}" alt="VNpay" width="20" height="20" class="me-2">
                     Thanh toán bằng VNPAY
                   </button>
                 </div>

@@ -10,7 +10,7 @@
   <meta name="robots" content="index, follow">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <!-- Favicon -->
-  <link rel="icon" href="{{ asset('images/hanh-trinh-vang-icon.png') }}" type="image/png">
+  <link rel="icon" href="{{ asset('images/client/hanh-trinh-vang-icon.png') }}" type="image/png">
   <!-- CSS Files -->
   <link rel="stylesheet" href="{{ asset('css/client/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ asset('css/client/all.min.css') }}">
@@ -96,7 +96,7 @@
                                         <li>
                                           <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}" class="d-flex justify-content-between align-items-center py-1 text-decoration-none text-dark">
                                             <span>{{ $province }}</span>
-                                            <img src="{{ asset('images/hot.png') }}" alt="HOT">
+                                            <img src="{{ asset('images/client/hot.png') }}" alt="HOT">
                                           </a>
                                         </li>
                                         @endforeach
@@ -160,7 +160,7 @@
                                 @if($client)
                                 @if($client->avatar)
                                 {{-- Nếu có avatar --}}
-                                <img src="{{ asset('images/avatar/' . $client->avatar) }}"
+                                <img src="{{ asset('images/client/avatar/' . $client->avatar) }}"
                                   alt="Avatar"
                                   class="user-avatar">
                                 @else
@@ -221,7 +221,7 @@
       <!-- Logo -->
       <div class="mobile-logo">
         <a href="{{ url('/') }}">
-          <img src="{{ asset('images/hanh-trinh-vang-icon.png') }}" alt="Logo">
+          <img src="{{ asset('images/client/hanh-trinh-vang-icon.png') }}" alt="Logo">
         </a>
       </div>
 
@@ -235,7 +235,7 @@
         @if($client->avatar)
         {{-- Có avatar --}}
         <a href="{{ route('account.info') }}">
-          <img src="{{ asset('images/avatar/' . $client->avatar) }}" alt="Avatar" class="user-avatar">
+          <img src="{{ asset('images/client/avatar/' . $client->avatar) }}" alt="Avatar" class="user-avatar">
         </a>
         @else
         {{-- Không có avatar --}}
@@ -685,7 +685,7 @@
         let avatarHtml = '';
         if (avatarUrl) {
           // Nếu có avatar, tạo thẻ <img>
-          avatarHtml = `<img src="{{ asset('images/avatar/${avatarUrl}') }}" alt="Avatar" class="user-avatar">`;
+          avatarHtml = `<img src="{{ asset('images/client/avatar/${avatarUrl}') }}" alt="Avatar" class="user-avatar">`;
 
         } else {
           // Nếu không, dùng icon mặc định

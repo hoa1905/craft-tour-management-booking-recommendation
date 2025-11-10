@@ -160,11 +160,15 @@ class AccountController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::guard('client')->user();
 
+        $avatarDirectory = public_path('images/client/avatar');
+        $oldAvatarPath = $avatarDirectory . '/' . $user->avatar;
+        $defaultAvatar = 'default-avatar.jpg';
+
         // Nếu người dùng bấm nút "Xóa ảnh đại diện"
         if ($request->has('remove_avatar')) {
-            // Nếu có file cũ thì xóa file vật lý (tùy chọn)
-            if ($user->avatar && file_exists(public_path($user->avatar)) && $user->avatar !== 'images/avatar/default-avatar.jpg') {
-                unlink(public_path($user->avatar));
+            // Xóa file vật lý (nếu không phải ảnh mặc định)
+            if ($user->avatar && $user->avatar !== $defaultAvatar && file_exists($oldAvatarPath)) {
+                unlink($oldAvatarPath);
             }
 
             // Gán về null trong DB
@@ -181,13 +185,18 @@ class AccountController extends Controller
 
         $file = $request->file('avatar');
         $fileName = $user->user_id . '-' . $user->user_name . '-' . $file->getClientOriginalName();
-        $file->move(public_path('images/avatar'), $fileName);
+        $file->move($avatarDirectory, $fileName);
 
-        // Nếu có avatar cũ, xóa file cũ (nếu không phải ảnh mặc định)
-        if ($user->avatar && file_exists(public_path($user->avatar)) && $user->avatar !== 'images/avatar/default-avatar.jpg') {
+        // Xóa avatar cũ nếu có (và không phải mặc định)
+        if ($user->avatar && file_exists(public_path($user->avatar)) && $user->avatar !== 'images/client/avatar/default-avatar.jpg') {
             unlink(public_path($user->avatar));
         }
 
+        if ($user->avatar && $user->avatar !== $defaultAvatar && file_exists($oldAvatarPath)) {
+            unlink($oldAvatarPath);
+        }
+
+        // Lưu tên file avatar mới vào DB
         $user->avatar = $fileName;
         $user->save();
 

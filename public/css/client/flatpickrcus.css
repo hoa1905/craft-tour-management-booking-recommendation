@@ -95,7 +95,7 @@ a:hover {
 }
 
 .header .country-select .flag.vn {
-    background: url(../../images/vn.png) center center no-repeat;
+    background: url(../../images/client/vn.png) center center no-repeat;
     background-position: initial!important;
     background-size: contain;
     width: 22px;
@@ -646,7 +646,7 @@ body.has-modal .modal::before {
 }
 
 .main-nav .nav-right .flag-vi {
-    background: url(../../images/vn.png) center center no-repeat;
+    background: url(../../images/client/vn.png) center center no-repeat;
     background-size: contain
 }
 

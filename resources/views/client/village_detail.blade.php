@@ -19,8 +19,8 @@
 
       @php
       $villageImage = $village->image_main
-      ? asset('images/' . $village->image_main)
-      : asset('images/banner-1.jpg'); // Fallback
+      ? asset('images/client/' . $village->image_main)
+      : asset('images/client/banner-1.jpg'); // Fallback
       @endphp
 
       <div class="village-image"
@@ -52,7 +52,7 @@
         <div id="related-tour-list" class="row g-4">
           @forelse ($village->tours as $tour)
           @php
-          $tourImage = asset('images/' . $tour->image_main);
+          $tourImage = asset('images/client/' . $tour->image_main);
           @endphp
           <div class="col-lg-3 col-md-4 col-sm-6">
             <div class="tour-card">

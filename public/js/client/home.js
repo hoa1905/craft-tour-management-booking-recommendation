@@ -27,7 +27,7 @@ $(function () {
       success: function (data) {
         if (data && data.length > 0) {
           data.forEach(function (tour) {
-            const imageUrl = `/images/${tour.image_main}`;
+            const imageUrl = `/images/client/${tour.image_main}`;
             const detailUrl = `/tour-detail/${tour.tour_id}`; // route detail
             // Thêm dữ liệu mới vào vùng đúng theo slug
             $('#' + slug + '-tour-list').append(`

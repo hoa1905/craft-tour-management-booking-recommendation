@@ -28,13 +28,13 @@
           <!-- Các slide -->
           <div class="carousel-inner">
             <div class="item active">
-              <img src="{{ asset('images/banner-1.jpg') }}" alt="Banner 1">
+              <img src="{{ asset('images/client/banner-1.jpg') }}" alt="Banner 1">
             </div>
             <div class="item">
-              <img src="{{ asset('images/banner-2.jpg') }}" alt="Banner 2">
+              <img src="{{ asset('images/client/banner-2.jpg') }}" alt="Banner 2">
             </div>
             <div class="item">
-              <img src="{{ asset('images/banner-3.jpg') }}" alt="Banner 3">
+              <img src="{{ asset('images/client/banner-3.jpg') }}" alt="Banner 3">
             </div>
           </div>
 
@@ -145,7 +145,7 @@
           <div class="col-md-3 col-sm-6">
             <div class="tour-card">
               <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
-                <div class="tour-image" style="background-image: url(images/banner-tour-detail-1.jpg);">
+                <div class="tour-image" style="background-image: url(images/client/banner-tour-detail-1.jpg);">
                   <span class="tour-badge">TOUR BÁN CHẠY</span>
                   <span class="tour-region"><i class="glyphicon glyphicon-map-marker"></i> {{ $tour->destination }}</span>
                 </div>
@@ -252,7 +252,7 @@
       <div id="mien-bac-tour-list" class="row">
         @foreach ($northTours as $tour)
         @php
-        $imageUrl = asset('images/' . $tour->image_main);
+        $imageUrl = asset('images/client/' . $tour->image_main);
         @endphp
         <div class="col-md-3 col-sm-6">
           <div class="tour-card">
@@ -368,7 +368,7 @@
       <div id="mien-trung-tour-list" class="row">
         @foreach ($centralTours as $tour)
         @php
-        $imageUrl = asset('images/' . $tour->image_main);
+        $imageUrl = asset('images/client/' . $tour->image_main);
         @endphp
         <div class="col-md-3 col-sm-6">
           <div class="tour-card">
@@ -481,7 +481,7 @@
       <div id="mien-nam-tour-list" class="row">
         @foreach ($southTours as $tour)
         @php
-        $imageUrl = asset('images/' . $tour->image_main);
+        $imageUrl = asset('images/client/' . $tour->image_main);
         @endphp
         <div class="col-md-3 col-sm-6">
           <div class="tour-card">

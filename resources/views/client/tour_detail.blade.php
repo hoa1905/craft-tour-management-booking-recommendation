@@ -210,7 +210,7 @@
                           <div class="ifgrip">
                             <div class="xcol">
                               <div class="iicon">
-                                <img src="{{ asset('images/ihotline.png') }}" alt="ihotline">
+                                <img src="{{ asset('images/client/ihotline.png') }}" alt="ihotline">
                               </div>
                             </div>
                             <div class="vcol">
@@ -240,19 +240,19 @@
                           <div class="slupgradenm">
                             <div class="colsl">
                               <div class="itupgradenma clpopalbum">
-                                <img src="{{ asset('images/' . $tour->image_main) }}" alt="">
+                                <img src="{{ asset('images/client/' . $tour->image_main) }}" alt="">
                               </div>
                             </div>
 
                             <div class="colsl">
                               <div class="itupgradenma clpopalbum">
-                                <img src="{{ asset('images/' . $tour->image_1) }}" alt="">
+                                <img src="{{ asset('images/client/' . $tour->image_1) }}" alt="">
                               </div>
                             </div>
 
                             <div class="colsl">
                               <div class="itupgradenma clpopalbum">
-                                <img src="{{ asset('images/' . $tour->image_2) }}" alt="">
+                                <img src="{{ asset('images/client/' . $tour->image_2) }}" alt="">
                               </div>
                             </div>
                           </div>

@@ -80,7 +80,7 @@
           <div class="detail-box-body">
             <a href="{{ route('tour.detail', ['id' => $booking->tour->tour_id]) }}">
               <div class="tour-info">
-                <img src="{{ asset('images/' . $booking->tour->image_main) }}"
+                <img src="{{ asset('images/client/' . $booking->tour->image_main) }}"
                   alt="{{ $booking->tour->tour_name }}"
                   class="tour-image">
                 <div class="tour-info-text">
