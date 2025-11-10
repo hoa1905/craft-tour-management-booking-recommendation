@@ -218,7 +218,7 @@
           @if(!empty($regions['Miền Bắc']))
           @foreach($regions['Miền Bắc']->take(6) as $province)
           <li>
-            <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
+            <a href="{{ url('/tour-search?search_type=exact&destination=' . urlencode($province)) }}">
               {{ $province }}
             </a>
           </li>
@@ -236,7 +236,7 @@
               @if(!empty($regions['Miền Bắc']))
               @foreach($regions['Miền Bắc'] as $province)
               <li>
-                <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
+                <a href="{{ url('/tour-search?search_type=exact&destination=' . urlencode($province)) }}">
                   {{ $province }}
                 </a>
               </li>
@@ -333,7 +333,7 @@
           @if(!empty($regions['Miền Trung']))
           @foreach($regions['Miền Trung']->take(6) as $province)
           <li>
-            <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
+            <a href="{{ url('/tour-search?search_type=exact&destination=' . urlencode($province)) }}">
               {{ $province }}
             </a>
           </li>
@@ -351,7 +351,7 @@
               @if(!empty($regions['Miền Trung']))
               @foreach($regions['Miền Trung'] as $province)
               <li>
-                <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
+                <a href="{{ url('/tour-search?search_type=exact&destination=' . urlencode($province)) }}">
                   {{ $province }}
                 </a>
               </li>
@@ -446,7 +446,7 @@
           @if(!empty($regions['Miền Nam']))
           @foreach($regions['Miền Nam']->take(6) as $province)
           <li>
-            <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
+            <a href="{{ url('/tour-search?search_type=exact&destination=' . urlencode($province)) }}">
               {{ $province }}
             </a>
           </li>
@@ -464,7 +464,7 @@
               @if(!empty($regions['Miền Nam']))
               @foreach($regions['Miền Nam'] as $province)
               <li>
-                <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">
+                <a href="{{ url('/tour-search?search_type=exact&destination=' . urlencode($province)) }}">
                   {{ $province }}
                 </a>
               </li>

@@ -93,7 +93,7 @@
                                       <ul>
                                         @foreach ($provinces as $province)
                                         <li>
-                                          <a href="{{ url('/tour-search?destination=' . urlencode($province)) }}" class="d-flex justify-content-between align-items-center py-1 text-decoration-none text-dark">
+                                          <a href="{{ url('/tour-search?search_type=exact&destination=' . urlencode($province)) }}" class="d-flex justify-content-between align-items-center py-1 text-decoration-none text-dark">
                                             <span>{{ $province }}</span>
                                             <img src="{{ asset('images/client/hot.png') }}" alt="HOT">
                                           </a>
@@ -271,7 +271,7 @@
           @foreach ($regions as $regionName => $provinces)
           <li class="submenu-title">{{ $regionName }}</li>
           @foreach ($provinces as $province)
-          <li><a href="{{ url('/tour-search?destination=' . urlencode($province)) }}">{{ $province }}</a></li>
+          <li><a href="{{ url('/tour-search?search_type=exact&destination=' . urlencode($province)) }}">{{ $province }}</a></li>
           @endforeach
           @endforeach
         </ul>
