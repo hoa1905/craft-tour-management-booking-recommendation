@@ -13,7 +13,6 @@
       <i class="fas fa-check-circle"></i>
     </div>
     <div>
-      <h5 class="alert-heading mb-1">Thành công!</h5>
       <p class="mb-0">{{ session('status') }}</p>
     </div>
   </div>

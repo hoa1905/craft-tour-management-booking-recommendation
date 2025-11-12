@@ -43,7 +43,7 @@ class AdminAccountController extends Controller
             // Kiểm tra role
             if ($user->role === 'admin') {
                 $request->session()->regenerate();
-                return redirect()->intended(route('admin.dashboard'));
+                return redirect()->intended(route('admin.dashboard'))->with("status", "Đăng nhập thành công");
             }
 
             // Nếu không phải admin, đăng xuất và cấm truy cập
