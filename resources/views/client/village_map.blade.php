@@ -1,4 +1,4 @@
-@extends('client.master')
+@extends('layouts.app')
 
 @section('title', 'Bản đồ Làng nghề Truyền thống Việt Nam')
 

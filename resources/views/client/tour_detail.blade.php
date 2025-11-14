@@ -1,4 +1,4 @@
-@extends('client.master')
+@extends('layouts.app')
 
 @section('title', 'Trang chi tiết tour')
 

@@ -1,4 +1,4 @@
-@extends('client.master')
+@extends('layouts.app')
 
 @section('title', $village->village_name)
 <link rel="stylesheet" href="{{ asset('css/client/village-detail.css') }}">
