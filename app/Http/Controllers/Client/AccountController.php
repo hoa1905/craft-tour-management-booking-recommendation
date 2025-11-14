@@ -60,6 +60,18 @@ class AccountController extends Controller
             'login_pass.min' => 'Mật khẩu phải có ít nhất 6 ký tự.'
         ]);
 
+        // Lấy user theo email trước để kiểm tra status
+        $user = User::where('email', $request->login_user)->first();
+
+        // Kiểm tra trạng thái
+        if ($user && $user->status === 'locked') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tài khoản đã bị khóa.'
+            ], 403);
+        }
+
+        // Nếu status hợp lệ thì thử đăng nhập
         if (Auth::guard('client')->attempt([
             'email' => $request->login_user,
             'password' => $request->login_pass,
@@ -76,7 +88,7 @@ class AccountController extends Controller
             ]);
         }
 
-        // Nếu sai tài khoản hoặc mật khẩu
+        // Email hoặc mật khẩu sai
         return response()->json([
             'success' => false,
             'message' => 'Email hoặc mật khẩu không chính xác.'

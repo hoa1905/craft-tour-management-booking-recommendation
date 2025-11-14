@@ -647,6 +647,11 @@
             else if (xhr.status === 401) {
               $('.error-login').html(xhr.responseJSON.message);
             }
+
+            // Tài khoản bị khóa
+            else if (xhr.status === 403) {
+              toastr.error(xhr.responseJSON.message);
+            }
           }
         });
       });

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('avatar', 255)->nullable();
             $table->string('address', 255)->nullable();
             $table->enum('role', ['client', 'partner', 'admin'])->default('client');
-            $table->enum('status', ['pending', 'approved', 'inactive'])->default('approved');
+            $table->enum('status', ['pending', 'approved', 'locked'])->default('approved');
             $table->timestamps();
         });
     }
