@@ -1,0 +1,41 @@
+.avatar-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.x-small {
+  font-size: 0.75rem;
+}
+
+.form-control-sm {
+  height: 32px;
+  font-size: 0.875rem;
+}
+
+.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.15);
+}
+
+.password-toggle {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.password-toggle:focus {
+  box-shadow: none;
+}
+
+.line-divider {
+  height: 1px;
+  background-color: #dee2e6;
+}
+
+.btn-sm {
+  font-size: 0.8125rem;
+  padding: 0.325rem 0.65rem;
+}

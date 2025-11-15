@@ -1,0 +1,45 @@
+.form-control:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-primary {
+  background-image: linear-gradient(to right, #0d6efd, #0b5ed7);
+  border: none;
+  transition: all 0.3s;
+}
+
+.btn-primary:hover {
+  background-image: linear-gradient(to right, #0b5ed7, #084298);
+  transform: translateY(-2px);
+}
+
+.card {
+  transition: all 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Giảm kích thước chữ cho form bên trái */
+.col-lg-8 .form-label {
+  font-size: 0.9rem;
+}
+
+.col-lg-8 .btn {
+  font-size: 0.9rem;
+}
+
+.col-lg-8 .card-header h5 {
+  font-size: 1.1rem;
+}
+
+.col-lg-8 input::placeholder {
+  font-size: 0.85rem;
+}
+
+.btn-sm {
+  font-size: 0.8125rem;
+  padding: 0.325rem 0.65rem;
+}
