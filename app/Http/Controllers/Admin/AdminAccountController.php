@@ -15,7 +15,7 @@ class AdminAccountController extends Controller
   public function index()
   {
     $user = Auth::guard('admin')->user();
-    return view('admin.acount_info', compact('user'));
+    return view('admin.account_info', compact('user'));
   }
 
   public function updateAccountInfo(Request $request)
