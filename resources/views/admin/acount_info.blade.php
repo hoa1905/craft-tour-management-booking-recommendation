@@ -1,5 +1,7 @@
 @extends('layouts.admin')
 
+@section('title', 'Thông tin tài khoản')
+
 @section('head')
 <link rel="stylesheet" href="{{ asset('css/admin/account-info.css') }}">
 @endsection

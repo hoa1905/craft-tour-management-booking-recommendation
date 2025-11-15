@@ -1,5 +1,7 @@
 @extends('layouts.admin')
 
+@section('title', 'Dashboard')
+
 @section('head')
 <link rel="stylesheet" href="{{ asset('css/admin/dashboard.css') }}">
 @endsection
