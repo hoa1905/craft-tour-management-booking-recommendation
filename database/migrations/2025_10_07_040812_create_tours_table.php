@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('image_main', 255);
             $table->string('image_1', 255);
             $table->string('image_2', 255);
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'approved', 'rejected', 'inactive'])->default('pending');
             $table->timestamps();
 
             $table->foreign('partner_id')->references('user_id')->on('users');
