@@ -4,6 +4,8 @@
 
 @section('head')
 <link rel="stylesheet" href="{{ asset('css/admin/tours/detail.css') }}">
+{{-- Lightbox CSS (Optional: Nếu bạn muốn click vào ảnh để phóng to xịn hơn) --}}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet" />
 @endsection
 
 @section('content')
@@ -95,21 +97,76 @@
               <span class="ms-auto">{{ $tour->duration }}</span>
             </li>
             <li class="list-group-item d-flex border-0 px-0">
+              <span class="detail-icon me-3"><i class="bi bi-calendar-plus"></i></span>
+              <strong>Ngày tạo:</strong>
+              <span class="ms-auto">{{ $tour->created_at }}</span>
+            </li>
+            <li class="list-group-item d-flex border-0 px-0">
+              <span class="detail-icon me-3"><i class="bi bi-clock-history"></i></span>
+              <strong>Cập nhật lần cuối:</strong>
+              <span class="ms-auto">{{ $tour->updated_at }}</span>
+            </li>
+            <li class="list-group-item d-flex border-0 px-0">
               <span class="detail-icon me-3"><i class="bi bi-toggle-on"></i></span>
               <strong>Trạng thái:</strong>
               <span class="ms-auto">
-                @if($tour->status === 'approved')
-                <span class="badge rounded-pill bg-success bg-opacity-10 text-success px-3 py-2">Hoạt động</span>
-                @elseif($tour->status === 'inactive')
-                <span class="badge rounded-pill bg-secondary bg-opacity-10 text-secondary px-3 py-2">Ngừng hoạt động</span>
-                @elseif($tour->status === 'pending')
-                <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning px-3 py-2">Chờ duyệt</span>
+                @if($tour->status == 'active')
+                <span class="badge bg-success bg-opacity-10 text-success border border-success badge-custom">
+                  <i class="bi bi-check-circle me-1"></i> Đang hoạt động
+                </span>
                 @else
-                <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger px-3 py-2">Từ chối</span>
+                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger badge-custom">
+                  <i class="bi bi-x-circle me-1"></i> Ngừng hoạt động
+                </span>
                 @endif
               </span>
             </li>
           </ul>
+        </div>
+      </div>
+
+      {{-- Card: Thư viện ảnh --}}
+      <div class="card shadow border-0 rounded-3 mb-4">
+        <div class="card-header bg-white py-3">
+          <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-images me-2"></i>Thư viện ảnh</h5>
+        </div>
+        <div class="card-body p-4">
+          @if(!empty($tour->gallery) && count($tour->gallery) > 0)
+          <div class="gallery-grid">
+            @foreach($tour->gallery as $img)
+            <a href="{{ asset('images/tours/' . $img) }}" data-lightbox="tour-gallery" data-title="Thư viện ảnh">
+              <div class="gallery-item">
+                <img src="{{ asset('images/tours/' . $img) }}" alt="Gallery Image" loading="lazy">
+              </div>
+            </a>
+            @endforeach
+          </div>
+          @else
+          <div class="text-center py-4 text-muted">
+            <p>Chưa có ảnh nào trong thư viện.</p>
+          </div>
+          @endif
+        </div>
+      </div>
+    </div>
+
+    {{-- Cột phải --}}
+    <div class="col-lg-5">
+      {{-- Card: Ảnh đại diện --}}
+      <div class="card shadow border-0 rounded-3 mb-4">
+        <div class="card-header bg-white py-3">
+          <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-info-circle me-2"></i>Ảnh đại diện tour</h5>
+        </div>
+        <div class="card-body p-4 text-center">
+          <div class="main-image-container mb-3">
+            @if($tour->image_main)
+            <img src="{{ asset('images/tours/' . $tour->image_main) }}" alt="Ảnh đại diện" class="main-image">
+            @else
+            <div class="bg-light py-5 rounded text-muted">
+              <i class="bi bi-image fs-1"></i><br>Không có ảnh đại diện
+            </div>
+            @endif
+          </div>
         </div>
       </div>
 
@@ -139,35 +196,6 @@
           @empty
           <span class="text-muted">Chưa có làng nghề nào</span>
           @endforelse
-        </div>
-      </div>
-    </div>
-
-    {{-- Cột phải --}}
-    <div class="col-lg-5">
-      {{-- Card: Hình ảnh --}}
-      <div class="card shadow border-0 rounded-3 mb-4">
-        <div class="card-header bg-white py-3">
-          <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-image-fill me-2"></i>Hình ảnh tour</h5>
-        </div>
-        <div class="card-body p-4">
-          @if($tour->image_main)
-          <img src="{{ asset('images/client/' . $tour->image_main) }}" alt="Ảnh chính" class="rounded shadow-sm mb-3 w-100">
-          @else
-          <p class="text-muted text-center">Không có ảnh chính</p>
-          @endif
-          <div class="row">
-            @if($tour->image_1)
-            <div class="col-6">
-              <img src="{{ asset('images/client/' . $tour->image_1) }}" alt="Ảnh 1" class="rounded shadow-sm w-100">
-            </div>
-            @endif
-            @if($tour->image_2)
-            <div class="col-6">
-              <img src="{{ asset('images/client/' . $tour->image_2) }}" alt="Ảnh 2" class="rounded shadow-sm w-100">
-            </div>
-            @endif
-          </div>
         </div>
       </div>
     </div>
@@ -240,7 +268,7 @@
   {{-- Card: Mô tả tour --}}
   <div class="card shadow border-0 rounded-3">
     <div class="card-header bg-white py-3">
-      <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-file-text-fill me-2"></i>Mô tả chi tiết</h5>
+      <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-file-text-fill me-2"></i>Mô tả chi tiết tour</h5>
     </div>
     <div class="card-body p-4">
       {{-- Dùng class 'prose' (nếu bạn có) hoặc để tự do --}}
@@ -250,4 +278,9 @@
     </div>
   </div>
 </div>
+@endsection
+
+@section('scripts')
+{{-- Lightbox JS (Optional) - Giúp xem ảnh đẹp hơn --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 @endsection
