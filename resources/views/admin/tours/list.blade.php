@@ -78,7 +78,7 @@
               </td>
               <td class="align-middle">
                 @if($tour->image_main)
-                <img src="{{ asset('images/client/' . $tour->image_main) }}"
+                <img src="{{ asset('images/tours/' . $tour->image_main) }}"
                   alt="{{ $tour->tour_name }}"
                   class="rounded shadow-sm"
                   style="width: 60px; height: 60px; object-fit: cover;">
