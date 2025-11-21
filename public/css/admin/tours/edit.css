@@ -42,3 +42,28 @@
   color: #6c757d;
   display: block;
 }
+
+/* Upload zone */
+.border-dashed {
+  border-style: dashed;
+  border-color: #bac8f3;
+  border-width: 2px;
+  transition: all 0.3s ease;
+}
+.upload-zone:hover {
+  border-color: #4e73df;
+  background-color: #f8f9fc !important;
+}
+.cursor-pointer { 
+  cursor: pointer; 
+}
+
+/* Image Preview Specific */
+#image-preview img, 
+#description-image-preview img {
+  transition: transform 0.2s;
+}
+#image-preview img:hover, 
+#description-image-preview img:hover {
+  transform: scale(1.05);
+}

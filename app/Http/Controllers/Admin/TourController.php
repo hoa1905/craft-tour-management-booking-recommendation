@@ -75,7 +75,7 @@ class TourController extends Controller
      */
     public function updateTour(Request $request, $id)
     {
-        // 1. Định nghĩa quy tắc (Rules)
+        // 1. Định nghĩa quy tắc
         $rules = [
             'tour_name' => 'required|string|max:255',
             'transport' => 'required|string|max:100',
@@ -85,10 +85,10 @@ class TourController extends Controller
             'duration' => 'required|string|max:100',
             'description' => 'required|string',
 
-            // Hình ảnh
-            'image_main' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120', // Max 5MB
-            'image_1' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-            'image_2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            // Ảnh không bắt buộc (nullable) khi sửa
+            'image_main' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
 
             // Mảng Làng nghề phải chọn ít nhất 1 làng nghề
             'villages' => 'required|array|min:1',
@@ -127,17 +127,9 @@ class TourController extends Controller
             'description.required' => 'Vui lòng nhập mô tả tour.',
 
             // Hình ảnh
-            'image_main.image' => 'Ảnh chính phải là tệp hình ảnh.',
+            'image_main.required' => 'Vui lòng chọn ảnh đại diện.',
             'image_main.mimes' => 'Ảnh chính phải có định dạng: jpeg, png, jpg, gif.',
-            'image_main.max' => 'Ảnh chính vượt quá dung lượng cho phép (5MB).',
-
-            'image_1.image' => 'Ảnh 1 phải là tệp hình ảnh.',
-            'image_1.mimes' => 'Ảnh 1 phải có định dạng: jpeg, png, jpg, gif.',
-            'image_1.max' => 'Ảnh 1 vượt quá dung lượng cho phép (5MB).',
-
-            'image_2.image' => 'Ảnh 2 phải là tệp hình ảnh.',
-            'image_2.mimes' => 'Ảnh 2 phải có định dạng: jpeg, png, jpg, gif.',
-            'image_2.max' => 'Ảnh 2 vượt quá dung lượng cho phép (5MB).',
+            'image_main.max' => 'Ảnh chính vượt quá dung lượng cho phép (2MB).',
 
             // Làng nghề (dùng * để đại diện cho mọi phần tử trong mảng)
             'villages.required' => 'Bạn phải chọn ít nhất một làng nghề cho tour.',
@@ -200,35 +192,63 @@ class TourController extends Controller
             ];
 
             // 7. Xử lý Upload Hình ảnh
-            $imagePath = public_path('images/client');
-            foreach (['image_main', 'image_1', 'image_2'] as $imageField) {
-                if ($request->hasFile($imageField)) {
+            $imagePath = public_path('images/tours');
+            if ($request->hasFile('image_main')) {
+                // Xóa ảnh cũ
+                if ($tour->image_main && File::exists($imagePath . '/' . $tour->image_main)) {
+                    File::delete($imagePath . '/' . $tour->image_main);
+                }
+                // Upload ảnh mới
+                $file = $request->file('image_main');
+                $filename = time() . '-' . uniqid() . '-' . $file->getClientOriginalName();
+                $file->move($imagePath, $filename);
+                $tour->image_main = $filename;
+            }
 
-                    // Xóa ảnh cũ (nếu có)
-                    if ($tour->{$imageField} && File::exists($imagePath . '/' . $tour->{$imageField})) {
-                        File::delete($imagePath . '/' . $tour->{$imageField});
-                    }
+            // 8. Xứ lý Gallery
+            // Mảng ảnh hiện tại trong DB (trước khi update)
+            $oldGallery = $tour->gallery ?? [];
+            // Mảng ảnh người dùng muốn giữ lại (lấy từ input hidden)
+            $keptGallery = $request->input('existing_gallery', []);
 
-                    // Upload ảnh mới
-                    $file = $request->file($imageField);
+            // --- Bước 8a: Tìm và Xóa ảnh vật lý ---
+            // Lấy những ảnh có trong Old nhưng không có trong Kept => Ảnh cần xóa
+            $imagesToDelete = array_diff($oldGallery, $keptGallery);
+
+            foreach ($imagesToDelete as $deleteImage) {
+                $filePath = $imagePath . '/' . $deleteImage;
+                if (File::exists($filePath)) {
+                    File::delete($filePath); // Xóa file khỏi thư mục
+                }
+            }
+
+            // --- Bước 8b: Upload ảnh mới và gộp mảng ---
+            // Bắt đầu gallery mới bằng những ảnh được giữ lại
+            $finalGallery = $keptGallery;
+
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $key => $file) {
                     $filename = time() . '-' . uniqid() . '-' . $file->getClientOriginalName();
                     $file->move($imagePath, $filename);
 
-                    // Thêm tên file mới vào data để cập nhật
-                    $updateData[$imageField] = $filename;
+                    // Thêm ảnh mới vào mảng
+                    $finalGallery[] = $filename;
                 }
             }
+
+            // Lưu mảng mới vào DB (Laravel tự cast sang JSON)
+            $tour->gallery = array_values($finalGallery); // array_values để đánh lại index (0,1,2...)
 
             // Cập nhật các trường cơ bản của Tour
             $tour->update($updateData);
 
-            // 8. Đồng bộ hóa Làng nghề (Many-to-Many)
+            // 9. Đồng bộ hóa Làng nghề (Many-to-Many)
             // -----------------------------------------------------
             // sync() sẽ tự động xóa các làng nghề không có trong $request
             // và thêm các làng nghề mới.
             $tour->villages()->sync($request->input('villages', []));
 
-            // 9. Đồng bộ hóa Lịch khởi hành (One-to-Many)
+            // 10. Đồng bộ hóa Lịch khởi hành (One-to-Many)
             // -----------------------------------------------------
             // Cách an toàn nhất: Xóa hết cái cũ, tạo lại từ request
             $tour->schedules()->delete();
@@ -238,7 +258,7 @@ class TourController extends Controller
                 }
             }
 
-            // 10. Đồng bộ hóa Lịch trình (One-to-Many)
+            // 11. Đồng bộ hóa Lịch trình (One-to-Many)
             // -----------------------------------------------------
             // Tương tự, xóa hết và tạo lại
             $tour->itineraries()->delete();
@@ -248,7 +268,7 @@ class TourController extends Controller
                 }
             }
 
-            // 11. Hoàn tất
+            // 12. Hoàn tất
             // -----------------------------------------------------
             DB::commit(); // Mọi thứ thành công, lưu vào DB
 

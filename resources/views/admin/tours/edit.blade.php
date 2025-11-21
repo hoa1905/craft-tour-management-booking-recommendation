@@ -41,11 +41,9 @@
     </div>
     @endif -->
 
-    {{-- Bố cục 2 cột --}}
+    {{-- Bố cục FULL-WIDTH --}}
     <div class="row">
-
-      {{-- Cột bên trái --}}
-      <div class="col-lg-8">
+      <div class="col-lg-12">
         {{-- Card 1: Thông tin cơ bản --}}
         <div class="card shadow-sm mb-3">
           <div class="card-header bg-white py-3">
@@ -108,7 +106,226 @@
           </div>
         </div>
 
-        {{-- Card 2: Mô tả tour --}}
+        {{-- Card 2: Hình ảnh --}}
+        <div class="card shadow-sm mb-3">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold text-primary"> <i class="fas fa-images me-2"></i> Hình ảnh</h5>
+          </div>
+          <div class="card-body p-4">
+            <div class="row g-3">
+
+              {{-- Ảnh đại diện --}}
+              <div class="col-md-6">
+                <div class="card bg-light border-0 shadow-sm h-100">
+                  <div class="card-body d-flex flex-column">
+                    <label for="image_main" class="form-label fw-semibold mb-2">Ảnh đại diện (Thay đổi nếu cần)</label>
+
+                    {{-- Hiển thị ảnh cũ --}}
+                    @if($tour->image_main)
+                    <div class="mb-2 text-center">
+                      <img src="{{ asset('images/tours/' . $tour->image_main) }}" class="img-thumbnail" style="height: 120px; object-fit: cover;">
+                      <div class="text-muted small mt-1">Ảnh hiện tại</div>
+                    </div>
+                    @endif
+
+                    <div class="upload-zone p-3 border-2 border-dashed rounded-3 position-relative d-flex flex-column justify-content-center align-items-center bg-white flex-grow-1">
+                      <div class="text-center upload-instruction">
+                        <i class="bi bi-cloud-arrow-up-fill fa-2x text-secondary mb-1"></i>
+                        <p class="mb-0 text-muted small">Chọn ảnh mới để thay thế</p>
+                      </div>
+                      <input type="file" class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
+                        id="image_main" name="image_main" accept="image/*">
+                      <div id="image-preview" class="d-flex flex-wrap w-100 justify-content-center mt-2"></div>
+                    </div>
+                    @error('image_main') <div class="text-danger mt-2 small">{{ $message }}</div> @enderror
+                  </div>
+                </div>
+              </div>
+
+              {{-- Thư viện ảnh --}}
+              <div class="col-md-6">
+                <div class="card bg-light border-0 shadow-sm h-100">
+                  <div class="card-body d-flex flex-column">
+                    <label for="images" class="form-label fw-semibold mb-2">Thư viện ảnh</label>
+
+                    {{-- Input ẩn chứa danh sách ảnh cũ CÒN GIỮ LẠI --}}
+                    {{-- Nếu validation fail, dùng old(), nếu không dùng gallery từ DB --}}
+                    @php
+                    // Chuyển mảng gallery thành chuỗi JSON để JS dễ xử lý hoặc chuỗi cách nhau dấu phẩy
+                    // Ở đây ta dùng cách đơn giản: Tạo input hidden cho từng ảnh
+                    @endphp
+
+                    {{-- Khu vực hiển thị ảnh cũ --}}
+                    <div id="old-gallery-container" class="mb-2 d-flex flex-wrap gap-2 justify-content-center">
+                      @if($tour->gallery)
+                      @foreach($tour->gallery as $img)
+                      <div class="position-relative old-image-item">
+                        <img src="{{ asset('images/tours/' . $img) }}" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+
+                        {{-- Nút Xóa --}}
+                        <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 p-0 d-flex justify-content-center align-items-center rounded-circle remove-old-image-btn"
+                          style="width: 20px; height: 20px; transform: translate(30%, -30%);"
+                          data-image-name="{{ $img }}">
+                          <i class="bi bi-x" style="font-size: 14px;"></i>
+                        </button>
+
+                        {{-- Input ẩn cho ảnh này. Nếu div này bị xóa, input này cũng mất -> Controller biết ảnh đã bị xóa --}}
+                        <input type="hidden" name="existing_gallery[]" value="{{ $img }}">
+                      </div>
+                      @endforeach
+                      @endif
+                    </div>
+
+                    @if($tour->gallery)
+                    <div class="text-center text-muted small mb-2 fst-italic" id="old-gallery-note">Ảnh hiện tại (Nhấn X để xóa)</div>
+                    @endif
+
+                    {{-- Khu vực upload ảnh mới (Giữ nguyên) --}}
+                    <div class="upload-zone p-3 border-2 border-dashed rounded-3 position-relative d-flex flex-column justify-content-center align-items-center bg-white flex-grow-1">
+                      <div class="text-center upload-instruction">
+                        <i class="bi bi-images fa-2x text-secondary mb-1"></i>
+                        <p class="mb-0 text-muted small">Chọn thêm nhiều ảnh mới</p>
+                      </div>
+                      <input type="file" class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
+                        id="images" name="images[]" multiple accept="image/*">
+                      <div id="description-image-preview" class="d-flex flex-wrap w-100 justify-content-center mt-2 gap-2"></div>
+                    </div>
+                    @error('images') <div class="text-danger mt-2 small">{{ $message }}</div> @enderror
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{-- Bố cục 2 cột --}}
+        <div class="row">
+          {{-- Cột bên trái --}}
+          <div class="col-lg-8">
+            {{-- Card 3: Làng nghề --}}
+            <div class="card shadow-sm mb-3">
+              <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-houses-fill me-2"></i> Làng nghề cho tour</h5>
+              </div>
+              <div class="card-body p-4">
+                @php
+                // Lấy province_id của làng nghề đầu tiên, hoặc null nếu không có
+                $default_province_id = $tour->villages->first()->province_id ?? null;
+                @endphp
+                <div class="village-picker-container"
+                  data-villages-by-province='@json($villages->groupBy("province_id"))'
+                  data-default-province-id="{{ old('destination', $default_province_id) }}"> {{-- Giữ lại tỉnh đã chọn nếu validation fail --}}
+
+                  {{-- Cột bên trái: Nguồn chọn --}}
+                  <div class="village-source">
+                    <h5>Thêm làng nghề cho tour</h5>
+                    <div class="mb-3">
+                      <label for="province-source" class="form-label">1. Chọn tỉnh (lọc làng nghề) <span class="text-danger">*</span></label>
+                      <select id="province-source" class="form-control select2-basic @error('villages') is-invalid @enderror">
+                        <option value="">-- Chọn tỉnh --</option>
+                        @foreach($provinces as $p)
+                        {{-- Thêm logic 'old()' cho tỉnh --}}
+                        <option value="{{ $p->province_id }}" {{ old('destination', $default_province_id) == $p->province_id ? 'selected' : '' }}>
+                          {{ $p->province_name }}
+                        </option>
+                        @endforeach
+                      </select>
+                      @error('villages')
+                      <div class="invalid-feedback d-block">{{ $message }}</div>
+                      @enderror
+                    </div>
+                    <div class="mb-3">
+                      <label for="village-source" class="form-label">2. Chọn (các) làng nghề <span class="text-danger">*</span></label>
+                      <select id="village-source" class="form-control" multiple style="height: 150px;"></select>
+                    </div>
+                    <button type="button" id="add-village-btn" class="btn btn-primary w-100">
+                      <i class="bi bi-plus-circle"></i> Thêm vào tour
+                    </button>
+                  </div>
+
+                  {{-- Cột bên phải: Đã chọn --}}
+                  <div class="village-selected">
+                    <h5>Các làng nghề trong tour</h5>
+                    <div id="selected-villages-list" class="village-selected-list">
+                      {{-- Kiểm tra 'old()' cho làng nghề --}}
+                      @if(old('villages'))
+                      @foreach(old('villages') as $old_village_id)
+                      @php $v = $villages->find($old_village_id); @endphp
+                      @if($v)
+                      <div class="selected-village-item"
+                        data-region="{{ $v->province->region->region_name }}"
+                        data-province="{{ $v->province->province_name }}"
+                        data-province-id="{{ $v->province->province_id }}">
+                        <div class="village-info">
+                          <strong>{{ $v->village_name }}</strong>
+                          <small>{{ $v->province->province_name }} - {{ $v->province->region->region_name }}</small>
+                        </div>
+                        <button type="button" class="btn-close remove-village-btn" aria-label="Close"></button>
+                        <input type="hidden" name="villages[]" value="{{ $v->village_id }}">
+                      </div>
+                      @endif
+                      @endforeach
+                      @else
+
+                      {{-- Dữ liệu gốc từ DB --}}
+                      @foreach($tour->villages as $v)
+                      <div class="selected-village-item"
+                        data-region="{{ $v->province->region->region_name }}"
+                        data-province="{{ $v->province->province_name }}"
+                        data-province-id="{{ $v->province->province_id }}">
+                        <div class="village-info">
+                          <strong>{{ $v->village_name }}</strong>
+                          <small>{{ $v->province->province_name }} - {{ $v->province->region->region_name }}</small>
+                        </div>
+                        <button type="button" class="btn-close remove-village-btn" aria-label="Close"></button>
+                        <input type="hidden" name="villages[]" value="{{ $v->village_id }}">
+                      </div>
+                      @endforeach
+                      @endif
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {{-- Cột bên phải --}}
+          <div class="col-lg-4">
+            {{-- Card 4: Địa điểm --}}
+            <div class="card shadow-sm mb-3">
+              <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-geo-alt-fill me-2"></i> Địa điểm và Khu vực</h5>
+              </div>
+              <div class="card-body p-4">
+                <div class="mb-3">
+                  <label for="departure_point" class="form-label">Điểm khởi hành <span class="text-danger">*</span></label>
+                  <select name="departure_point" id="departure_point" class="form-control select2-basic @error('departure_point') is-invalid @enderror">
+                    <option value="">-- Chọn tỉnh --</option>
+                    @foreach($provinces as $p)
+                    <option value="{{ $p->province_name }}" {{ old('departure_point', $tour->departure_point) == $p->province_name ? 'selected' : '' }}>
+                      {{ $p->province_name }}
+                    </option>
+                    @endforeach
+                  </select>
+                  @error('departure_point')
+                  <div class="invalid-feedback d-block">{{ $message }}</div>
+                  @enderror
+                </div>
+                <div class="mb-3">
+                  <label for="tour-destinations-display" class="form-label">Điểm đến (Tỉnh) - (Tự động cập nhật)</label>
+                  <input type="text" id="tour-destinations-display" class="form-control" readonly placeholder="(Tự động cập nhật)">
+                </div>
+                <div>
+                  <label for="tour-regions-display" class="form-label">Miền - (Tự động cập nhật)</label>
+                  <input type="text" id="tour-regions-display" class="form-control" readonly
+                    placeholder="(Tự động cập nhật)">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{-- Card 5: Mô tả tour --}}
         <div class="card shadow-sm mb-3">
           <div class="card-header bg-white py-3">
             <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-file-text-fill me-2"></i> Mô tả tour <span class="text-danger">*</span></h5>
@@ -123,171 +340,6 @@
           </div>
         </div>
 
-        {{-- Card 3: Làng nghề --}}
-        <div class="card shadow-sm mb-3">
-          <div class="card-header bg-white py-3">
-            <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-houses-fill me-2"></i> Làng nghề cho tour</h5>
-          </div>
-          <div class="card-body p-4">
-            @php
-            // Lấy province_id của làng nghề đầu tiên, hoặc null nếu không có
-            $default_province_id = $tour->villages->first()->province_id ?? null;
-            @endphp
-            <div class="village-picker-container"
-              data-villages-by-province='@json($villages->groupBy("province_id"))'
-              data-default-province-id="{{ old('destination', $default_province_id) }}"> {{-- Giữ lại tỉnh đã chọn nếu validation fail --}}
-
-              {{-- Cột bên trái: Nguồn chọn --}}
-              <div class="village-source">
-                <h5>Thêm làng nghề cho tour</h5>
-                <div class="mb-3">
-                  <label for="province-source" class="form-label">1. Chọn tỉnh (lọc làng nghề) <span class="text-danger">*</span></label>
-                  <select id="province-source" class="form-control select2-basic @error('villages') is-invalid @enderror">
-                    <option value="">-- Chọn tỉnh --</option>
-                    @foreach($provinces as $p)
-                    {{-- Thêm logic 'old()' cho tỉnh --}}
-                    <option value="{{ $p->province_id }}" {{ old('destination', $default_province_id) == $p->province_id ? 'selected' : '' }}>
-                      {{ $p->province_name }}
-                    </option>
-                    @endforeach
-                  </select>
-                  @error('villages')
-                  <div class="invalid-feedback d-block">{{ $message }}</div>
-                  @enderror
-                </div>
-                <div class="mb-3">
-                  <label for="village-source" class="form-label">2. Chọn (các) làng nghề <span class="text-danger">*</span></label>
-                  <select id="village-source" class="form-control" multiple style="height: 150px;"></select>
-                </div>
-                <button type="button" id="add-village-btn" class="btn btn-primary w-100">
-                  <i class="bi bi-plus-circle"></i> Thêm vào tour
-                </button>
-              </div>
-
-              {{-- Cột bên phải: Đã chọn --}}
-              <div class="village-selected">
-                <h5>Các làng nghề trong tour</h5>
-                <div id="selected-villages-list" class="village-selected-list">
-                  {{-- Kiểm tra 'old()' cho làng nghề --}}
-                  @if(old('villages'))
-                  @foreach(old('villages') as $old_village_id)
-                  @php $v = $villages->find($old_village_id); @endphp
-                  @if($v)
-                  <div class="selected-village-item"
-                    data-region="{{ $v->province->region->region_name }}"
-                    data-province="{{ $v->province->province_name }}"
-                    data-province-id="{{ $v->province->province_id }}">
-                    <div class="village-info">
-                      <strong>{{ $v->village_name }}</strong>
-                      <small>{{ $v->province->province_name }} - {{ $v->province->region->region_name }}</small>
-                    </div>
-                    <button type="button" class="btn-close remove-village-btn" aria-label="Close"></button>
-                    <input type="hidden" name="villages[]" value="{{ $v->village_id }}">
-                  </div>
-                  @endif
-                  @endforeach
-                  @else
-
-                  {{-- Dữ liệu gốc từ DB --}}
-                  @foreach($tour->villages as $v)
-                  <div class="selected-village-item"
-                    data-region="{{ $v->province->region->region_name }}"
-                    data-province="{{ $v->province->province_name }}"
-                    data-province-id="{{ $v->province->province_id }}">
-                    <div class="village-info">
-                      <strong>{{ $v->village_name }}</strong>
-                      <small>{{ $v->province->province_name }} - {{ $v->province->region->region_name }}</small>
-                    </div>
-                    <button type="button" class="btn-close remove-village-btn" aria-label="Close"></button>
-                    <input type="hidden" name="villages[]" value="{{ $v->village_id }}">
-                  </div>
-                  @endforeach
-                  @endif
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {{-- Cột bên phải --}}
-      <div class="col-lg-4">
-        {{-- Card 4: Hình ảnh --}}
-        <div class="card shadow-sm mb-3">
-          <div class="card-header bg-white py-3">
-            <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-image-fill me-2"></i> Hình ảnh</h5>
-          </div>
-          <div class="card-body p-4">
-            <div class="mb-3">
-              <label class="form-label">Ảnh chính <span class="text-danger">*</span></label><br>
-              @if($tour->image_main)
-              <img src="{{ asset('images/client/' . $tour->image_main) }}" class="img-thumbnail mb-2" style="height:100px;">
-              @endif
-              <input type="file" name="image_main" class="form-control @error('image_main') is-invalid @enderror">
-              @error('image_main')
-              <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Ảnh 1</label><br>
-              @if($tour->image_1)
-              <img src="{{ asset('images/client/' . $tour->image_1) }}" class="img-thumbnail mb-2" style="height:100px;">
-              @endif
-              <input type="file" name="image_1" class="form-control @error('image_1') is-invalid @enderror">
-              @error('image_1')
-              <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Ảnh 2</label><br>
-              @if($tour->image_2)
-              <img src="{{ asset('images/client/' . $tour->image_2) }}" class="img-thumbnail mb-2" style="height:100px;">
-              @endif
-              <input type="file" name="image_2" class="form-control @error('image_2') is-invalid @enderror">
-              @error('image_2')
-              <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
-            </div>
-          </div>
-        </div>
-
-        {{-- Card 5: Địa điểm --}}
-        <div class="card shadow-sm mb-3">
-          <div class="card-header bg-white py-3">
-            <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-geo-alt-fill me-2"></i> Địa điểm và Khu vực</h5>
-          </div>
-          <div class="card-body p-4">
-            <div class="mb-3">
-              <label for="departure_point" class="form-label">Điểm khởi hành <span class="text-danger">*</span></label>
-              <select name="departure_point" id="departure_point" class="form-control select2-basic @error('departure_point') is-invalid @enderror">
-                <option value="">-- Chọn tỉnh --</option>
-                @foreach($provinces as $p)
-                <option value="{{ $p->province_name }}" {{ old('departure_point', $tour->departure_point) == $p->province_name ? 'selected' : '' }}>
-                  {{ $p->province_name }}
-                </option>
-                @endforeach
-              </select>
-              @error('departure_point')
-              <div class="invalid-feedback d-block">{{ $message }}</div>
-              @enderror
-            </div>
-            <div class="mb-3">
-              <label for="tour-destinations-display" class="form-label">Điểm đến (Tỉnh) - (Tự động cập nhật)</label>
-              <input type="text" id="tour-destinations-display" class="form-control" readonly placeholder="(Tự động cập nhật)">
-            </div>
-            <div>
-              <label for="tour-regions-display" class="form-label">Miền - (Tự động cập nhật)</label>
-              <input type="text" id="tour-regions-display" class="form-control" readonly
-                placeholder="(Tự động cập nhật)">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    {{-- Bố cục FULL-WIDTH --}}
-    <div class="row">
-      <div class="col-12">
         {{-- Card 6: Lịch khởi hành --}}
         <div class="card shadow-sm mb-3">
           <div class="card-header bg-white py-3">
@@ -368,11 +420,7 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="col-12">
         {{-- Card 7: Lịch trình tour --}}
         <div class="card shadow-sm mb-3">
           <div class="card-header bg-white py-3">
@@ -471,6 +519,5 @@
 <script src="//cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 {{-- Thư viện Select2 JS --}}
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-{{-- File JS tùy chỉnh của trang --}}
 <script src="{{ asset('js/admin/tours/edit.js') }}"></script>
 @endsection
