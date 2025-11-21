@@ -1,0 +1,46 @@
+/* Custom styles table */
+.table th { 
+  font-weight: 600;
+  color: #4a5568;
+}
+.table td { 
+  border-bottom: 1px solid #f0f0f0;
+}
+.badge { 
+  font-weight: 500; 
+  padding: 0.5em 1em; 
+}
+
+/* Alerts & Cards */
+.alert { 
+  border-radius: 0.5rem; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
+}
+.card { 
+  overflow: hidden; 
+}
+
+/* Upload zone */
+.border-dashed {
+  border-style: dashed;
+  border-color: #bac8f3;
+  border-width: 2px;
+  transition: all 0.3s ease;
+}
+.upload-zone:hover {
+  border-color: #4e73df;
+  background-color: #f8f9fc !important;
+}
+.cursor-pointer { 
+  cursor: pointer; 
+}
+
+/* Image Preview Specific */
+#image-preview img, 
+#description-image-preview img {
+  transition: transform 0.2s;
+}
+#image-preview img:hover, 
+#description-image-preview img:hover {
+  transform: scale(1.05);
+}
