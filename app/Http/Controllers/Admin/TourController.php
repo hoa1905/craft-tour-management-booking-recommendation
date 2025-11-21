@@ -480,6 +480,27 @@ class TourController extends Controller
         }
     }
 
+    /**
+     * Chuyển đổi trạng thái: Active <-> Inactive
+     */
+    public function toggleStatus($id)
+    {
+        try {
+            $tour = Tour::findOrFail($id);
+
+            $tour->status = $tour->status === 'active' ? 'inactive' : 'active';
+            $tour->save();
+
+            $message = $tour->status === 'active'
+                ? 'Đã kích hoạt tour thành công!'
+                : 'Đã ngừng hoạt động tour!';
+
+            return redirect()->back()->with('status', $message);
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Lỗi cập nhật trạng thái: ' . $e->getMessage()]);
+        }
+    }
+
     public function deleteTour($id)
     {
         // Lấy tour

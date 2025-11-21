@@ -134,38 +134,52 @@
                 @endforeach
               </td>
               <td class="align-middle">
-                @if($tour->status === 'approved')
+                @if($tour->status === 'active')
                 <span class="badge rounded-pill bg-success bg-opacity-10 text-success px-3">
                   Hoạt động
                 </span>
-                @elseif($tour->status === 'inactive')
-                <span class="badge rounded-pill bg-secondary bg-opacity-10 text-secondary px-3">
-                  Ngừng hoạt động
-                </span>
-                @elseif($tour->status === 'pending')
-                <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning px-3">
-                  Chờ duyệt
-                </span>
                 @else
                 <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger px-3">
-                  Từ chối
+                  Ngừng hoạt động
                 </span>
                 @endif
               </td>
               <td class="align-middle">
                 <div class="d-flex justify-content-center gap-2">
+                  {{-- Nút xem chi tiết --}}
                   <a href="{{ route('admin.tour.detail', ['id' => $tour->tour_id]) }}"
                     class="btn btn-light btn-sm"
                     data-bs-toggle="tooltip"
                     title="Xem chi tiết">
                     <i class="fas fa-eye text-info"></i>
                   </a>
+                  {{-- Nút Chỉnh sửa --}}
                   <a href="{{ route('admin.tour.showEditForm', ['id' => $tour->tour_id]) }}"
                     class="btn btn-light btn-sm"
                     data-bs-toggle="tooltip"
                     title="Chỉnh sửa">
                     <i class="fas fa-edit text-warning"></i>
                   </a>
+                  {{-- Nút chuyển đổi trạng thái --}}
+                  <form action="{{ route('admin.tour.toggleStatus', ['id' => $tour->tour_id]) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('PUT')
+
+                    @if($tour->status == 'active')
+                    <button type="submit" class="btn btn-warning btn-sm text-white"
+                      title="Nhấn để ngừng hoạt động"
+                      onclick="return confirm('Bạn muốn ngừng hoạt động tour này?')">
+                      <i class="bi bi-pause-circle-fill"></i>
+                    </button>
+                    @else
+                    <button type="submit" class="btn btn-success btn-sm"
+                      title="Nhấn để kích hoạt lại">
+                      <i class="bi bi-play-circle-fill"></i>
+                    </button>
+                    @endif
+                  </form>
+
+                  {{-- Nút xóa tour --}}
                   <form action="{{ route('admin.tour.delete', ['id' => $tour->tour_id]) }}"
                     method="POST"
                     class="d-inline">
