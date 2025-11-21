@@ -278,7 +278,6 @@ class TourController extends Controller
             ->where('status', 'active')
             ->get();
 
-        // Trả về view 'add', không cần $tour
         return view('admin.tours.add', compact('provinces', 'villages'));
     }
 
@@ -298,9 +297,9 @@ class TourController extends Controller
             'description' => 'required|string',
 
             // Ảnh: bắt buộc
-            'image_main' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // Max 5MB
-            'image_1' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'image_2' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'image_main' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // Max 2MB
+            'images' => 'nullable|array', // Gallery
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
 
             // Làng nghề: Bắt buộc chọn ít nhất 1
             'villages' => 'required|array|min:1',
@@ -329,23 +328,7 @@ class TourController extends Controller
             'duration.required' => 'Vui lòng nhập thời lượng tour.',
             'description.required' => 'Vui lòng nhập mô tả tour.',
             'image_main.required' => 'Vui lòng chọn ảnh đại diện cho tour.',
-            'image_main.max' => 'Ảnh không được vượt quá 5MB.',
-
-            // Hình ảnh
-            'image_main.required' => 'Vui lòng chọn ảnh.',
-            'image_main.image' => 'Ảnh chính phải là tệp hình ảnh.',
-            'image_main.mimes' => 'Ảnh chính phải có định dạng: jpeg, png, jpg, gif.',
-            'image_main.max' => 'Ảnh chính vượt quá dung lượng cho phép (5MB).',
-
-            'image_1.required' => 'Vui lòng chọn ảnh.',
-            'image_1.image' => 'Ảnh 1 phải là tệp hình ảnh.',
-            'image_1.mimes' => 'Ảnh 1 phải có định dạng: jpeg, png, jpg, gif.',
-            'image_1.max' => 'Ảnh 1 vượt quá dung lượng cho phép (5MB).',
-
-            'image_2.required' => 'Vui lòng chọn ảnh.',
-            'image_2.image' => 'Ảnh 2 phải là tệp hình ảnh.',
-            'image_2.mimes' => 'Ảnh 2 phải có định dạng: jpeg, png, jpg, gif.',
-            'image_2.max' => 'Ảnh 2 vượt quá dung lượng cho phép (5MB).',
+            'image_main.max' => 'Ảnh không được vượt quá 2MB.',
 
             // Làng nghề (dùng * để đại diện cho mọi phần tử trong mảng)
             'villages.required' => 'Bạn phải chọn ít nhất một làng nghề cho tour.',
@@ -372,11 +355,11 @@ class TourController extends Controller
         // Chạy validate
         $validatedData = $request->validate($rules, $messages);
 
-        // 2. XỬ LÝ LOGIC & LƯU DATABASE (TRANSACTION)
+        // 2. Xử lý logic và lưu database (transaction)
         DB::beginTransaction(); // Bắt đầu giao dịch
         try {
 
-            // --- BƯỚC A: Tính toán "Điểm đến" (Destination) ---
+            // --- 1. Tính toán "Điểm đến" (Destination) ---
             // Lấy danh sách tên các Tỉnh từ các Làng nghề đã chọn
             $destination_string = "Chưa cập nhật";
             if (!empty($validatedData['villages'])) {
@@ -396,7 +379,7 @@ class TourController extends Controller
             // Lấy thông tin admin hiện tại
             $user = Auth::guard('admin')->user();
 
-            // --- BƯỚC B: Chuẩn bị dữ liệu Tour ---
+            // --- 2. Chuẩn bị dữ liệu Tour ---
             $tourData = [
                 'tour_name' => $validatedData['tour_name'],
                 'transport' => $validatedData['transport'],
@@ -406,35 +389,44 @@ class TourController extends Controller
                 'destination' => $destination_string,
                 'duration' => $validatedData['duration'],
                 'description' => $validatedData['description'],
-                'status' => 'approved',
+                'status' => 'active',
                 // Lấy ID người đang đăng nhập (Admin hoặc Partner)
                 'partner_id' => $user->user_id,
+                'gallery' => [], // Khởi tạo mảng rỗng
             ];
 
-            // --- BƯỚC C: Upload Hình ảnh ---
-            $imagePath = public_path('images/client');
-            // Đảm bảo thư mục tồn tại
+            // 3. Xử lý upload ảnh chính
+            $imagePath = public_path('images/tours');
             if (!File::exists($imagePath)) {
                 File::makeDirectory($imagePath, 0755, true);
             }
 
-            foreach (['image_main', 'image_1', 'image_2'] as $field) {
-                if ($request->hasFile($field)) {
-                    $file = $request->file($field);
-                    // Đặt tên file: {timestamp}-{random}-ten-file.jpg để tránh trùng
-                    $filename = time() . '-' . uniqid() . '-' . $file->getClientOriginalExtension();
-                    $file->move($imagePath, $filename);
-                    $tourData[$field] = $filename;
-                }
+            if ($request->hasFile('image_main')) {
+                $file = $request->file('image_main');
+                $filename = time() . '-' . uniqid() . '-' . $file->getClientOriginalName();
+                $file->move($imagePath, $filename);
+                $tourData['image_main'] = $filename;
             }
-            // --- Bước D: Tạo Tour ---
+
+            // 4. Xử lý upload thư viện ảnh (Gallery)
+            if ($request->hasFile('images')) {
+                $galleryPaths = [];
+                foreach ($request->file('images') as $key => $file) {
+                    $filename = time() . '-' . uniqid() . '-' . $file->getClientOriginalName();
+                    $file->move($imagePath, $filename);
+                    $galleryPaths[] = $filename;
+                }
+                $tourData['gallery'] = $galleryPaths; // Model đã cast sang array, nên lưu mảng trực tiếp
+            }
+
+            // --- 5. Tạo Tour ---
             $tour = Tour::create($tourData);
 
-            // --- Bước E: Lưu Làng nghề (Bảng trung gian) ---
+            // --- 6. Lưu Làng nghề (Bảng trung gian) ---
             // attach() sẽ thêm các dòng vào bảng tour_village
             $tour->villages()->attach($validatedData['villages']);
 
-            // --- Bước F: Lưu Lịch khởi hành ---
+            // --- 7. Lưu Lịch khởi hành ---
             if ($request->has('schedules')) {
                 // Lọc bỏ các hàng rỗng (nếu JS gửi lên hàng trống)
                 $validSchedules = collect($validatedData['schedules'])->filter(function ($s) {
@@ -450,7 +442,7 @@ class TourController extends Controller
                 }
             }
 
-            // --- Bước G: Lưu Lịch trình chi tiết ---
+            // --- 8.Lưu Lịch trình chi tiết ---
             if ($request->has('itineraries')) {
                 // Lọc bỏ hàng rỗng
                 $validItineraries = collect($validatedData['itineraries'])->filter(function ($i) {
@@ -467,7 +459,7 @@ class TourController extends Controller
                 }
             }
 
-            // --- Bước H: Hoàn tất ---
+            // --- 9. Hoàn tất ---
             DB::commit();
 
             // Chuyển hướng về trang chi tiết tour vừa tạo

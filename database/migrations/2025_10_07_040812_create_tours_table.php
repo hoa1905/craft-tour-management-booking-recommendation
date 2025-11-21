@@ -23,8 +23,7 @@ return new class extends Migration
             $table->string('destination', 100);
             $table->string('transport', 50);
             $table->string('image_main', 255);
-            $table->string('image_1', 255);
-            $table->string('image_2', 255);
+            $table->json('gallery')->nullable(); // Mảng chứa nhiều ảnh mô tả
             $table->enum('status', ['pending', 'approved', 'rejected', 'inactive'])->default('pending');
             $table->timestamps();
 

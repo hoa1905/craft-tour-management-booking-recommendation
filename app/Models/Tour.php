@@ -24,9 +24,13 @@ class Tour extends Model
         'destination',
         'transport',
         'image_main',
-        'image_1',
-        'image_2',
+        'gallery',
         'status',
+    ];
+
+    // Tự động chuyển đổi JSON trong DB sang Mảng PHP và ngược lại
+    protected $casts = [
+        'gallery' => 'array',
     ];
 
     // Relationships
