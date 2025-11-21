@@ -10,14 +10,23 @@ class Village extends Model
     use HasFactory;
 
     protected $primaryKey = 'village_id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'province_id',
         'village_name',
+        'address',
+        'description',
         'latitude',
         'longitude',
         'image_main',
+        'gallery',
+        'status',
+    ];
+
+    // Tự động chuyển đổi JSON trong DB sang Mảng PHP và ngược lại
+    protected $casts = [
+        'gallery' => 'array',
     ];
 
     // Relationships
