@@ -273,7 +273,10 @@ class TourController extends Controller
     {
         // Cần gửi $provinces và $villages rỗng để JS-picker hoạt động
         $provinces = Province::all();
-        $villages = Village::with('province.region')->get();
+        // Lấy danh sách làng nghề (kèm tỉnh, miền) nhưng chỉ lấy cái nào đang 'active'
+        $villages = Village::with('province.region')
+            ->where('status', 'active')
+            ->get();
 
         // Trả về view 'add', không cần $tour
         return view('admin.tours.add', compact('provinces', 'villages'));
