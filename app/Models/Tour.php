@@ -64,10 +64,10 @@ class Tour extends Model
         return $this->hasMany(Booking::class, 'tour_id', 'tour_id');
     }
 
-    // Hàm scope lọc tour được duyệt
-    public function scopeApproved($query)
+    // Hàm scope lọc tour có trạng thái active
+    public function scopeActive($query)
     {
-        return $query->where('status', 'approved');
+        return $query->where('status', 'active');
     }
 
     // Lọc tour theo vùng miền (qua villages → provinces → regions)
@@ -81,16 +81,16 @@ class Tour extends Model
     // Lấy 8 tour hot (được duyệt và có quan hệ làng nghề)
     public static function getHotTours($limit = 8)
     {
-        return self::approved()
+        return self::active()
             ->with(['villages.province.region', 'schedules'])
             ->take($limit)
             ->get();
     }
 
     // Lấy 8 tour đầu tiên theo vùng và tổng số tour
-    public static function getToursByRegion($regionName, $limit = 2)
+    public static function getToursByRegion($regionName, $limit = 8)
     {
-        $query = self::approved()
+        $query = self::active()
             ->byRegion($regionName)
             ->with(['villages.province.region', 'schedules']);
 
@@ -102,7 +102,7 @@ class Tour extends Model
 
     public static function loadMoreByRegion($regionName, $offset = 0, $limit = 4)
     {
-        return self::where('status', 'approved')
+        return self::where('status', 'active')
             ->whereHas('villages.province.region', function ($query) use ($regionName) {
                 $query->where('region_name', $regionName);
             })
@@ -144,7 +144,7 @@ class Tour extends Model
             ->join('provinces', 'villages.province_id', '=', 'provinces.province_id')
             ->join('regions', 'provinces.region_id', '=', 'regions.region_id')
             ->leftJoin('tour_schedules', 'tours.tour_id', '=', 'tour_schedules.tour_id')
-            ->where('tours.status', 'approved');
+            ->where('tours.status', 'active');
 
         // Tìm theo điểm đến
         if (!empty($filters['destination'])) {

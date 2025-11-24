@@ -535,8 +535,8 @@
       </div>
       <!-- Nút xem thêm -->
       <div class="viewall vcenter vfullmb html_nav" style="text-align:center; margin:20px 0;">
-        @if ($totalSouthTours > 2)
-        <a href="javascript:void(0)" class="loadmore" data-offset="2" data-region="Miền Nam">
+        @if ($totalSouthTours > 8)
+        <a href="javascript:void(0)" class="loadmore" data-offset="8" data-region="Miền Nam">
           <span><i class="fa fa-chevron-down"></i> Xem thêm</span>
         </a>
         @endif
