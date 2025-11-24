@@ -240,19 +240,19 @@
                           <div class="slupgradenm">
                             <div class="colsl">
                               <div class="itupgradenma clpopalbum">
-                                <img src="{{ asset('images/client/' . $tour->image_main) }}" alt="">
+                                <img src="{{ asset('images/tours/' . $tour->image_main) }}" alt="">
                               </div>
                             </div>
 
                             <div class="colsl">
                               <div class="itupgradenma clpopalbum">
-                                <img src="{{ asset('images/client/' . $tour->image_1) }}" alt="">
+                                <img src="{{ asset('images/tours/' . $tour->image_1) }}" alt="">
                               </div>
                             </div>
 
                             <div class="colsl">
                               <div class="itupgradenma clpopalbum">
-                                <img src="{{ asset('images/client/' . $tour->image_2) }}" alt="">
+                                <img src="{{ asset('images/tours/' . $tour->image_2) }}" alt="">
                               </div>
                             </div>
                           </div>

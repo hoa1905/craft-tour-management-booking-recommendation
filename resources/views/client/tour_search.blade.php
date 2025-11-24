@@ -236,7 +236,7 @@
                   {{-- Ảnh --}}
                   <a href="{{ route('tour.detail', $tour->tour_id) }}">
                     <div class="col-md-3 position-relative">
-                      <img src="{{ asset('images/client/' . $tour->image_main) }}" class="img-fluid rounded" alt="{{ $tour->tour_name }}">
+                      <img src="{{ asset('images/tours/' . $tour->image_main) }}" class="img-fluid rounded" alt="{{ $tour->tour_name }}">
                     </div>
                   </a>
 

@@ -25,7 +25,7 @@
               <div class="box-info-item">
                 <div class="tDetal">
                   <div class="tImg">
-                    <img src="{{ asset('images/client/' . $bookingData['tour_image']) }}" alt="Tour Image">
+                    <img src="{{ asset('images/tours/' . $bookingData['tour_image']) }}" alt="Tour Image">
                   </div>
                   <div class="tTitle">{{ $bookingData['tour_name'] }}</div>
                   <div class="clear"></div>

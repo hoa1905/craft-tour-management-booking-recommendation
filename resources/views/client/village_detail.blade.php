@@ -52,7 +52,7 @@
         <div id="related-tour-list" class="row g-4">
           @forelse ($village->tours as $tour)
           @php
-          $tourImage = asset('images/client/' . $tour->image_main);
+          $tourImage = asset('images/tours/' . $tour->image_main);
           @endphp
           <div class="col-lg-3 col-md-4 col-sm-6">
             <div class="tour-card">

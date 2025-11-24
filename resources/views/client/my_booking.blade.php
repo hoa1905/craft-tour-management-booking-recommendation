@@ -49,7 +49,7 @@
                       <div class="bhgrip">
                         <div class="mcol">
                           <div class="vthumb">
-                            <img src="{{ asset('images/client/' . $booking->tour->image_main) }}" alt="Ảnh tour">
+                            <img src="{{ asset('images/tours/' . $booking->tour->image_main) }}" alt="Ảnh tour">
                           </div>
                         </div>
                         <div class="hcol">
