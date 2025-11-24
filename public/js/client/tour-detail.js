@@ -234,4 +234,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Khởi chạy tính toán ban đầu
   calculateTotal();
+
+  // Kích hoạt slide
+  $('.slupgradenm').slick({
+    autoplay: true,
+    autoplaySpeed: 4000,
+    speed: 1000,
+    arrows: true,
+    dots: false,
+    slidesToShow: 1,
+    pauseOnHover: false,
+  });
 });

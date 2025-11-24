@@ -238,25 +238,26 @@
                       <div class="nmponsi">
                         <div class="imupgradenm">
                           <div class="slupgradenm">
+                            {{-- 1. Hiển thị Ảnh chính --}}
+                            @if($tour->image_main)
                             <div class="colsl">
                               <div class="itupgradenma clpopalbum">
-                                <img src="{{ asset('images/tours/' . $tour->image_main) }}" alt="">
+                                <img src="{{ asset('images/tours/' . $tour->image_main) }}" alt="Ảnh chính">
                               </div>
                             </div>
+                            @endif
 
+                            {{-- 2. Hiển thị danh sách ảnh từ Gallery --}}
+                            @if($tour->gallery && is_array($tour->gallery))
+                            @foreach($tour->gallery as $img)
                             <div class="colsl">
                               <div class="itupgradenma clpopalbum">
-                                <img src="{{ asset('images/tours/' . $tour->image_1) }}" alt="">
+                                <img src="{{ asset('images/tours/' . $img) }}" alt="Ảnh thư viện">
                               </div>
                             </div>
-
-                            <div class="colsl">
-                              <div class="itupgradenma clpopalbum">
-                                <img src="{{ asset('images/tours/' . $tour->image_2) }}" alt="">
-                              </div>
-                            </div>
+                            @endforeach
+                            @endif
                           </div>
-
                         </div>
                       </div>
                     </div>
