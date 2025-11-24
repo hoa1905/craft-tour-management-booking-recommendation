@@ -78,11 +78,24 @@ class Tour extends Model
         });
     }
 
-    // Lấy 8 tour hot (được duyệt và có quan hệ làng nghề)
+    // Lấy 8 tour được đặt nhiều nhất
     public static function getHotTours($limit = 8)
     {
         return self::active()
             ->with(['villages.province.region', 'schedules'])
+
+            // 1. LỌC: Chỉ lấy tour có ít nhất 1 booking completed
+            ->whereHas('bookings', function ($query) {
+                $query->where('status', 'completed');
+            })
+
+            // 2. ĐẾM: Để lấy số liệu sắp xếp
+            ->withCount(['bookings' => function ($query) {
+                $query->where('status', 'completed');
+            }])
+
+            // Sắp xếp giảm dần theo số lượng đơn completed (bookings_count là cột ảo Laravel tự tạo)
+            ->orderByDesc('bookings_count')
             ->take($limit)
             ->get();
     }

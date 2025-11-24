@@ -146,7 +146,7 @@
             <div class="tour-card">
               <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
                 <div class="tour-image" style="background-image: url(images/client/banner-tour-detail-1.jpg);">
-                  <span class="tour-badge">TOUR BÁN CHẠY</span>
+                  <span class="tour-badge">Điểm đến hàng đầu</span>
                   <span class="tour-region"><i class="glyphicon glyphicon-map-marker"></i> {{ $tour->destination }}</span>
                 </div>
               </a>
@@ -193,17 +193,6 @@
           </div>
           @endforeach
         </div>
-      </div>
-      <!-- Nút xem thêm -->
-      <div class="viewall vcenter vfullmb html_nav" style="text-align:center; margin:20px 0;">
-        <a href="javascript:void(0)" class="load-more-hot-tours" data-offset="8">
-          <span class="fa-chevron-down">Xem thêm</span>
-        </a>
-      </div>
-
-      <!-- Thông báo khi hết tour -->
-      <div class="no-more" style="text-align:center; display:none; color:gray;">
-        <em>Đã hiển thị tất cả tour</em>
       </div>
     </div>
   </div>
@@ -258,7 +247,6 @@
           <div class="tour-card">
             <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
               <div class="tour-image" style="background-image: url('{{ $imageUrl }}')">
-                <span class="tour-badge">TOUR BÁN CHẠY</span>
                 <span class="tour-region"><i class="glyphicon glyphicon-map-marker"></i> {{ $tour->destination }}</span>
               </div>
             </a>
@@ -374,7 +362,6 @@
           <div class="tour-card">
             <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
               <div class="tour-image" style="background-image: url('{{ $imageUrl }}')">
-                <span class="tour-badge">TOUR BÁN CHẠY</span>
                 <span class="tour-region"><i class="glyphicon glyphicon-map-marker"></i> {{ $tour->destination }}</span>
               </div>
             </a>
@@ -487,7 +474,6 @@
           <div class="tour-card">
             <a href="{{ route('tour.detail', ['id' => $tour->tour_id]) }}">
               <div class="tour-image" style="background-image: url('{{ $imageUrl }}')">
-                <span class="tour-badge">TOUR BÁN CHẠY</span>
                 <span class="tour-region"><i class="glyphicon glyphicon-map-marker"></i> {{ $tour->destination }}</span>
               </div>
             </a>
