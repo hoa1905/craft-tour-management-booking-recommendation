@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (village.latitude && village.longitude) {
       const iconHTML = `
         <div class="village-node"
-          style="background-image: url('/images/client/${village.image_main}');"
+          style="background-image: url('/images/villages/${village.image_main}');"
         ></div>`;
 
       const customIcon = L.divIcon({
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const popupContent = `
         <div style="text-align: center; min-width: 200px;">
           <h4 style="margin: 0 0 10px 0; font-size: 16px; color: #1f2937;">${village.village_name}</h4>
-          <img src="/images/client/${village.image_main}"
+          <img src="/images/villages/${village.image_main}"
             alt="${village.village_name}"
             style="width:100%;
             max-width:250px;
