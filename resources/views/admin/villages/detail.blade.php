@@ -203,7 +203,7 @@
               <div class="d-flex align-items-center">
                 <div class="flex-shrink-0 me-3">
                   @if($tour->image_main)
-                  <img src="{{ asset('images/tour/' . $tour->image_main) }}"
+                  <img src="{{ asset('images/tours/' . $tour->image_main) }}"
                     class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
                   @else
                   <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
