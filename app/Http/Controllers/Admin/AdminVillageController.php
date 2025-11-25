@@ -17,10 +17,16 @@ class AdminVillageController extends Controller
     public function villageDetail($id)
     {
         // Lấy thông tin làng nghề kèm theo Tỉnh -> Miền và các Tour liên quan
-        $village = Village::with(['province.region', 'tours'])->findOrFail($id);
+        $village = Village::with([
+            'province.region',
+            'tours' => function ($q) {
+                $q->where('status', 'active');
+            }
+        ])->findOrFail($id);
 
         return view('admin.villages.detail', compact('village'));
     }
+
     public function index()
     {
         // Eager loading: Lấy Village kèm theo Province, và từ Province lấy tiếp Region
