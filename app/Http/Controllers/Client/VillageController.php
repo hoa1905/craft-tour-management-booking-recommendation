@@ -51,7 +51,7 @@ class VillageController extends Controller
         $village = Village::with([
             'province.region',
             'tours' => function ($q) {
-                $q->where('status', 'approved');
+                $q->where('status', 'active');
             }
         ])->findOrFail($id);
 
