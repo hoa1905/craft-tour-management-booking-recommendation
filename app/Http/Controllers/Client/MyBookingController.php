@@ -56,7 +56,7 @@ class MyBookingController extends Controller
 
             // Nếu đã thanh toán chuyển sang trạng thái chờ xử lý hoàn tiền
             if ($isPaid) {
-                $booking->status = 'pending_refund';
+                $booking->status = 'canceled';
                 $booking->payment->status = 'pending_refund';
                 $booking->payment->save();
 
