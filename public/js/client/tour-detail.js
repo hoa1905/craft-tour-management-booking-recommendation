@@ -245,4 +245,49 @@ document.addEventListener('DOMContentLoaded', function () {
     slidesToShow: 1,
     pauseOnHover: false,
   });
+
+  // Gửi đánh giá
+  $('#reviewForm').submit(function (e) {
+    e.preventDefault();
+
+    let formData = new FormData(this);
+
+    $.ajax({
+      url: "/review/create",
+      type: "POST",
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (res) {
+        // Ẩn form gửi đánh giá
+        document.getElementById("reviewFormBox").style.display = "none";
+
+        // Hiện thông báo "Bạn đã đánh giá tour này"
+        document.getElementById("alreadyReviewed").style.display = "block";
+
+        loadReviews();
+
+        $('#reviewForm')[0].reset();
+        $('input[type=file]').val('');
+      },
+      error: function (err) {
+        alert(err.responseJSON?.message || "Lỗi không xác định");
+      }
+    });
+  });
+
+  // Load review
+  function loadReviews(page = 1) {
+    $.get(`/review/list/${tourId}?page=${page}`, function (res) {
+      $('#reviewList').html(res.html);
+      $('#reviewPagination').html(res.pagination);
+    });
+  }
+
+  // Phân trang AJAX
+  $(document).on('click', '#reviewPagination .pagination a', function (e) {
+    e.preventDefault();
+    let page = $(this).attr('href').split('page=')[1];
+    loadReviews(page);
+  });
 });

@@ -35,4 +35,10 @@ class User extends Authenticatable
   {
     return $this->hasMany(Booking::class, 'user_id', 'user_id');
   }
+
+  // User có nhiều đánh giá
+  public function reviews()
+  {
+    return $this->hasMany(Review::class, 'user_id', 'user_id');
+  }
 }

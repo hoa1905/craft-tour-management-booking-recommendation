@@ -279,7 +279,7 @@
                           <div class="hpviewcont">
                             <div class="thecontent desc">
                               <div class="txt-intro">
-                                <p style="text-align: justify;">{{ $tour->description }}</p>
+                                <p style="text-align: justify;">{!! $tour->description !!}</p>
                               </div>
                             </div>
                           </div>
@@ -294,7 +294,7 @@
                       <div class="xcol">
                         <div class="tname">
                           <div class="icon"><i class="fa fa-info-circle"></i></div>
-                          <div class="txt"><b> LỊCH TRÌNH TOUR CHI TIẾT</b></div>
+                          <div class="txt"><b> Lịch trình tour chi tiết</b></div>
                         </div>
                       </div>
                       <div class="ycol">
@@ -327,231 +327,136 @@
                       @endif
                     </div>
                   </div>
+
                   <div class="viewtab vhtabtour" id="viewtabComment">
                     <div class="vvtitle">
                       <div class="icon"><i class="fa fa-comments"></i></div>
                       <div class="txt"><span>Đánh giá tour</span></div>
                     </div>
+
                     <div class="vvcont">
-                      <div class="the-content">
-                        <div class="box-info">
-                          <div class="info-content">
-                            <div class="thecontent">
-                              <div class="vnt-review">
-                                <div class="itreviewfaq">
-                                  <div class="rftitle">
-                                    <h3>0 Đánh giá về tour</h3>
-                                  </div>
-                                  <div class="rfcont">
-                                    <div class="box-detail">
-                                      <div class="row cel-p10 rowflex">
-                                        <div
-                                          class="col-md-3 col-sm-12 col-xs-12">
-                                          <div class="cricleDG"
-                                            data-point="9.5">
-                                            <div class="status">Chưa có đánh
-                                              giá</div>
-                                            <div class="point"></div>
-                                            <svg viewBox="0 0 180 180">
-                                              <path class="circle"
-                                                d="M90 4  a 86 86 0 0 1 0 172  a 86 86 0 0 1 0 -172">
-                                              </path>
-                                            </svg>
-                                          </div>
-                                        </div>
-                                        <div
-                                          class="col-md-6 col-sm-12 col-xs-12">
-                                          <div class="row cel-p10">
+                      {{-- Form gửi đánh giá --}}
 
-                                            <div
-                                              class="col-md-6 col-sm-6 col-xs-6">
-                                              <div class="wrapDG">
-                                                <div class="lineDG">
-                                                  <div>
-                                                    <div class="fl">
-                                                      Hướng dẫn
-                                                      viên</div>
-                                                    <div class="fr">
-                                                      <span
-                                                        class="color1">0</span>
-                                                    </div>
-                                                    <div
-                                                      class="clear">
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div class="bgLine">
-                                                  <div class="perLine"
-                                                    style="width: 0%;">
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
+                      @php
+                      $reviewed = false;
+                      if (Auth::guard('client')->check()) {
+                      $reviewed = \App\Models\Review::where('tour_id', $tour->tour_id)
+                      ->where('user_id', Auth::guard('client')->id())
+                      ->exists();
+                      }
+                      @endphp
 
-                                            <div
-                                              class="col-md-6 col-sm-6 col-xs-6">
-                                              <div class="wrapDG">
-                                                <div class="lineDG">
-                                                  <div>
-                                                    <div class="fl">
-                                                      Lưu trú
-                                                    </div>
-                                                    <div class="fr">
-                                                      <span
-                                                        class="color1">0</span>
-                                                    </div>
-                                                    <div
-                                                      class="clear">
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div class="bgLine">
-                                                  <div class="perLine"
-                                                    style="width: 0%;">
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
+                      @if(!$reviewed)
+                      <div class="panel panel-default" id="reviewFormBox">
+                        <div class="panel-heading"><strong>Gửi đánh giá của bạn</strong></div>
+                        <div class="panel-body">
 
-                                            <div
-                                              class="col-md-6 col-sm-6 col-xs-6">
-                                              <div class="wrapDG">
-                                                <div class="lineDG">
-                                                  <div>
-                                                    <div class="fl">
-                                                      Giá cả</div>
-                                                    <div class="fr">
-                                                      <span
-                                                        class="color1">0</span>
-                                                    </div>
-                                                    <div
-                                                      class="clear">
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div class="bgLine">
-                                                  <div class="perLine"
-                                                    style="width: 0%;">
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
+                          @if(Auth::guard('client')->check())
+                          <form id="reviewForm">
+                            <input type="hidden" name="tour_id" value="{{ $tour->tour_id }}">
+                            @csrf
 
-                                            <div
-                                              class="col-md-6 col-sm-6 col-xs-6">
-                                              <div class="wrapDG">
-                                                <div class="lineDG">
-                                                  <div>
-                                                    <div class="fl">
-                                                      Phương tiện
-                                                    </div>
-                                                    <div class="fr">
-                                                      <span
-                                                        class="color1">0</span>
-                                                    </div>
-                                                    <div
-                                                      class="clear">
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div class="bgLine">
-                                                  <div class="perLine"
-                                                    style="width: 0%;">
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
-
-                                            <div
-                                              class="col-md-6 col-sm-6 col-xs-6">
-                                              <div class="wrapDG">
-                                                <div class="lineDG">
-                                                  <div>
-                                                    <div class="fl">
-                                                      Địa điểm
-                                                    </div>
-                                                    <div class="fr">
-                                                      <span
-                                                        class="color1">0</span>
-                                                    </div>
-                                                    <div
-                                                      class="clear">
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div class="bgLine">
-                                                  <div class="perLine"
-                                                    style="width: 0%;">
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
-
-                                            <div
-                                              class="col-md-6 col-sm-6 col-xs-6">
-                                              <div class="wrapDG">
-                                                <div class="lineDG">
-                                                  <div>
-                                                    <div class="fl">
-                                                      Ăn uống
-                                                    </div>
-                                                    <div class="fr">
-                                                      <span
-                                                        class="color1">0</span>
-                                                    </div>
-                                                    <div
-                                                      class="clear">
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div class="bgLine">
-                                                  <div class="perLine"
-                                                    style="width: 0%;">
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
-
-                                          </div>
-                                        </div>
-                                        <div
-                                          class="col-md-3 col-sm-12 col-xs-12">
-                                          <div class="viewpop">
-                                            <a class="popup_edit fancybox.iframe"
-                                              href="/tour/tour/popup/reviews.html/?item_id=191">Gửi
-                                              đánh giá</a>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div class="itreviewfaq">
-                                <div class="rftitle">
-                                  <h3>BÌNH LUẬN</h3>
-                                </div>
-                                <div class="rfcont">
-                                  <div class="facebook-comment"
-                                    style="padding-top:10px;">
-                                    <div class="fb-comments"
-                                      data-width="100%" data-num-posts="5"
-                                      data-colorscheme="light"></div>
-                                    <div id="fb-root"></div>
-                                  </div>
-                                </div>
+                            <div class="form-group">
+                              <div class="rating">
+                                @for ($i = 5; $i >= 1; $i--)
+                                <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}">
+                                <label for="star{{ $i }}" title="{{ $i }} sao">★</label>
+                                @endfor
                               </div>
                             </div>
-                          </div>
+
+                            <div class="form-group">
+                              <label for="comment">Nội dung đánh giá:</label>
+                              <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                              <label>Ảnh (tối đa 5 ảnh):</label>
+                              <input type="file" name="images[]" class="form-control" multiple>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                              <i class="fa fa-paper-plane"></i> Gửi đánh giá
+                            </button>
+                          </form>
+                          @else
+                          <p>Bạn cần đăng nhập và tour đã đi du lịch để đánh giá.</p>
+                          @endif
                         </div>
                       </div>
+                      <h3 class="text-success" id="alreadyReviewed" style="font-size:18px; display:none;">
+                        Bạn đã đánh giá tour này.
+                      </h3>
+                      @else
+                      {{-- Nếu đã đánh giá từ trước --}}
+                      <h3 class="text-success" id="alreadyReviewed" style="font-size:18px;">
+                        Bạn đã đánh giá tour này.
+                      </h3>
+                      @endif
+
+                      {{-- Danh sách đánh giá --}}
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <strong>Đánh giá tour</strong>
+                        </div>
+
+                        <ul class="list-group" id="reviewList">
+                          @forelse($reviews as $review)
+                          <li class="list-group-item">
+                            <div style="display: flex; align-items: flex-start; gap: 15px;">
+
+                              {{-- Avatar --}}
+                              @if($review->user->avatar)
+                              <img src="{{ asset('images/client/avatar/' . $review->user->avatar) }}"
+                                style="width:50px;height:50px;border-radius:50%;object-fit:cover;">
+                              @else
+                              <div style="width:50px;height:50px;border-radius:50%;background:#ddd;display:flex;
+                        align-items:center;justify-content:center;font-size:22px;">
+                                <i class="fa fa-user"></i>
+                              </div>
+                              @endif
+
+                              <div style="flex: 1;">
+                                <strong>{{ $review->user->user_name }}</strong>
+                                <br>
+                                <span class="rated">{!! str_repeat('★', $review->rating) !!}</span>
+                                <small class="text-muted">{{ $review->created_at->format('d/m/Y H:i') }}</small>
+
+                                <p>{{ $review->comment }}</p>
+
+                                {{-- Images --}}
+                                @if(!empty($review->images))
+                                <div class="row">
+                                  @foreach($review->images as $img)
+                                  <div class="col-xs-4">
+                                    <img src="{{ asset('images/reviews/' . $img) }}"
+                                      class="img-responsive img-thumbnail"
+                                      style="max-height:120px;">
+                                  </div>
+                                  @endforeach
+                                </div>
+                                @endif
+                              </div>
+
+                            </div>
+                          </li>
+                          @empty
+                          <li class="list-group-item">Chưa có đánh giá nào.</li>
+                          @endforelse
+                        </ul>
+
+                        <div class="text-center" id="reviewPagination">
+                          {!! $reviews->links() !!}
+                        </div>
+                      </div>
+
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
           <div id="vnt-load_other" class="mb30 vnt-load-tour">
             <div class="style-title-1">
               <div class="fl"><span class="stTitle">Các tour tương tự</span></div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Review;
 use App\Models\Tour;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -42,6 +43,13 @@ class HomeController extends Controller
     public function showTourDetail($id)
     {
         $tour = Tour::getTourDetail($id);
-        return view('client.tour_detail', compact('tour'));
+
+        // Lấy đánh giá của tour (10 item / trang)
+        $reviews = Review::with('user')
+            ->where('tour_id', $tour->tour_id)
+            ->orderByDesc('review_id')
+            ->paginate(10);
+
+        return view('client.tour_detail', compact('tour', 'reviews'));
     }
 }

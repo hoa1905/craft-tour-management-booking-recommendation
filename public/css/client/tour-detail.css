@@ -375,6 +375,31 @@ a.book-tour  {
   margin-right: 5px;
 }
 
+/* css của đánh giá */
+.rating {
+  direction: rtl;
+  unicode-bidi: bidi-override;
+  text-align: left;
+}
+.rating input {
+  display: none;
+}
+.rating label {
+  font-size: 25px;
+  color: #ccc;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.rated  {
+  color: #FFBF00;
+}
+.rating input:checked ~ label,
+.rating label:hover,
+.rating label:hover ~ label {
+  color: #FFBF00;
+}
+
+
 @media screen and (max-width: 991px) {
 
   .box-detail-tour .ctinfos{
