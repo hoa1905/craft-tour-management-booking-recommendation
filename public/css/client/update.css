@@ -4291,3 +4291,63 @@ Responsive cho header menu
     border-color: #ff6600;
     /* hiệu ứng khi hover */
 }
+
+
+/* --- Chỉ áp dụng flex CHO MENU CẤP 1 --- */
+.vnt-fixed-menu > ul {
+    display: flex !important;
+    align-items: center;
+}
+
+/* Không đụng vào các UL cấp 2, 3 */
+/* Tự động trở lại display: block */
+.vnt-fixed-menu ul ul {
+    display: block !important;
+}
+
+/* --- Form search chiếm toàn bộ phần còn lại ở LI cuối --- */
+.vnt-fixed-menu > ul > li:last-child {
+    flex: 1 !important;
+}
+
+/* --- Container form search --- */
+.box_search.search-wide {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex;
+}
+
+/* Input + button ngang hàng và co giãn */
+.box_search.search-wide .seponsi {
+    display: flex;
+    width: 100%;
+}
+
+/* Input co giãn đầy đủ */
+.box_search.search-wide .text_search {
+    flex: 1;
+    padding: 10px 15px;
+    font-size: 16px;
+    width: 100% !important;
+    min-width: 0;
+}
+
+/* Nút search */
+.box_search.search-wide button {
+    padding: 10px 15px;
+    white-space: nowrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box_search.search-wide button i {
+    font-size: 18px;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .box_search.search-wide .text_search {
+        font-size: 14px;
+    }
+}
