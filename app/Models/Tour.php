@@ -19,6 +19,7 @@ class Tour extends Model
         'price_child',
         'duration',
         'description',
+        'workshop',
         'departure_point',
         'destination',
         'transport',

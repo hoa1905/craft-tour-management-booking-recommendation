@@ -265,6 +265,31 @@
                 </div>
               </div>
               <div class="tab_wrapper tab_responsive">
+                <div class="viewtab vhtabtour">
+                  <div class="vvtitle">
+                    <div class="icon"><i class="fas fa-hands-helping me-1"></i></div>
+                    <div class="txt">
+                      <h2>Hoạt động trải nghiệm (Workshop)</h2>
+                    </div>
+                  </div>
+                  <div class="vvcont">
+                    <div class="the-content ">
+                      <div class="box-info">
+                        <div class="info-content">
+                          <div class="hpviewcont">
+                            <div class="thecontent desc">
+                              <div class="txt-intro">
+                                <p style="text-align: justify;"> {!! $tour->workshop ?? '
+                                  Không có hoạt động trải nghiệm.' !!}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="viewtab vhtabtour" id="viewtabDesc">
                   <div class="vvtitle">
                     <div class="icon"><i class="fa fa-paperclip"></i></div>
@@ -331,7 +356,7 @@
                   <div class="viewtab vhtabtour" id="viewtabComment">
                     <div class="vvtitle">
                       <div class="icon"><i class="fa fa-comments"></i></div>
-                      <div class="txt"><span>Đánh giá tour</span></div>
+                      <div class="txt"><span>Đánh giá và bình luận tour</span></div>
                     </div>
 
                     <div class="vvcont">

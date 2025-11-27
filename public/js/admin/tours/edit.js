@@ -22,6 +22,10 @@ document.addEventListener("DOMContentLoaded", function () {
     CKEDITOR.replace('description');
   }
 
+  if (document.getElementById('workshop')) {
+    CKEDITOR.replace('workshop');
+  }
+
   // Khởi tạo Select2 (jQuery $ đã được tải từ master)
   try {
     $('.select2-basic').select2({

@@ -12,6 +12,10 @@ document.addEventListener("DOMContentLoaded", function () {
     CKEDITOR.replace('description');
   }
 
+  if (document.getElementById('workshop')) {
+    CKEDITOR.replace('workshop');
+  }
+
   // Init Select2
   try {
     $('.select2-basic').select2({ theme: "bootstrap-5", width: '100%' });

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('price_child', 10, 2);
             $table->string('duration', 20);
             $table->text('description');
+            $table->text('workshop');
             $table->string('departure_point', 100);
             $table->string('destination', 100);
             $table->string('transport', 50);

@@ -82,6 +82,7 @@ class TourController extends Controller
             'price_child' => 'required|numeric|min:0',
             'departure_point' => 'required|string',
             'duration' => 'required|string|max:100',
+            'workshop' => 'required|string',
             'description' => 'required|string',
 
             // Ảnh không bắt buộc (nullable) khi sửa
@@ -123,6 +124,7 @@ class TourController extends Controller
             'departure_point.required' => 'Vui lòng chọn điểm khởi hành.',
             'duration.required' => 'Vui lòng nhập thời lượng tour.',
             'duration.max' => 'Thời lượng tour không được vượt quá 100 ký tự.',
+            'workshop.required' => 'Vui lòng nhập hoạt động trải nghiệm.',
             'description.required' => 'Vui lòng nhập mô tả tour.',
 
             // Hình ảnh
@@ -187,6 +189,7 @@ class TourController extends Controller
                 'departure_point' => $validatedData['departure_point'],
                 'destination' => $destination_name, // Lưu chuỗi tên tỉnh đã tính toán
                 'duration' => $validatedData['duration'],
+                'workshop' => $validatedData['workshop'],
                 'description' => $validatedData['description'],
             ];
 
@@ -313,6 +316,7 @@ class TourController extends Controller
             'price_child' => 'required|numeric|min:0',
             'departure_point' => 'required|string',
             'duration' => 'required|string|max:100',
+            'workshop' => 'required|string',
             'description' => 'required|string',
 
             // Ảnh: bắt buộc
@@ -345,6 +349,7 @@ class TourController extends Controller
             'price_child.required' => 'Vui lòng nhập giá vé trẻ em.',
             'departure_point.required' => 'Vui lòng chọn điểm khởi hành.',
             'duration.required' => 'Vui lòng nhập thời lượng tour.',
+            'workshop.required' => 'Vui lòng nhập hoạt động trải nghiệm.',
             'description.required' => 'Vui lòng nhập mô tả tour.',
             'image_main.required' => 'Vui lòng chọn ảnh đại diện cho tour.',
             'image_main.max' => 'Ảnh không được vượt quá 2MB.',
@@ -407,6 +412,7 @@ class TourController extends Controller
                 'departure_point' => $validatedData['departure_point'],
                 'destination' => $destination_string,
                 'duration' => $validatedData['duration'],
+                'workshop' => $validatedData['workshop'],
                 'description' => $validatedData['description'],
                 'status' => 'active',
                 'gallery' => [], // Khởi tạo mảng rỗng

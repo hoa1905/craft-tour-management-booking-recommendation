@@ -265,6 +265,18 @@
     </div>
   </div>
 
+  {{-- Card: Hoạt động trải nghiệm --}}
+  <div class="card shadow border-0 rounded-3 mb-4">
+    <div class="card-header bg-white py-3">
+      <h5 class="mb-0 fw-bold text-primary"><i class="fas fa-hands-helping me-1"></i> Hoạt động trải nghiệm (Workshop)</h5>
+    </div>
+    <div class="card-body p-4">
+      <div class="prose">
+        {!! $tour->workshop ?? '<p class="text-muted">Không có hoạt động trải nghiệm.</p>' !!}
+      </div>
+    </div>
+  </div>
+
   {{-- Card: Mô tả tour --}}
   <div class="card shadow border-0 rounded-3">
     <div class="card-header bg-white py-3">
