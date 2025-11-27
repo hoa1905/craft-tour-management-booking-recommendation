@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('tours', function (Blueprint $table) {
             $table->id('tour_id');
             $table->string('tour_name', 150);
-            $table->unsignedBigInteger('partner_id');
             $table->decimal('price_adult', 10, 2);
             $table->decimal('price_child', 10, 2);
             $table->string('duration', 20);
@@ -24,10 +23,8 @@ return new class extends Migration
             $table->string('transport', 50);
             $table->string('image_main', 255);
             $table->json('gallery')->nullable(); // Mảng chứa nhiều ảnh mô tả
-            $table->enum('status', ['pending', 'approved', 'rejected', 'inactive'])->default('pending');
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
-
-            $table->foreign('partner_id')->references('user_id')->on('users');
         });
     }
 

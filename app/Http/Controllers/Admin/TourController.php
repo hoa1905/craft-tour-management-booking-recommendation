@@ -43,7 +43,6 @@ class TourController extends Controller
     public function tourDetail($id)
     {
         $tour = Tour::with([
-            'partner',
             'villages.province.region',
             'schedules',
             'itineraries',
@@ -410,8 +409,6 @@ class TourController extends Controller
                 'duration' => $validatedData['duration'],
                 'description' => $validatedData['description'],
                 'status' => 'active',
-                // Lấy ID người đang đăng nhập (Admin hoặc Partner)
-                'partner_id' => $user->user_id,
                 'gallery' => [], // Khởi tạo mảng rỗng
             ];
 

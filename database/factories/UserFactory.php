@@ -17,11 +17,8 @@ class UserFactory extends Factory
    */
   public function definition(): array
   {
-    // Chỉ partner mới có thể ở trạng thái pending
-    $role = $this->faker->randomElement(['client', 'partner', 'admin']);
-    $status = ($role === 'partner')
-      ? $this->faker->randomElement(['pending', 'approved'])
-      : 'approved';
+    $role = $this->faker->randomElement(['client', 'admin']);
+    $status = 'approved';
 
     return [
       'user_name' => $this->faker->name(),

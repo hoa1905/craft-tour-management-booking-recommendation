@@ -20,7 +20,6 @@ class TourFactory extends Factory
     {
         return [
             'tour_name' => 'Tour ' . $this->faker->city . ' khám phá làng nghề',
-            'partner_id' => User::inRandomOrder()->first()?->user_id ?? User::factory(),
             'price_adult' => $this->faker->numberBetween(500000, 3000000),
             'price_child' => $this->faker->numberBetween(200000, 1500000),
             'duration' => $this->faker->randomElement(['1N', '2N1Đ', '3N2Đ', '4N3Đ']),

@@ -14,7 +14,6 @@ class Tour extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'partner_id',
         'tour_name',
         'price_adult',
         'price_child',
@@ -34,12 +33,6 @@ class Tour extends Model
     ];
 
     // Relationships
-    // Mỗi tour do một đối tác (partner) tạo
-    public function partner()
-    {
-        return $this->belongsTo(User::class, 'partner_id');
-    }
-
     // Một tour có thể có nhiều lịch khởi hành
     public function schedules()
     {
@@ -129,7 +122,6 @@ class Tour extends Model
     {
         return self::with([
             'villages.province.region',
-            'partner',
             'schedules',
             'itineraries',
         ])

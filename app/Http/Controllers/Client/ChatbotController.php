@@ -41,9 +41,6 @@ class ChatbotController extends Controller
                 case 'BOOKING_INQUIRY':
                     $context = $this->toolCheckBooking($prompt);
                     break;
-                case 'PARTNER_INQUIRY':
-                    $context = "Dữ liệu: Khách hàng hỏi về việc trở thành đối tác. Hãy trả lời rằng họ có thể xem thông tin ở link 'Đăng ký trở thành nhà cung cấp' trên menu, hoặc liên hệ support@hanhtrinhvang.com.";
-                    break;
                 case 'CUSTOM_TOUR':
                     $context = "Dữ liệu: Khách hàng hỏi về tour tùy chỉnh. Hãy trả lời rằng họ có thể nhấn vào 'Tour theo yêu cầu' trên menu và điền form, chúng tôi sẽ liên hệ lại.";
                     break;
@@ -92,10 +89,9 @@ class ChatbotController extends Controller
         Phân loại câu hỏi thành MỘT trong các loại nhãn sau:
         1. TOUR_SEARCH: Nếu hỏi về thông tin tour, làng nghề, giá vé, lịch trình, thời gian, địa điểm (ví dụ: "tour Bát Tràng bao nhiêu tiền?", "gợi ý tour 3 ngày").
         2. BOOKING_INQUIRY: Nếu hỏi về đơn đặt tour cá nhân, trạng thái đơn hàng, cách hủy tour (ví dụ: "kiểm tra đơn hàng của tôi", "làm sao để hủy tour?").
-        3. PARTNER_INQUIRY: Nếu hỏi về cách đăng ký làm đối tác, nhà cung cấp.
-        4. CUSTOM_TOUR: Nếu hỏi về tour theo yêu cầu riêng.
-        5. REALTIME_SEARCH - hỏi thông tin bên ngoài hoặc kiến thức thực tế như: Thời tiết, giá vàng, tin tức, tỷ giá, ai là ai, cái gì là gì, định nghĩa, thông tin sự kiện. (ví dụ: "giá vàng hôm nay", "tình yêu là gì", "ai là tổng bí thư Việt Nam", "Hà Nội ở đâu").
-        6. GENERAL - lời chào, hỏi thăm, nói chuyện phiếm không cần thông tin (ví dụ: "xin chào", "bạn khỏe không", "cảm ơn",...).
+        3. CUSTOM_TOUR: Nếu hỏi về tour theo yêu cầu riêng.
+        4. REALTIME_SEARCH - hỏi thông tin bên ngoài hoặc kiến thức thực tế như: Thời tiết, giá vàng, tin tức, tỷ giá, ai là ai, cái gì là gì, định nghĩa, thông tin sự kiện. (ví dụ: "giá vàng hôm nay", "tình yêu là gì", "ai là tổng bí thư Việt Nam", "Hà Nội ở đâu").
+        5. GENERAL - lời chào, hỏi thăm, nói chuyện phiếm không cần thông tin (ví dụ: "xin chào", "bạn khỏe không", "cảm ơn",...).
 
         Câu hỏi: "$prompt"
         Chỉ trả lời **một nhãn duy nhất** trong danh sách trên. (ví dụ: TOUR_SEARCH, BOOKING_INQUIRY, REALTIME_SEARCH, ...):

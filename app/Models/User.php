@@ -24,12 +24,6 @@ class User extends Authenticatable
     'status',
   ];
 
-  // Quan hệ với bảng Tours (1 partner có nhiều tours)
-  public function tours()
-  {
-    return $this->hasMany(Tour::class, 'partner_id', 'user_id');
-  }
-
   // Người dùng có thể đặt nhiều tour
   public function bookings()
   {
