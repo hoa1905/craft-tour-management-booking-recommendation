@@ -205,7 +205,7 @@
   <div class="d-flex justify-content-between align-items-center mt-3">
     <div class="text-muted">
       <small>
-        Hiển thị từ <strong>{{ $tours->firstItem() }}</strong> đén <strong>{{ $tours->lastItem() }}</strong> trong tổng số <strong>{{ $tours->total() }}</strong> tour
+        Hiển thị từ <strong>{{ $tours->firstItem() }}</strong> đến <strong>{{ $tours->lastItem() }}</strong> trong tổng số <strong>{{ $tours->total() }}</strong> tour
       </small>
     </div>
     <div>

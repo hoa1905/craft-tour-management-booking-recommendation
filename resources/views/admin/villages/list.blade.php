@@ -203,7 +203,7 @@
   <div class="d-flex justify-content-between align-items-center mt-3">
     <div class="text-muted">
       <small>
-        Hiển thị từ <strong>{{ $villages->firstItem() }}</strong> đén <strong>{{ $villages->lastItem() }}</strong> trong tổng số <strong>{{ $villages->total() }}</strong> làng nghề truyền thống
+        Hiển thị từ <strong>{{ $villages->firstItem() }}</strong> đến <strong>{{ $villages->lastItem() }}</strong> trong tổng số <strong>{{ $villages->total() }}</strong> làng nghề truyền thống
       </small>
     </div>
     <div>
