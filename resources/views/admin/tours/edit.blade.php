@@ -325,7 +325,24 @@
           </div>
         </div>
 
-        {{-- Card 5: Mô tả tour --}}
+        {{-- Card 5: Hoạt động trải nghiệm --}}
+        <div class="card shadow-sm mb-3">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold text-primary"><i class="fas fa-hands-helping me-1"></i> Hoạt động trải nghiệm (Workshop)<span class="text-danger">*</span></h5>
+          </div>
+
+          <div class="card-body">
+            <div class="form-text text-muted">Nêu bật các hoạt động thực hành dành cho khách du lịch.</div>
+            <textarea id="workshop" class="form-control @error('workshop') is-invalid @enderror" name="workshop" id="workshop" rows="4"> {{ old('workshop', $tour->workshop) }}</textarea>
+
+            {{-- CKEditor ẩn textarea, nên chúng ta cần 'd-block' để lỗi hiển thị --}}
+            @error('workshop')
+            <div class="invalid-feedback d-block">{{ $message }}</div>
+            @enderror
+          </div>
+        </div>
+
+        {{-- Card 6: Mô tả tour --}}
         <div class="card shadow-sm mb-3">
           <div class="card-header bg-white py-3">
             <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-file-text-fill me-2"></i> Mô tả tour <span class="text-danger">*</span></h5>
@@ -340,7 +357,7 @@
           </div>
         </div>
 
-        {{-- Card 6: Lịch khởi hành --}}
+        {{-- Card 7: Lịch khởi hành --}}
         <div class="card shadow-sm mb-3">
           <div class="card-header bg-white py-3">
             <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-calendar-check-fill me-2"></i> Lịch khởi hành <span class="text-danger">*</span></h5>
@@ -421,7 +438,7 @@
           </div>
         </div>
 
-        {{-- Card 7: Lịch trình tour --}}
+        {{-- Card 8: Lịch trình tour --}}
         <div class="card shadow-sm mb-3">
           <div class="card-header bg-white py-3">
             <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-list-ol me-2"></i> Lịch trình tour <span class="text-danger">*</span></h5>
