@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('transaction_id', 255)->nullable();
 
             $table->enum('payment_method', ['Office', 'Paypal', 'Vnpay']);
-            $table->decimal('amount', 10, 2);
+            $table->decimal('amount', 15, 2);
             $table->string('payper_name', 100)->nullable();
             $table->string('payper_email', 150)->nullable();
             $table->enum('status', ['waiting_payment', 'success', 'failed', 'pending_refund', 'refunded'])->default('waiting_payment');

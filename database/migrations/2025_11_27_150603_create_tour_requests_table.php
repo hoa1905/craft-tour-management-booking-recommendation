@@ -25,11 +25,11 @@ return new class extends Migration
             $table->date('end_date');
             $table->integer('adult_quantity')->default(1);
             $table->integer('child_quantity')->default(0);
-            $table->decimal('price_adult_final', 15, 2)->nullable();
-            $table->decimal('price_child_final', 15, 2)->nullable();
+            $table->decimal('price_adult_final', 10, 2)->nullable();
+            $table->decimal('price_child_final', 10, 2)->nullable();
             $table->decimal('final_total_price', 15, 2)->nullable();
-            $table->decimal('budget_min', 15, 2)->nullable();
-            $table->decimal('budget_max', 15, 2)->nullable();
+            $table->decimal('budget_min', 10, 2)->nullable();
+            $table->decimal('budget_max', 10, 2)->nullable();
             $table->enum('transportation', ['Ô tô', 'Xe khách', 'Tàu hỏa', 'Máu bay', 'Bất kỳ'])->default('Bất kỳ');
 
             $table->text('requirements')->nullable();

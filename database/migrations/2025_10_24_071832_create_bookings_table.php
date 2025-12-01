@@ -27,7 +27,7 @@ return new class extends Migration
             $table->integer('child_quantity')->default(0);
             $table->decimal('price_adult_at_booking', 10, 2);
             $table->decimal('price_child_at_booking', 10, 2);
-            $table->decimal('total_price', 10, 2)->default(0);
+            $table->decimal('total_price', 15, 2)->default(0);
             $table->enum('status', ['waiting_payment', 'paid', 'active', 'canceled', 'completed'])
                 ->default('waiting_payment');
             $table->timestamps();
