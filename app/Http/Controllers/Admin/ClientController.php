@@ -16,7 +16,7 @@ class ClientController extends Controller
     public function index()
     {
         $clients = User::where('role', 'client')->paginate(10);
-        return view('admin.clients.client_list', compact('clients'));
+        return view('admin.clients.list', compact('clients'));
     }
 
     public function showEditForm($id)
