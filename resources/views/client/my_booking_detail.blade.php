@@ -78,24 +78,62 @@
         <div class="detail-box">
           <div class="detail-box-header">Thông tin Tour</div>
           <div class="detail-box-body">
-            <a href="{{ route('tour.detail', ['id' => $booking->tour->tour_id]) }}">
-              <div class="tour-info">
-                <img src="{{ asset('images/tours/' . $booking->tour->image_main) }}"
-                  alt="{{ $booking->tour->tour_name }}"
-                  class="tour-image">
-                <div class="tour-info-text">
-                  <h3>{{ $booking->tour->tour_name }}</h3>
-                  <p>Mã tour: {{ $booking->tour->tour_id }}</p>
-                  <p>Khởi hành: <strong>{{ $booking->schedule->start_date?->format('d/m/Y') }}</strong></p>
-                  <p>Ngày về: <strong>{{ $booking->schedule->end_date?->format('d/m/Y') }}</strong></p>
-                  <p>Phương tiện: <strong> @if ($booking->tour->transport === 'Máy bay')
-                      <i class="fa fa-plane"></i>
-                      @else
-                      <i class="fa fa-bus"></i>
-                      @endif</strong></p>
-                </div>
+            <div class="tour-info">
+              @if($booking->tour && $booking->tour->image_main)
+              <a href="{{ route('tour.detail', ['id' => $booking->tour_id]) }}">
+                <img src="{{ asset('images/tours/' . $booking->tour->image_main) }}" alt="Tour Image" class="tour-image">
+              </a>
+              @else
+              <a href="{{ route('tour_request.detail', ['id' => $booking->request_id]) }}">
+                <img src="{{ asset('images/tours/custom-tour.jpg') }}" alt="Tour theo yêu cầu" class="tour-image">
+              </a>
+              @endif
+
+              <div class="tour-info-text">
+                @if($booking->tour)
+                <a href="{{ route('tour.detail', $booking->tour_id) }}" style="color: inherit; text-decoration: none;">
+                  <h3>{{ $booking->tour_name }}</h3>
+                </a>
+                @else
+                <a href="{{ route('tour_request.detail', ['id' => $booking->request_id]) }}" style="color: inherit; text-decoration: none;">
+                  <h3>{{ $booking->tour_name }}</h3>
+                </a>
+                @endif
+
+                {{-- Mã Tour / Request ID --}}
+                @if($booking->tour_id)
+                <p>Mã tour: {{ $booking->tour_id }}</p>
+                @elseif($booking->request_id)
+                <p>Mã đặt tour theo yêu cầu: {{ $booking->request_id }}</p>
+                @endif
+
+                {{-- Ngày đi/về --}}
+                @php
+                if ($booking->schedule) {
+                $startDate = $booking->schedule->start_date;
+                $endDate = $booking->schedule->end_date;
+                } elseif ($booking->tourRequest) {
+                $startDate = $booking->tourRequest->start_date;
+                $endDate = $booking->tourRequest->end_date;
+                } else {
+                $startDate = null; $endDate = null;
+                }
+                @endphp
+
+                <p>Khởi hành: <strong>{{ $startDate ? \Carbon\Carbon::parse($startDate)->format('d/m/Y') : 'N/A' }}</strong></p>
+                <p>Ngày về: <strong>{{ $endDate ? \Carbon\Carbon::parse($endDate)->format('d/m/Y') : 'N/A' }}</strong></p>
+
+                <p>Phương tiện:
+                  <strong>
+                    @if ($booking->tour)
+                    {{ $booking->tour->transport }}
+                    @elseif ($booking->tourRequest)
+                    {{ $booking->tourRequest->transportation }}
+                    @endif
+                  </strong>
+                </p>
               </div>
-            </a>
+            </div>
           </div>
         </div>
 

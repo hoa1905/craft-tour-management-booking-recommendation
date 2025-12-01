@@ -18,7 +18,7 @@ class MyBookingController extends Controller
         $status = $request->get('status', 'all');
 
         $bookings = Booking::ofUser($client->user_id)
-            ->with(['tour', 'schedule', 'payment'])
+            ->with(['tour', 'tourRequest', 'schedule', 'payment'])
             ->filterByStatus($status)
             ->latest() // tương đương với ->orderBy('created_at', 'DESC')
             ->get();
@@ -32,7 +32,7 @@ class MyBookingController extends Controller
     public function show(Booking $booking)
     {
         // Tải các quan hệ cần thiết (giống hệt hàm index)
-        $booking->load(['tour', 'schedule', 'payment']);
+        $booking->load(['tour', 'tourRequest', 'schedule', 'payment']);
 
         // Trả về view
         return view('client.my_booking_detail', compact('booking'));

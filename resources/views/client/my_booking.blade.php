@@ -49,15 +49,29 @@
                       <div class="bhgrip">
                         <div class="mcol">
                           <div class="vthumb">
+                            @if($booking->tour && $booking->tour->image_main)
+                            {{-- Ảnh Tour thường --}}
                             <img src="{{ asset('images/tours/' . $booking->tour->image_main) }}" alt="Ảnh tour">
+                            @else
+                            {{-- Ảnh của tour theo yêu cầu (Mặc định) --}}
+                            <img src="{{ asset('images/tours/custom-tour.jpg') }}" alt="Ảnh tour theo yêu cầu">
+                            @endif
                           </div>
                         </div>
                         <div class="hcol">
                           <div class="vdecss">
                             <div class="dstitle">
-                              <h3>{{ $booking->tour->tour_name }}</h3>
+                              {{-- (Dùng Accessor trong Model Booking) --}}
+                              <h3>{{ $booking->tour_name }}</h3>
                             </div>
-                            <div class="dscodes">Mã tour: {{ $booking->tour->tour_id }}</div>
+                            {{-- Hiển thị Mã Tour hoặc Request ID --}}
+                            <div class="dscodes">
+                              @if($booking->tour_id)
+                              Mã tour: {{ $booking->tour_id }}
+                              @elseif($booking->request_id)
+                              Mã đặt tour theo yêu cầu: {{ $booking->request_id }}
+                              @endif
+                            </div>
                           </div>
                         </div>
                         <div class="bcol">
@@ -66,11 +80,25 @@
                               <ul>
                                 <li>
                                   <div class="tm">Ngày đi:</div>
-                                  <div class="th">{{ $booking->schedule->start_date->format('d/m/Y') }}</div>
+                                  <div class="th">
+                                    {{-- Nếu có schedule (tour thường) --}}
+                                    @if($booking->schedule)
+                                    {{ $booking->schedule->start_date->format('d/m/Y') }}
+                                    {{-- Nếu là tour yêu cầu (lấy từ request) --}}
+                                    @elseif($booking->tourRequest)
+                                    {{ $booking->tourRequest->start_date->format('d/m/Y') }}
+                                    @endif
+                                  </div>
                                 </li>
                                 <li>
                                   <div class="tm">Ngày về:</div>
-                                  <div class="th">{{ $booking->schedule->end_date->format('d/m/Y') }}</div>
+                                  <div class="th">
+                                    @if($booking->schedule)
+                                    {{ $booking->schedule->end_date->format('d/m/Y') }}
+                                    @elseif($booking->tourRequest)
+                                    {{ $booking->tourRequest->end_date->format('d/m/Y') }}
+                                    @endif
+                                  </div>
                                 </li>
                                 <li>
                                   <div class="tm">Số khách:</div>
@@ -95,23 +123,48 @@
                               </ul>
                             </div>
                             <div class="dslinks">
-                              <div class="vstatus" style="border:1px solid #ec1d25;color:#ec1d25;">
-                                @if ($booking->payment && $booking->payment->status === 'success')
-                                Đã thanh toán
-                                @elseif ($booking->payment && $booking->payment->status === 'waiting_payment')
-                                Chờ thanh toán
-                                @elseif ($booking->status === 'completed')
-                                Hoàn thành
-                                @elseif ($booking->status === 'active')
-                                Đang hoạt động
-                                @elseif ($booking->status === 'canceled')
-                                Đã hủy
-                                @elseif ($booking->payment && $booking->payment->status === 'refunded')
-                                Đã hoàn tiền
-                                @else
-                                Đang xử lý
-                                @endif
+                              @if ($booking->payment && $booking->payment->status === 'success')
+                              <div class="vstatus" style="border:1px solid #5cb85c;">
+                                <span style="color: #5cb85c;">
+                                  Đã thanh toán
+                                </span>
                               </div>
+                              @elseif ($booking->payment && $booking->payment->status === 'waiting_payment')
+                              <div class="vstatus" style="border:1px solid #f0ad4e;">
+                                <span style="color: #f0ad4e;">
+                                  Chờ thanh toán
+                                </span>
+                              </div>
+                              @elseif ($booking->status === 'completed')
+                              <div class="vstatus" style="border:1px solid #5bc0de;">
+                                <span style="color: #5bc0de;">
+                                  Hoàn thành
+                                </span>
+                              </div>
+                              @elseif ($booking->status === 'active')
+                              <div class="vstatus" style="border:1px solid #0275d8;">
+                                <span style="color: #0275d8;">
+                                  Đang hoạt động
+                                </span>
+                              </div>
+                              @elseif ($booking->status === 'canceled')
+                              <div class="vstatus" style="border:1px solid #ec1d25;">
+                                <span style="color: #ec1d25;">
+                                  Đã hủy
+                                </span>
+                              </div>
+                              @elseif ($booking->payment && $booking->payment->status === 'refunded')
+                              <div class="vstatus" style="border:1px solid #6c757d;">
+                                <span style="color: #6c757d;">
+                                  Đã hoàn tiền
+                                </span>
+                              </div>
+                              @else
+                              <div class="vstatus" style="border:1px solid #333;">
+                                <span style="color: #333;">Chờ hoàn tiền
+                                </span>
+                              </div>
+                              @endif
 
                               {{-- NÚT HỦY TOUR --}}
                               @if ($booking->is_cancelable)

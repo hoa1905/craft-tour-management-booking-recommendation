@@ -25,7 +25,13 @@
               <div class="box-info-item">
                 <div class="tDetal">
                   <div class="tImg">
+                    @if(isset($bookingData['is_custom_tour']) && $bookingData['is_custom_tour'])
+                    {{-- Ảnh mặc định cho tour tự thiết kế --}}
+                    <img src="{{ asset('images/tours/custom-tour.jpg') }}" alt="Tour theo yêu cầu">
+                    @else
+                    {{-- Ảnh tour thường --}}
                     <img src="{{ asset('images/tours/' . $bookingData['tour_image']) }}" alt="Tour Image">
+                    @endif
                   </div>
                   <div class="tTitle">{{ $bookingData['tour_name'] }}</div>
                   <div class="clear"></div>
@@ -117,8 +123,9 @@
               @csrf
 
               {{-- Thêm thông tin tour bằng input hidden, được gửi đi khi nhấn nút thanh toán --}}
-              <input type="hidden" name="tour_id" value="{{ $bookingData['tour_id'] }}">
+              <input type="hidden" name="tour_id" value="{{ $bookingData['tour_id'] ?? null }}">
               <input type="hidden" name="schedule_id" value="{{ $bookingData['schedule_id'] ?? null }}">
+              <input type="hidden" name="request_id" value="{{ $bookingData['request_id'] ?? null }}">
               <input type="hidden" name="adult_quantity" class="adult_quantity_hidden" value="{{ $bookingData['adult_quantity'] }}">
               <input type="hidden" name="child_quantity" class="child_quantity_hidden" value="{{ $bookingData['child_quantity'] }}">
               <input type="hidden" name="price_adult_at_booking" class="price_adult_at_booking_hidden" value="{{ $bookingData['price_adult_at_booking'] }}">

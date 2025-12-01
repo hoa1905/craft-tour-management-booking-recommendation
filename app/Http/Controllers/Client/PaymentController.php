@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Payment;
+use App\Models\TourRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,8 +20,12 @@ class PaymentController extends Controller
     {
         // Đây là tất cả các trường bạn gửi lên từ form
         return Validator::make($request->all(), [
-            'tour_id' => 'required|integer|exists:tours,tour_id',
+            // Cho phép tour_id null (nếu là tour request)
+            'tour_id' => 'nullable|integer|exists:tours,tour_id',
             'schedule_id' => 'nullable|integer|exists:tour_schedules,schedule_id',
+            // Nếu không có tour_id thì bắt buộc phải có request_id
+            'request_id' => 'nullable|integer|exists:tour_requests,request_id',
+
             'adult_quantity' => 'required|integer|min:1',
             'child_quantity' => 'required|integer|min:0',
             'price_adult_at_booking' => 'required|numeric',
@@ -45,8 +50,9 @@ class PaymentController extends Controller
             // 1. Tạo Booking
             $booking = Booking::create([
                 'user_id' => Auth::guard('client')->id(),
-                'tour_id' => $bookingData['tour_id'],
-                'schedule_id' => $bookingData['schedule_id'],
+                'tour_id' => $bookingData['tour_id'] ?? null,     // Có thể null
+                'schedule_id' => $bookingData['schedule_id'] ?? null,
+                'request_id' => $bookingData['request_id'] ?? null,
                 'full_name' => $bookingData['full_name'],
                 'phone_number' => $bookingData['phone'],
                 'email' => $bookingData['email'],
@@ -58,6 +64,15 @@ class PaymentController extends Controller
                 'total_price' => $bookingData['total_price'], // Tiền VND
                 'status' => $bookingStatus, // 'waiting_payment' hoặc 'paid'
             ]);
+
+            // 1.1. Nếu là Tour Request, cập nhật trạng thái request ở bảng tour_requests thành 'completed' (Đã tạo đơn)
+            if (!empty($bookingData['request_id'])) {
+                $tourRequest = TourRequest::find($bookingData['request_id']);
+                if ($tourRequest) {
+                    $tourRequest->status = 'completed';
+                    $tourRequest->save();
+                }
+            }
 
             // 2. Tạo Payment
             $payment = new Payment();
@@ -145,6 +160,7 @@ class PaymentController extends Controller
         $usd_total = round($vnd_total / $vnd_to_usd_rate, 2);
 
         // 2. Lưu tất cả dữ liệu form vào session để dùng sau khi thanh toán thành công
+        // Lưu session: Đảm bảo lưu cả request_id vào session
         session(['paypal_booking_data' => $request->all()]);
 
         // 3. Tạo đơn hàng PayPal
