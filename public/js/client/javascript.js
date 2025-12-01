@@ -3,8 +3,20 @@ var vnTAccout = function () {
   return {
     init: function () {
       var $this = this;
+      // Khởi tạo biến toàn cục (đăng nhập vào Đặt tour theo yêu cầu)
+      window.pendingRedirectUrl = null;
 
       $("html").on("click", ".vnt-popup-login", function () {
+        // Nếu link đó có thuộc tính data-redirect, lưu nó lại
+        var redirect = $(this).data('redirect');
+
+        if (redirect) {
+          // Lưu vào biến toàn cục window
+          window.pendingRedirectUrl = redirect;
+        } else {
+          window.pendingRedirectUrl = null;
+        }
+
         $this.popupLogin();
       });
 
@@ -538,5 +550,3 @@ vnTRUST.init = function () {
 jQuery(window).ready(function () {
   vnTRUST.init();
 });
-
-

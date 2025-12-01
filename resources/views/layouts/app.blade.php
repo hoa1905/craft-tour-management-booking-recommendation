@@ -78,7 +78,7 @@
                       <ul>
                         <li class="current">
                           <a href="http://127.0.0.1:8000/" target="_self">
-                            <i class="fas fa-map-marked-alt"></i>HanhTrinhVang
+                            <i class="fas fa-plane-departure"></i>HanhTrinhVang
                           </a>
                         </li>
                         <li class="submenu"><a href="javascript:void(0)" target="_self">Tour</a>
@@ -120,17 +120,26 @@
                           </ul>
                         </li>
                         <li>
-                          <a href="{{ route('villages.map') }}" target="_self">Bản đồ làng nghề</a>
+                          <a href="{{ route('villages.map') }}" target="_self"><i class="fas fa-map-marked-alt"></i>Bản đồ làng nghề</a>
                         </li>
                         <li>
-                          <a href="javascript:void(0)" target="_self">Tour theo yêu cầu</a>
+                        <li class="menu-tour-request-item">
+                          @if(Auth::guard('client')->check())
+                          {{-- Đã đăng nhập --}}
+                          <a href="{{ route('tour_request.create') }}" target="_self">
+                            <i class="fas fa-clipboard-list"></i> Đặt tour theo yêu cầu
+                          </a>
+                          @else
+                          {{-- Chưa đăng nhập --}}
+                          <a href="javascript:void(0)" class="vnt-popup-login auth-required-link" data-redirect="{{ route('tour_request.create') }}">
+                            <i class="fas fa-clipboard-list"></i> Đặt tour theo yêu cầu
+                          </a>
+                          @endif
                         </li>
-                        <li>
-                          <a href="javascript:void(0)" target="_self">Đăng ký trở thành nhà cung cấp</a>
                         </li>
                         <li>
                           <div class="vnt-search hiddenmb">
-                            <form name="formSearch" action="{{ route('tour.search') }}" method="get" class="box_search">
+                            <form name="formSearch" action="{{ route('tour.search') }}" method="get" class="box_search search-wide">
                               <!-- Tham số phân biệt form -->
                               <input type="hidden" name="search_type" value="fuzzy">
                               <div class="seponsi">
@@ -287,8 +296,18 @@
       </li>
 
       <li><a href="{{ route('villages.map') }}"><i class="fas fa-map"></i> Bản đồ làng nghề</a></li>
-      <li><a href="javascript:void(0)"><i class="fas fa-clipboard-list"></i> Tour theo yêu cầu</a></li>
-      <li><a href="javascript:void(0)"><i class="fas fa-user-plus"></i> Đăng ký nhà cung cấp</a></li>
+
+      <li class="menu-tour-request-item">
+        @if(Auth::guard('client')->check())
+        <a href="{{ route('tour_request.create') }}" target="_self">
+          <i class="fas fa-clipboard-list"></i> Đặt tour theo yêu cầu
+        </a>
+        @else
+        <a href="javascript:void(0)" class="vnt-popup-login auth-required-link" data-redirect="{{ route('tour_request.create') }}">
+          <i class="fas fa-clipboard-list"></i> Đặt tour theo yêu cầu
+        </a>
+        @endif
+      </li>
 
       @if(Auth::guard('client')->check())
       <li style="border-top: 2px solid #ddd; margin-top: 10px; padding-top: 10px;">
@@ -631,6 +650,19 @@
                * Truyền username và avatar từ AcountController của hàm postLogin
                */
               updateUserHeader(res.username, res.avatar);
+
+              /* Khi nhấn menu Đặt tour theo yêu cầu, nếu đăng nhập thành công 
+               * sẽ Chuyển đến trang điền form đặt tour theo yêu cầu
+               */
+              if (window.pendingRedirectUrl) {
+                // Chuyển hướng đến link đã lưu
+                window.location.href = window.pendingRedirectUrl;
+
+                // Reset lại sau khi dùng xong để tránh lỗi lần sau
+                window.pendingRedirectUrl = null;
+              } else {
+                // Nếu không có link đích thì giữ nguyên
+              }
             }
           },
           error: function(xhr) {
@@ -702,6 +734,35 @@
 
         // Cập nhật avatar/icon
         $('.tpaccounts .acnolog .nntitle').html(avatarHtml);
+
+
+        // --- Cập nhật các link cần đăng nhập ---
+        // Tìm tất cả các link có class 'auth-required-link'
+        $('.auth-required-link').each(function() {
+          var redirectUrl = $(this).data('redirect'); // Lấy link đích
+
+          if (redirectUrl) {
+            // Gỡ bỏ class kích hoạt popup
+            $(this).removeClass('vnt-popup-login auth-required-link');
+
+            // Gán link đích vào href
+            $(this).attr('href', redirectUrl);
+
+            // (Tùy chọn) Gỡ bỏ sự kiện click cũ nếu cần thiết
+            $(this).off('click');
+          }
+        });
+
+        // Cập nhật cụ thể cho menu "Đặt tour theo yêu cầu"
+        var tourRequestUrl = "{{ route('tour_request.create') }}";
+        $('.menu-tour-request-item').html(`
+        <a href="${tourRequestUrl}" target="_self">
+            <i class="fas fa-clipboard-list"></i> Đặt tour theo yêu cầu
+        </a>
+    `);
+
+        // Cập nhật trạng thái biến toàn cục
+        window.isLoggedIn = true;
       }
     });
   </script>
