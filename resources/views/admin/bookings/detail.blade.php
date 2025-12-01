@@ -64,43 +64,101 @@
         </div>
         <div class="card-body p-4">
           <div class="d-flex align-items-start">
-            @if($booking->tour && $booking->tour->image_main)
             <div class="flex-shrink-0 me-4">
+              @if($booking->tour && $booking->tour->image_main)
+              {{-- Ảnh Tour thường --}}
               <img src="{{ asset('images/tours/' . $booking->tour->image_main) }}"
-                alt="Tour Image"
+                alt="Ảnh tour"
                 class="rounded shadow-sm border"
                 style="width: 180px; height: 120px; object-fit: cover;">
+              @else
+              {{-- Ảnh Tour yêu cầu --}}
+              <img src="{{ asset('images/tours/custom-tour.jpg') }}"
+                alt="Tour theo yêu cầu"
+                class="rounded shadow-sm border"
+                style="width: 180px; height: 120px; object-fit: cover;">
+              @endif
             </div>
-            @endif
             <div class="flex-grow-1">
               <h5 class="fw-bold mb-2">
-                <a href="{{ route('admin.tour.detail', $booking->tour_id) }}" class="text-decoration-none text-dark">
-                  {{ $booking->tour->tour_name }}
+                @if($booking->tour_id)
+                <a href="{{ route('admin.tour.detail', ['id' => $booking->tour_id]) }}" class="text-decoration-none text-dark">
+                  {{ $booking->tour_name }}
                 </a>
-                <p class="text-muted small mb-3">
-                  <i class="fas fa-barcode me-1"></i> Mã tour: <strong>{{ $booking->tour_id }}</strong>
+                @elseif($booking->request_id)
+                <a href="{{ route('admin.tour_request.detail', ['id' => $booking->request_id]) }}" class="text-decoration-none text-dark">
+                  {{ $booking->tour_name }}
+                </a>
+                @else
+                {{ $booking->tour_name }}
+                @endif
+
+                <p class="text-muted small mb-3 mt-1">
+                  @if($booking->tour_id)
+                  Mã tour: <strong>{{ $booking->tour_id }}</strong>
+                  @elseif($booking->request_id)
+                  Mã tour theo yêu cầu: <strong>{{ $booking->request_id }}</strong>
+                  @endif
                 </p>
               </h5>
+
+              {{-- Xử lý thông tin chi tiết --}}
+              @php
+              // 1. Lấy ngày đi & về
+              if ($booking->schedule) {
+              $startDate = $booking->schedule->start_date;
+              $endDate = $booking->schedule->end_date;
+              } elseif ($booking->tourRequest) {
+              $startDate = $booking->tourRequest->start_date;
+              $endDate = $booking->tourRequest->end_date;
+              } else {
+              $startDate = null; $endDate = null;
+              }
+
+              // 2. Lấy địa điểm
+              $departure = $booking->tour ? $booking->tour->departure_point : ($booking->tourRequest->departure_point ?? 'N/A');
+              $destination = $booking->tour ? $booking->tour->destination : ($booking->tourRequest->desired_destination ?? 'N/A');
+
+              // 3. Tính toán thời lượng
+              if ($booking->tour) {
+              // Nếu là tour có sẵn: Lấy text có sẵn trong DB (VD: "3 ngày 2 đêm")
+              $duration = $booking->tour->duration;
+              } elseif ($startDate && $endDate) {
+              // Nếu là tour yêu cầu: Tự tính toán
+              $cStart = \Carbon\Carbon::parse($startDate);
+              $cEnd = \Carbon\Carbon::parse($endDate);
+
+              // diffInDays trả về khoảng cách, +1 để tính cả ngày khởi hành
+              $days = $cStart->diffInDays($cEnd) + 1;
+              $nights = $days > 1 ? $days - 1 : 0;
+
+              $duration = "$days ngày $nights đêm";
+              } else {
+              $duration = 'Chưa xác định';
+              }
+              @endphp
+
               <div class="row g-3">
                 <div class="col-md-4">
                   <small class="text-muted d-block">Khởi hành:</small>
-                  <strong><i class="far fa-calendar-alt me-1 text-info"></i> {{ \Carbon\Carbon::parse($booking->schedule->start_date)->format('d/m/Y') }}</strong>
+                  <strong><i class="far fa-calendar-alt me-1 text-info"></i> {{ $startDate ? \Carbon\Carbon::parse($startDate)->format('d/m/Y') : '---' }}</strong>
                 </div>
                 <div class="col-md-4">
                   <small class="text-muted d-block">Kết thúc:</small>
-                  <strong><i class="far fa-calendar-check me-1 text-success"></i> {{ \Carbon\Carbon::parse($booking->schedule->end_date)->format('d/m/Y') }}</strong>
+                  <strong><i class="far fa-calendar-check me-1 text-success"></i> {{ $endDate ? \Carbon\Carbon::parse($endDate)->format('d/m/Y') : '---' }}</strong>
                 </div>
                 <div class="col-md-4">
                   <small class="text-muted d-block">Thời lượng tour:</small>
-                  <span>{{ $booking->tour->duration }}</span>
+                  {{-- Hiển thị kết quả tính toán --}}
+                  <span>{{ $duration }}</span>
                 </div>
                 <div class="col-md-4">
                   <small class="text-muted d-block">Điểm khởi hành:</small>
-                  <span>{{ $booking->tour->departure_point }}</span>
+                  <span>{{ $departure }}</span>
                 </div>
                 <div class="col-md-4">
                   <small class="text-muted d-block">Điểm đến:</small>
-                  <span>{{ $booking->tour->destination }}</span>
+                  <span>{{ $destination }}</span>
                 </div>
               </div>
             </div>
@@ -172,23 +230,23 @@
             <tr>
               <td class="ps-4 fw-bold"><i class="fas fa-user me-2 text-primary"></i> Người lớn</td>
               <td class="text-center">{{ $booking->adult_quantity }}</td>
-              <td class="text-end">{{ number_format($booking->price_adult_at_booking, 0, ',', '.') }} ₫</td>
-              <td class="text-end pe-4 fw-bold text-danger">{{ number_format($booking->adult_quantity * $booking->price_adult_at_booking, 0, ',', '.') }} ₫</td>
+              <td class="text-end">{{ number_format($booking->price_adult_at_booking, 0, ',', '.') }} đ</td>
+              <td class="text-end pe-4 fw-bold text-danger">{{ number_format($booking->adult_quantity * $booking->price_adult_at_booking, 0, ',', '.') }} đ</td>
             </tr>
             {{-- Trẻ em --}}
             @if($booking->child_quantity > 0)
             <tr>
               <td class="ps-4 fw-bold"><i class="fas fa-child me-2 text-warning"></i> Trẻ em</td>
               <td class="text-center">{{ $booking->child_quantity }}</td>
-              <td class="text-end">{{ number_format($booking->price_child_at_booking, 0, ',', '.') }} ₫</td>
-              <td class="text-end pe-4 fw-bold text-danger">{{ number_format($booking->child_quantity * $booking->price_child_at_booking, 0, ',', '.') }} ₫</td>
+              <td class="text-end">{{ number_format($booking->price_child_at_booking, 0, ',', '.') }} đ</td>
+              <td class="text-end pe-4 fw-bold text-danger">{{ number_format($booking->child_quantity * $booking->price_child_at_booking, 0, ',', '.') }} đ</td>
             </tr>
             @endif
           </tbody>
           <tfoot class="bg-white">
             <tr>
               <td colspan="3" class="text-end fw-bold py-3 text-danger border-0">Tổng cộng:</td>
-              <td class="text-end pe-4 total-price py-3 fw-bold text-danger border-0 fs-5">{{ number_format($booking->total_price, 0, ',', '.') }} ₫</td>
+              <td class="text-end pe-4 total-price py-3 fw-bold text-danger border-0 fs-5">{{ number_format($booking->total_price, 0, ',', '.') }} đ</td>
             </tr>
           </tfoot>
         </table>

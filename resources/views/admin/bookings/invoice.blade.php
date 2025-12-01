@@ -126,7 +126,7 @@
         <td class="w-50">
           <div class="company-name">HÀNH TRÌNH VÀNG</div>
           <div>Địa chỉ: 123 Đường ABC, TP. Đà Nẵng</div>
-          <div>Hotline: 1900 xxxx</div>
+          <div>Hotline: 0123 456 789</div>
         </td>
         <td class="w-50 text-end">
           <div class="invoice-title">HÓA ĐƠN</div>
@@ -150,10 +150,31 @@
         <td class="w-50" style="padding-left: 15px;">
           <div class="p-3 bg-light rounded border">
             <h4 class="fw-bold text-primary mb-2">THÔNG TIN TOUR</h4>
-            <div><strong>Tour:</strong> {{ $booking->tour->tour_name }}</div>
-            <div><strong>Thời gian:</strong> {{ \Carbon\Carbon::parse($booking->schedule->start_date)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($booking->schedule->end_date)->format('d/m/Y') }}</div>
-            <div><strong>Điểm khởi hành:</strong> {{ $booking->tour->departure_point }}</div>
-            <div><strong>Điểm đến:</strong> {{ $booking->tour->destination }}</div>
+            {{-- Tên tour sử dụng Accessor $booking->tour_name (An toàn cho cả 2 loại tour) --}}
+            <div><strong>Tour:</strong> {{ $booking->tour_name }}</div>
+
+            {{-- 2. XỬ LÝ NGÀY & ĐỊA ĐIỂM LINH HOẠT --}}
+            @php
+            if ($booking->schedule) {
+            $startDate = $booking->schedule->start_date;
+            $endDate = $booking->schedule->end_date;
+            } elseif ($booking->tourRequest) {
+            $startDate = $booking->tourRequest->start_date;
+            $endDate = $booking->tourRequest->end_date;
+            } else {
+            $startDate = null; $endDate = null;
+            }
+
+            $departure = $booking->tour ? $booking->tour->departure_point : ($booking->tourRequest->departure_point ?? 'N/A');
+            $destination = $booking->tour ? $booking->tour->destination : ($booking->tourRequest->desired_destination ?? 'N/A');
+            @endphp
+
+            <div><strong>Thời gian:</strong> {{ $startDate ? \Carbon\Carbon::parse($startDate)->format('d/m/Y') : '---' }}
+              -
+              {{ $endDate ? \Carbon\Carbon::parse($endDate)->format('d/m/Y') : '---' }}
+            </div>
+            <div><strong>Điểm khởi hành:</strong> {{ $departure }}</div>
+            <div><strong>Điểm đến:</strong> {{ $destination }}</div>
           </div>
         </td>
       </tr>
@@ -173,15 +194,15 @@
         <tr>
           <td class="text-center">Vé Người lớn</td>
           <td class="text-center">{{ $booking->adult_quantity }}</td>
-          <td class="text-center">{{ number_format($booking->price_adult_at_booking, 0, ',', '.') }} ₫</td>
-          <td class="text-center">{{ number_format($booking->adult_quantity * $booking->price_adult_at_booking, 0, ',', '.') }} ₫</td>
+          <td class="text-center">{{ number_format($booking->price_adult_at_booking, 0, ',', '.') }} đ</td>
+          <td class="text-center">{{ number_format($booking->adult_quantity * $booking->price_adult_at_booking, 0, ',', '.') }} đ</td>
         </tr>
         @if($booking->child_quantity > 0)
         <tr>
           <td>Vé Trẻ em</td>
           <td class="text-center">{{ $booking->child_quantity }}</td>
-          <td class="text-center">{{ number_format($booking->price_child_at_booking, 0, ',', '.') }} ₫</td>
-          <td class="text-center">{{ number_format($booking->child_quantity * $booking->price_child_at_booking, 0, ',', '.') }} ₫</td>
+          <td class="text-center">{{ number_format($booking->price_child_at_booking, 0, ',', '.') }} đ</td>
+          <td class="text-center">{{ number_format($booking->child_quantity * $booking->price_child_at_booking, 0, ',', '.') }} đ</td>
         </tr>
         @endif
       </tbody>

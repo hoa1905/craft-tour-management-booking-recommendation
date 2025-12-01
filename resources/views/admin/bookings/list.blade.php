@@ -78,7 +78,7 @@
         <table class="table table-hover align-middle mb-0">
           <thead class="bg-light text-secondary">
             <tr>
-              <th class="py-3 ps-3">Mã và Ngày đặt</th>
+              <th class="py-3 text-center">Mã và Ngày đặt</th>
               <th class="py-3">Khách hàng</th>
               <th class="py-3" style="width: 25%;">Tour và Lịch trình</th>
               <th class="py-3 text-center">Tổng tiền</th>
@@ -91,7 +91,7 @@
           <tbody>
             @forelse($bookings as $booking)
             <tr>
-              {{-- 1. Mã & Ngày --}}
+              {{-- 1. Mã và Ngày --}}
               <td class="ps-3">
                 <div>
                   <i class="fas fa-barcode me-1"></i>
@@ -111,20 +111,36 @@
                   </div>
                   @endif
                   <div>
-                    <div class="fw-bold">{{ $booking->full_name }}</div>
-                    <small class="text-muted d-block"><i class="fas fa-phone-alt me-1"></i>{{ $booking->phone_number }}</small>
+                    <div class="fw-bold">{{ $booking->user->user_name }}</div>
+                    <small class="text-muted d-block"><i class="fas fa-phone-alt me-1"></i>{{ $booking->user->phone_number }}</small>
                   </div>
                 </div>
               </td>
 
               {{-- 3. Thông tin Tour --}}
               <td>
-                <a href="{{ route('admin.tour.detail', $booking->tour_id) }}" class="tour-name text-decoration-none mb-1">
+                @if($booking->tour_id)
+                {{-- Trường hợp: Tour có sẵn (Có tour_id) --}}
+                <a href="{{ route('admin.tour.detail', ['id' => $booking->tour_id]) }}" class="tour-name text-decoration-none mb-1">
                   {{ $booking->tour->tour_name ?? 'Tour không tồn tại' }}
                 </a>
+                @elseif($booking->request_id)
+                {{-- Trường hợp: Tour theo yêu cầu (Có request_id) --}}
+                <a href="{{ route('admin.tour_request.detail', ['id' => $booking->request_id]) }}" class="tour-name text-decoration-none mb-1">
+                  {{ $booking->tour_name }} {{-- Sử dụng Accessor trong Model --}}
+                </a>
+                @else
+                <span class="text-muted">Thông tin tour bị lỗi</span>
+                @endif
+
+                {{-- Ngày khởi hành --}}
                 <div class="small text-muted mt-1">
                   <i class="far fa-calendar-alt text-info me-1"></i>
+                  @if($booking->schedule)
                   Khởi hành: <strong>{{ \Carbon\Carbon::parse($booking->schedule->start_date)->format('d/m/Y') }}</strong>
+                  @elseif($booking->tourRequest)
+                  Khởi hành: <strong>{{ \Carbon\Carbon::parse($booking->tourRequest->start_date)->format('d/m/Y') }}</strong>
+                  @endif
                 </div>
                 <div class="small text-muted">
                   <i class="fas fa-users text-secondary me-1"></i>
@@ -167,9 +183,6 @@
                     </button>
                     <ul class="dropdown-menu shadow">
                       <li>
-                        <h6 class="dropdown-header">Cập nhật thanh toán</h6>
-                      </li>
-                      <li>
                         <button type="submit" name="payment_status" value="waiting_payment" class="dropdown-item">
                           Chưa thanh toán
                         </button>
@@ -207,14 +220,30 @@
                 @php
                 // Lấy ngày hiện tại, ngày đi, ngày về
                 $now = \Carbon\Carbon::now();
-                $start = \Carbon\Carbon::parse($booking->schedule->start_date);
-                $end = \Carbon\Carbon::parse($booking->schedule->end_date);
 
-                // Kiểm tra xem có đang trong thời gian đi tour không
+                // Xử lý an toàn: Nếu schedule null thì lấy tourRequest, nếu cả 2 null thì lấy today
+                $start = $booking->schedule ? \Carbon\Carbon::parse($booking->schedule->start_date)
+                : ($booking->tourRequest ? \Carbon\Carbon::parse($booking->tourRequest->start_date) : $now);
+
+                $end = $booking->schedule ? \Carbon\Carbon::parse($booking->schedule->end_date)
+                : ($booking->tourRequest ? \Carbon\Carbon::parse($booking->tourRequest->end_date) : $now);
+
+                // Kiểm tra đang đi tour
                 $isTraveling = $booking->status === 'active' && $now->between($start, $end);
+
+                // Cấu hình màu sắc và icon cho từng trạng thái
+                $bStatus = $booking->status;
+                $bConfig = [
+                'waiting_payment' => ['cls'=>'btn-warning text-dark', 'lbl'=>'Chờ thanh toán', 'icon'=>'hourglass-half'],
+                'paid' => ['cls'=>'btn-info text-white', 'lbl'=>'Đã thanh toán', 'icon'=>'money-bill-wave'],
+                'active' => ['cls'=>'btn-primary', 'lbl'=>'Đang du lịch', 'icon'=>'check-circle'],
+                'completed' => ['cls'=>'btn-success', 'lbl'=>'Hoàn thành', 'icon'=>'flag-checkered'],
+                'canceled' => ['cls'=>'btn-danger', 'lbl'=>'Đã hủy', 'icon'=>'ban'],
+                ];
+                $bCurr = $bConfig[$bStatus] ?? ['cls'=>'btn-secondary', 'lbl'=>$bStatus, 'icon'=>'question'];
                 @endphp
 
-                {{-- Nếu đang đi tour -> Hiện badge đặc biệt --}}
+                {{-- Nếu đang đi tour-  Hiện Badge Đang Du Lịch (Nổi bật) --}}
                 @if($isTraveling)
                 <div class="badge bg-primary bg-opacity-10 text-primary border border-primary mb-1 p-2">
                   <i class="fas fa-plane-departure me-1"></i> Đang du lịch
@@ -222,31 +251,16 @@
                 </div>
                 @endif
 
+                {{-- Form Cập nhật --}}
                 <form action="{{ route('admin.booking.updateStatus', $booking->booking_id) }}" method="POST">
                   @csrf
                   @method('PUT')
 
-                  @php
-                  $bStatus = $booking->status;
-                  $bConfig = [
-                  'waiting_payment' => ['cls'=>'btn-warning text-dark', 'lbl'=>'Chờ thanh toán'],
-                  'paid' => ['cls'=>'btn-info text-white', 'lbl'=>'Đã thanh toán'],
-                  'active' => ['cls'=>'btn-primary', 'lbl'=>'Đang du lịch'],
-                  'completed' => ['cls'=>'btn-success', 'lbl'=>'Hoàn thành'],
-                  'canceled' => ['cls'=>'btn-danger', 'lbl'=>'Đã hủy'],
-                  ];
-                  $bCurr = $bConfig[$bStatus] ?? ['cls'=>'btn-secondary', 'lbl'=>$bStatus];
-                  @endphp
-
                   <div class="btn-group">
                     <button type="button" class="btn {{ $bCurr['cls'] }} btn-sm dropdown-toggle shadow-sm" data-bs-toggle="dropdown">
-                      {{ $bCurr['lbl'] }}
+                      <i class="fas fa-{{ $bCurr['icon'] }}"></i> {{ $bCurr['lbl'] }}
                     </button>
                     <ul class="dropdown-menu shadow">
-                      <li>
-                        <h6 class="dropdown-header">
-                          Trạng thái Tour</h6>
-                      </li>
                       <li>
                         <button type="submit" name="status" value="waiting_payment" class="dropdown-item">
                           Chờ thanh toán
@@ -282,9 +296,23 @@
 
               {{-- 8. Thao tác --}}
               <td class="text-center">
-                <a href="{{ route('admin.booking.detail', ['id' => $booking->booking_id]) }}" class="btn btn-outline-primary btn-sm shadow-sm" title="Xem chi tiết">
-                  <i class="fas fa-eye"></i>
-                </a>
+                <div class="d-flex justify-content-center gap-2">
+
+                  {{-- Nút Xem Chi Tiết --}}
+                  <a href="{{ route('admin.booking.detail', ['id' => $booking->booking_id]) }}"
+                    class="btn btn-outline-primary btn-sm shadow-sm"
+                    title="Xem chi tiết">
+                    <i class="fas fa-eye"></i>
+                  </a>
+
+                  {{-- Nút In Hóa Đơn (Mới thêm) --}}
+                  <a href="{{ route('admin.booking.invoice', ['id' => $booking->booking_id]) }}"
+                    class="btn btn-outline-secondary btn-sm shadow-sm"
+                    title="In hóa đơn"
+                    target="_blank"> {{-- target="_blank" để mở tab mới --}}
+                    <i class="fas fa-print"></i>
+                  </a>
+                </div>
               </td>
             </tr>
             @empty
