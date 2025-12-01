@@ -16,6 +16,7 @@ class Booking extends Model
         'user_id',
         'tour_id',
         'schedule_id',
+        'request_id',
         'full_name',
         'phone_number',
         'email',
@@ -41,6 +42,12 @@ class Booking extends Model
     public function schedule()
     {
         return $this->belongsTo(TourSchedule::class, 'schedule_id');
+    }
+
+    public function tourRequest()
+    {
+        // Booking thuộc về một TourRequest (nếu có)
+        return $this->belongsTo(TourRequest::class, 'request_id', 'request_id');
     }
 
     public function payment()
@@ -126,5 +133,39 @@ class Booking extends Model
 
         // Cho phép hủy nếu ngày hiện tại còn TRƯỚC 7 ngày so với ngày khởi hành
         return now()->lt($startDate->subDays(7));
+    }
+
+    /**
+     * Accessor: Tự động tạo tên tour hiển thị
+     * Gọi trên view: {{ $booking->tour_name }}
+     */
+    public function getTourNameAttribute()
+    {
+        // 1. Nếu là Tour có sẵn (Tour thường)
+        if ($this->tour) {
+            return $this->tour->tour_name;
+        }
+
+        // 2. Nếu là Tour theo yêu cầu
+        if ($this->tourRequest) {
+            $name = "Tour theo yêu cầu: " . $this->tourRequest->desired_destination;
+
+            // Logic lấy tên các làng nghề (Giống hệt logic bạn viết trong controller)
+            if (!empty($this->tourRequest->village_ids)) {
+                // Lấy danh sách tên làng dựa trên mảng ID
+                $villageNames = Village::whereIn('village_id', $this->tourRequest->village_ids)
+                    ->pluck('village_name')
+                    ->toArray();
+
+                if (!empty($villageNames)) {
+                    // Nối chuỗi lại
+                    $name .= ' - Tham quan: ' . implode(', ', $villageNames);
+                }
+            }
+
+            return $name;
+        }
+
+        return "Tour không xác định";
     }
 }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('tour_id');
             $table->unsignedBigInteger('schedule_id');
+            $table->unsignedBigInteger('request_id');
 
             $table->string('full_name', 100);
             $table->string('phone_number', 15);
@@ -35,6 +36,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('user_id')->on('users');
             $table->foreign('tour_id')->references('tour_id')->on('tours');
             $table->foreign('schedule_id')->references('schedule_id')->on('tour_schedules');
+            $table->foreign('request_id')->references('request_id')->on('tour_requests');
         });
     }
 
