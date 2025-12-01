@@ -1,15 +1,3 @@
-.table th {
-  font-weight: 600;
-  color: #4a5568;
-  text-align: center;
-}
-
-.table td {
-  border-bottom: 1px solid #f0f0f0;
-  vertical-align: middle;
-  text-align: center;
-}
-
 .badge {
   font-weight: 500;
   padding: 0.4em 0.8em;
