@@ -97,21 +97,21 @@
                   <tr>
                     <td><strong>Người lớn</strong></td>
                     <td class="text-center">{{ $request->adult_quantity }}</td>
-                    <td class="text-right">{{ number_format($request->price_adult_final, 0, ',', '.') }} đ</td>
-                    <td class="text-right">{{ number_format($request->adult_quantity * $request->price_adult_final, 0, ',', '.') }} đ</td>
+                    <td class="text-right">{{ number_format($request->price_adult_final, 0, ',', '.') }}₫</td>
+                    <td class="text-right"><strong>{{ number_format($request->adult_quantity * $request->price_adult_final, 0, ',', '.') }}₫</strong></td>
                   </tr>
                   @if($request->child_quantity > 0)
                   <tr>
                     <td><strong>Trẻ em</strong></td>
                     <td class="text-center">{{ $request->child_quantity }}</td>
-                    <td class="text-right">{{ number_format($request->price_child_final, 0, ',', '.') }} đ</td>
-                    <td class="text-right">{{ number_format($request->child_quantity * $request->price_child_final, 0, ',', '.') }} đ</td>
+                    <td class="text-right">{{ number_format($request->price_child_final, 0, ',', '.') }}₫</td>
+                    <td class="text-right"><strong>{{ number_format($request->child_quantity * $request->price_child_final, 0, ',', '.') }}đ</strong></td>
                   </tr>
                   @endif
                   <tr class="warning">
                     <td colspan="3" class="text-right text-danger"><strong>TỔNG CỘNG:</strong></td>
                     <td class="text-right text-danger" style="font-size: 18px; font-weight: bold;">
-                      {{ number_format($request->final_total_price, 0, ',', '.') }} đ
+                      {{ number_format($request->final_total_price, 0, ',', '.') }}₫
                     </td>
                   </tr>
                 </tbody>
@@ -277,9 +277,9 @@
               <p><strong>Ngân sách dự kiến (người):</strong></p>
               <p class="text-danger" style="font-weight: bold; font-size: 16px;">
                 @if($request->budget_min || $request->budget_max)
-                {{ $request->budget_min ? number_format($request->budget_min, 0, ',', '.') : '0' }} đ
+                {{ $request->budget_min ? number_format($request->budget_min, 0, ',', '.') : '0' }}₫
                 -
-                {{ $request->budget_max ? number_format($request->budget_max, 0, ',', '.') : '...' }} đ
+                {{ $request->budget_max ? number_format($request->budget_max, 0, ',', '.') : '...' }}₫
                 @else
                 Chưa xác định
                 @endif

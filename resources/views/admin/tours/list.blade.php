@@ -99,7 +99,7 @@
                   Giá người lớn:
                   <br>
                   <span class="text-danger">
-                    {{ number_format($tour->price_adult, 0, ',', '.') }} đ
+                    {{ number_format($tour->price_adult, 0, ',', '.') }}₫
                   </span>
                 </span>
                 <br>
@@ -107,7 +107,7 @@
                   Giá trẻ em:
                   <br>
                   <span class="text-danger">
-                    {{ number_format($tour->price_child, 0, ',', '.') }} đ
+                    {{ number_format($tour->price_child, 0, ',', '.') }}₫
                   </span>
                 </span>
               </td>

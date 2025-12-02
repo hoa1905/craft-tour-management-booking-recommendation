@@ -44,7 +44,7 @@ $(function () {
                 </h4>
 
                 <div class="tour-price">
-                  ${Number(tour.price_adult).toLocaleString('vi-VN').replaceAll('.', ',')} <span class="currency">đ</span>
+                  ${Number(tour.price_adult).toLocaleString('vi-VN').replaceAll('.', ',')}<span class="currency">₫</span>
                 </div>
 
                 <ul class="tour-info list-unstyled">

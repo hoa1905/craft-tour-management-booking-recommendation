@@ -67,7 +67,7 @@
               <td>
                 <div class="fw-bold text-dark mb-1">{{ $request->desired_destination }}</div>
                 <small class="text-muted">
-                  <i class="bi bi-calendar-event me-1"></i>
+                  <i class="far fa-calendar-alt text-info me-1"></i>
                   {{ \Carbon\Carbon::parse($request->start_date)->format('d/m/Y') }} -
                   {{ \Carbon\Carbon::parse($request->end_date)->format('d/m/Y') }}
                 </small>
@@ -85,7 +85,7 @@
                 </span>
               </td>
               <td class="text-center text-muted small">
-                {{ $request->created_at->format('H:i d/m/Y') }}
+                {{ $request->created_at->format('d/m/Y H:i') }}
               </td>
               <td class="align-middle">
                 <div class="d-flex justify-content-center gap-2">

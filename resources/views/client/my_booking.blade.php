@@ -107,14 +107,14 @@
                                   </div>
                                 </li>
                                 <li>
-                                  <div class="tm">Tổng cộng:</div>
-                                  <div class="th vcolor"><strong>{{ number_format($booking->total_price, 0, ',', '.') }} đ</strong></div>
+                                  <div class="tm" style="color: #d82727">Tổng cộng:</div>
+                                  <div class="th" style="color: #d82727; font-weight: bold">{{ number_format($booking->total_price, 0, ',', '.') }}₫</div>
                                 </li>
                               </ul>
                             </div>
                           </div>
                         </div>
-                        <div class="tcol">
+                        <div class=" tcol">
                           <div class="vdecss dright">
                             <div class="dstends">
                               <ul>

@@ -162,7 +162,7 @@
                 </h4>
 
                 <div class="tour-price">
-                  {{ number_format($tour->price_adult, 0, ',', '.') }} <span class="currency">đ</span>
+                  {{ number_format($tour->price_adult, 0, ',', '.') }}<span class="currency">₫</span>
                 </div>
 
                 <ul class="tour-info list-unstyled">
@@ -262,7 +262,7 @@
               </h4>
 
               <div class="tour-price">
-                {{ number_format($tour->price_adult, 0, ',', '.') }} <span class="currency">đ</span>
+                {{ number_format($tour->price_adult, 0, ',', '.') }}<span class="currency">₫</span>
               </div>
 
               <ul class="tour-info list-unstyled">
@@ -377,7 +377,7 @@
               </h4>
 
               <div class="tour-price">
-                {{ number_format($tour->price_adult, 0, ',', '.') }} <span class="currency">đ</span>
+                {{ number_format($tour->price_adult, 0, ',', '.') }}<span class="currency">₫</span>
               </div>
 
               <ul class="tour-info list-unstyled">
@@ -489,7 +489,7 @@
               </h4>
 
               <div class="tour-price">
-                {{ number_format($tour->price_adult, 0, ',', '.') }} <span class="currency">đ</span>
+                {{ number_format($tour->price_adult, 0, ',', '.') }}<span class="currency">₫</span>
               </div>
 
               <ul class="tour-info list-unstyled">

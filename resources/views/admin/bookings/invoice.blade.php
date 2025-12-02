@@ -194,23 +194,23 @@
         <tr>
           <td class="text-center">Vé Người lớn</td>
           <td class="text-center">{{ $booking->adult_quantity }}</td>
-          <td class="text-center">{{ number_format($booking->price_adult_at_booking, 0, ',', '.') }} đ</td>
-          <td class="text-center">{{ number_format($booking->adult_quantity * $booking->price_adult_at_booking, 0, ',', '.') }} đ</td>
+          <td class="text-center">{{ number_format($booking->price_adult_at_booking, 0, ',', '.') }}₫</td>
+          <td class="text-center fw-bold">{{ number_format($booking->adult_quantity * $booking->price_adult_at_booking, 0, ',', '.') }}₫</td>
         </tr>
         @if($booking->child_quantity > 0)
         <tr>
           <td>Vé Trẻ em</td>
           <td class="text-center">{{ $booking->child_quantity }}</td>
-          <td class="text-center">{{ number_format($booking->price_child_at_booking, 0, ',', '.') }} đ</td>
-          <td class="text-center">{{ number_format($booking->child_quantity * $booking->price_child_at_booking, 0, ',', '.') }} đ</td>
+          <td class="text-center">{{ number_format($booking->price_child_at_booking, 0, ',', '.') }}₫</td>
+          <td class="text-center fw-bold">{{ number_format($booking->child_quantity * $booking->price_child_at_booking, 0, ',', '.') }}₫</td>
         </tr>
         @endif
       </tbody>
       <tfoot>
         <tr>
-          <td colspan="3" class="text-end fw-bold pt-3">TỔNG CỘNG:</td>
+          <td colspan="3" class="text-end fw-bold text-danger pt-3">TỔNG CỘNG:</td>
           <td class="text-end fw-bold text-danger pt-3 fs-5" style="font-size: 16px;">
-            {{ number_format($booking->total_price, 0, ',', '.') }} VND
+            {{ number_format($booking->total_price, 0, ',', '.') }}₫
           </td>
         </tr>
       </tfoot>

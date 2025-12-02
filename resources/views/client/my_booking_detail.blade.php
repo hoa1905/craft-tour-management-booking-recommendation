@@ -156,15 +156,15 @@
           <div class="detail-box-body">
             <div class="detail-item">
               <span>Người lớn:</span>
-              <span>{{ $booking->adult_quantity }} x {{ number_format($booking->price_adult_at_booking, 0, ',', '.') }} đ</span>
+              <span>{{ $booking->adult_quantity }} x {{ number_format($booking->price_adult_at_booking, 0, ',', '.') }}₫</span>
             </div>
             <div class="detail-item">
               <span>Trẻ em:</span>
-              <span>{{ $booking->child_quantity }} x {{ number_format($booking->price_child_at_booking, 0, ',', '.') }} đ</span>
+              <span>{{ $booking->child_quantity }} x {{ number_format($booking->price_child_at_booking, 0, ',', '.') }}₫</span>
             </div>
             <div class="detail-item total-line">
               <span class="total-price-label">Tổng cộng:</span>
-              <span class="total-price-value">{{ number_format($booking->total_price, 0, ',', '.') }} đ</span>
+              <span class="total-price-value">{{ number_format($booking->total_price, 0, ',', '.') }}₫</span>
             </div>
 
             <hr class="divider">

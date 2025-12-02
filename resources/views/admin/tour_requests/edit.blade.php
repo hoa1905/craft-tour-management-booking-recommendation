@@ -51,7 +51,7 @@
                     class="form-control currency fw-bold"
                     placeholder="0"
                     value="{{ old('price_adult_final', number_format($request->price_adult_final ?? 0, 0, ',', '.')) }}">
-                  <span class="input-group-text">đ</span>
+                  <span class="input-group-text">₫</span>
                 </div>
               </div>
               <div class="col-md-4">
@@ -61,14 +61,14 @@
                     class="form-control currency fw-bold"
                     placeholder="0"
                     value="{{ old('price_child_final', number_format($request->price_child_final ?? 0, 0, ',', '.')) }}">
-                  <span class="input-group-text">đ</span>
+                  <span class="input-group-text">₫</span>
                 </div>
               </div>
               <div class="col-md-4">
                 <label class="form-label fw-bold text-danger">Tổng tiền</label>
                 <div class="input-group">
                   <input type="text" id="final_total_display" class="form-control fw-bold text-danger bg-white" readonly value="0">
-                  <span class="input-group-text text-danger fw-bold">đ</span>
+                  <span class="input-group-text text-danger fw-bold">₫</span>
                 </div>
               </div>
             </div>
@@ -250,7 +250,7 @@
       width: '100%'
     });
 
-    // Format tiền tệ VNĐ
+    // Format tiền tệ đ
     function formatCurrency(input) {
       let value = input.value.replace(/[^0-9]/g, '');
       input.value = new Intl.NumberFormat('vi-VN').format(value);

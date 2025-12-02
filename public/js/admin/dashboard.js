@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
       data: {
         labels: data.map(item => `Tháng ${item.month}`),
         datasets: [{
-          label: "Doanh thu (VNĐ)",
+          label: "Doanh thu (đ)",
           data: data.map(item => item.revenue),
           backgroundColor: "#4facfe"
         }]
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
       data: {
         labels: data.map(item => `Tuần ${item.week}`),
         datasets: [{
-          label: "Doanh thu tuần (VNĐ)",
+          label: "Doanh thu tuần (đ)",
           data: data.map(item => item.revenue),
           borderColor: "#FF6384",
           fill: false,
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
       data: {
         labels: data.map(item => item.date),
         datasets: [{
-          label: "Doanh thu ngày (VNĐ)",
+          label: "Doanh thu ngày (đ)",
           data: data.map(item => item.revenue),
           borderColor: "#36A2EB",
           fill: true, // tô nền dưới đường
@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
       data: {
         labels: data.map(item => item.label),
         datasets: [{
-          label: "Doanh thu (VNĐ)",
+          label: "Doanh thu (đ)",
           data: data.map(item => item.value),
           backgroundColor: "#f6d365"
         }]

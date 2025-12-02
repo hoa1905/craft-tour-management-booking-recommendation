@@ -141,7 +141,7 @@
 
             <div class="row">
               <div class="col-md-6 form-group">
-                <label>Ngân sách dự kiến (VNĐ/người)</label>
+                <label>Ngân sách dự kiến (VND/người)</label>
                 <div class="input-group">
                   <input type="text" name="budget_min" class="form-control currency" placeholder="Tối thiểu"
                     value="{{ old('budget_min', number_format($request->budget_min, 0, ',', '.')) }}">

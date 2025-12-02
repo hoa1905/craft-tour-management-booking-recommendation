@@ -69,12 +69,12 @@
             <li class="list-group-item d-flex border-0 px-0">
               <span class="detail-icon me-3"><i class="bi bi-cash-coin"></i></span>
               <strong>Giá người lớn:</strong>
-              <span class="text-danger fw-bold ms-auto">{{ number_format($tour->price_adult,0,',','.') }} đ</span>
+              <span class="text-danger fw-bold ms-auto">{{ number_format($tour->price_adult,0,',','.') }}₫</span>
             </li>
             <li class="list-group-item d-flex border-0 px-0">
               <span class="detail-icon me-3"><i class="bi bi-cash"></i></span>
               <strong>Giá trẻ em:</strong>
-              <span class="text-danger fw-bold ms-auto">{{ number_format($tour->price_child,0,',','.') }} đ</span>
+              <span class="text-danger fw-bold ms-auto">{{ number_format($tour->price_child,0,',','.') }}₫</span>
             </li>
             <li class="list-group-item d-flex border-0 px-0">
               <span class="detail-icon me-3"><i class="bi bi-geo-alt-fill"></i></span>

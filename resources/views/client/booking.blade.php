@@ -65,7 +65,7 @@
                     <div class="bcol">
                       <div class="cremo">
                         <div class="rnew i-price" data-price="{{ $bookingData['price_adult_at_booking'] }}">
-                          {{ number_format($bookingData['price_adult_at_booking'], 0, ',', '.') }} đ
+                          {{ number_format($bookingData['price_adult_at_booking'], 0, ',', '.') }}₫
                         </div>
                       </div>
                     </div>
@@ -93,7 +93,7 @@
                     <div class="bcol">
                       <div class="cremo">
                         <div class="rnew i-price_child" data-price="{{ $bookingData['price_child_at_booking'] }}">
-                          {{ number_format($bookingData['price_child_at_booking'], 0, ',', '.') }} đ
+                          {{ number_format($bookingData['price_child_at_booking'], 0, ',', '.') }}₫
                         </div>
                       </div>
                     </div>
@@ -105,7 +105,7 @@
                       <div class="fl">Tổng cộng</div>
                       <div class="fr">
                         <strong class="color4 total-price" id="ext_total_price">
-                          {{ number_format($bookingData['total_price'], 0, ',', '.') }} đ
+                          {{ number_format($bookingData['total_price'], 0, ',', '.') }}<span class="currency">₫</span>
                         </strong>
                       </div>
                       <div class="clear"></div>

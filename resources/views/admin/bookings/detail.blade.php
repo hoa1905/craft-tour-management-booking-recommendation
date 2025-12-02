@@ -230,23 +230,23 @@
             <tr>
               <td class="ps-4 fw-bold"><i class="fas fa-user me-2 text-primary"></i> Người lớn</td>
               <td class="text-center">{{ $booking->adult_quantity }}</td>
-              <td class="text-end">{{ number_format($booking->price_adult_at_booking, 0, ',', '.') }} đ</td>
-              <td class="text-end pe-4 fw-bold text-danger">{{ number_format($booking->adult_quantity * $booking->price_adult_at_booking, 0, ',', '.') }} đ</td>
+              <td class="text-end">{{ number_format($booking->price_adult_at_booking, 0, ',', '.') }}₫</td>
+              <td class="text-end pe-4 fw-bold">{{ number_format($booking->adult_quantity * $booking->price_adult_at_booking, 0, ',', '.') }}₫</td>
             </tr>
             {{-- Trẻ em --}}
             @if($booking->child_quantity > 0)
             <tr>
               <td class="ps-4 fw-bold"><i class="fas fa-child me-2 text-warning"></i> Trẻ em</td>
               <td class="text-center">{{ $booking->child_quantity }}</td>
-              <td class="text-end">{{ number_format($booking->price_child_at_booking, 0, ',', '.') }} đ</td>
-              <td class="text-end pe-4 fw-bold text-danger">{{ number_format($booking->child_quantity * $booking->price_child_at_booking, 0, ',', '.') }} đ</td>
+              <td class="text-end">{{ number_format($booking->price_child_at_booking, 0, ',', '.') }}₫</td>
+              <td class="text-end pe-4 fw-bold">{{ number_format($booking->child_quantity * $booking->price_child_at_booking, 0, ',', '.') }}₫</td>
             </tr>
             @endif
           </tbody>
           <tfoot class="bg-white">
             <tr>
-              <td colspan="3" class="text-end fw-bold py-3 text-danger border-0">Tổng cộng:</td>
-              <td class="text-end pe-4 total-price py-3 fw-bold text-danger border-0 fs-5">{{ number_format($booking->total_price, 0, ',', '.') }} đ</td>
+              <td colspan="3" class="text-end fw-bold py-3 text-danger border-0">TỔNG CỘNG:</td>
+              <td class="text-end pe-4 total-price py-3 fw-bold text-danger border-0 fs-5">{{ number_format($booking->total_price, 0, ',', '.') }}₫</td>
             </tr>
           </tfoot>
         </table>
@@ -297,12 +297,12 @@
                 $vndEstimate = $booking->payment->amount * $exchangeRate;
                 @endphp
                 <div class="text-muted small fst-italic">
-                  (~ {{ number_format($vndEstimate, 0, ',', '.') }} VND)
+                  (~ {{ number_format($vndEstimate, 0, ',', '.') }}VND)
                 </div>
 
                 @else
                 <span class="fw-bold text-success fs-5">
-                  {{ number_format($booking->payment->amount, 0, ',', '.') }} VND
+                  {{ number_format($booking->payment->amount, 0, ',', '.') }}₫
                 </span>
                 @endif
               </td>

@@ -155,10 +155,10 @@
 
                                 <div class="slider-info">
                                   <div class="s-item">
-                                    <span id="price_min" class="number_vnd"></span> đ
+                                    <span id="price_min" class="number_vnd"></span>₫
                                   </div>
                                   <div class="s-item">
-                                    <span id="price_max" class="number_vnd"></span> đ
+                                    <span id="price_max" class="number_vnd"></span>₫
                                   </div>
                                 </div>
 
@@ -278,7 +278,7 @@
                     </p>
 
                     <p class="mb-1">Giá 1 khách</p>
-                    <h4 class="fw-bold tour-price">{{ number_format($tour->price_adult, 0, ',', '.') }} đ</h4>
+                    <h4 class="fw-bold tour-price">{{ number_format($tour->price_adult, 0, ',', '.') }}₫</h4>
                   </div>
                 </div>
               </div>

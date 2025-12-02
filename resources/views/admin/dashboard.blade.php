@@ -93,8 +93,7 @@
               <p class="stat-label">Tổng doanh thu</p>
               {{-- Đặt font-size nhỏ hơn một chút --}}
               <h3 class="stat-value text-danger">
-                {{ number_format($totalRevenue, 0, ',', '.') }}
-                <small class="fs-6">VND</small>
+                {{ number_format($totalRevenue, 0, ',', '.') }}<small class="fs-6">₫</small>
               </h3>
             </div>
           </div>

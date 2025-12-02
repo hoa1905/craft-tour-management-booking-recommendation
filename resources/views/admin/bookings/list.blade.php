@@ -150,7 +150,7 @@
 
               {{-- 4. Tổng tiền --}}
               <td class="text-center">
-                <div class="fw-bold text-danger">{{ number_format($booking->total_price, 0, ',', '.') }} ₫</div>
+                <div class="fw-bold text-danger">{{ number_format($booking->total_price, 0, ',', '.') }}₫</div>
               </td>
 
               {{-- 5. Phương thức --}}

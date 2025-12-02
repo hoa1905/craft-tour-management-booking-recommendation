@@ -142,7 +142,7 @@
                                   <div class="ncore">X</div>
                                   <div class="ninfo">
                                     <div class="sold i-price_old"></div>
-                                    <div class="snew i-price">{{ number_format($tour->price_adult, 0, ',', '.') }} đ</div>
+                                    <div class="snew i-price">{{ number_format($tour->price_adult, 0, ',', '.') }}₫</div>
                                   </div>
                                 </div>
                               </div>
@@ -171,7 +171,7 @@
                                   <div class="ncore">X</div>
                                   <div class="ninfo">
                                     <div class="sold i-price_old_child"></div>
-                                    <div class="snew i-price_child">{{ number_format($tour->price_child, 0, ',', '.') }} đ
+                                    <div class="snew i-price_child">{{ number_format($tour->price_child, 0, ',', '.') }}₫
                                     </div>
                                   </div>
                                 </div>
@@ -193,7 +193,7 @@
                           <div class="prgrip">
                             <div class="xcol">
                               <div class="polds total-price-old"></div>
-                              <div class="pnews total-price">{{ number_format($tour->price_adult, 0, ',', '.') }} đ</div>
+                              <div class="pnews total-price">{{ number_format($tour->price_adult, 0, ',', '.') }}₫</div>
                             </div>
                             <div class="vcol">
                               <div class="ctlinks">
@@ -505,7 +505,7 @@
                       </h4>
 
                       <div class="tour-price">
-                        1122 <span class="currency">đ</span>
+                        1122<span class="currency">₫</span>
                       </div>
 
                       <ul class="tour-info list-unstyled">

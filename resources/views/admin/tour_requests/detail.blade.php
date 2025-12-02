@@ -75,15 +75,15 @@
                 <tr>
                   <td class="fw-bold">Người lớn</td>
                   <td class="text-center">{{ $request->adult_quantity }}</td>
-                  <td class="text-end">{{ number_format($request->price_adult_final, 0, ',', '.') }} đ</td>
-                  <td class="text-end fw-bold">{{ number_format($request->adult_quantity * $request->price_adult_final, 0, ',', '.') }} đ</td>
+                  <td class="text-end">{{ number_format($request->price_adult_final, 0, ',', '.') }}₫</td>
+                  <td class="text-end fw-bold">{{ number_format($request->adult_quantity * $request->price_adult_final, 0, ',', '.') }}₫</td>
                 </tr>
                 @if($request->child_quantity > 0)
                 <tr>
                   <td class="fw-bold">Trẻ em</td>
                   <td class="text-center">{{ $request->child_quantity }}</td>
-                  <td class="text-end">{{ number_format($request->price_child_final, 0, ',', '.') }} đ</td>
-                  <td class="text-end fw-bold">{{ number_format($request->child_quantity * $request->price_child_final, 0, ',', '.') }} đ</td>
+                  <td class="text-end">{{ number_format($request->price_child_final, 0, ',', '.') }}₫</td>
+                  <td class="text-end fw-bold">{{ number_format($request->child_quantity * $request->price_child_final, 0, ',', '.') }}₫</td>
                 </tr>
                 @endif
                 <tr class="border-top">
@@ -91,7 +91,7 @@
                     <span class="h6 fw-bold text-danger">TỔNG CỘNG:</span>
                   </td>
                   <td class="text-end pt-3">
-                    <span class="h4 fw-bold text-danger">{{ number_format($request->final_total_price, 0, ',', '.') }} đ</span>
+                    <span class="h4 fw-bold text-danger">{{ number_format($request->final_total_price, 0, ',', '.') }}₫</span>
                   </td>
                 </tr>
               </tbody>
@@ -138,7 +138,7 @@
             <div class="col-md-6">
               <label class="text-muted small">Ngân sách dự kiến</label>
               <div class="fw-bold text-danger">
-                {{ number_format($request->budget_min, 0, ',', '.') }} đ - {{ number_format($request->budget_max, 0, ',', '.') }} đ
+                {{ number_format($request->budget_min, 0, ',', '.') }}₫ - {{ number_format($request->budget_max, 0, ',', '.') }}₫
               </div>
             </div>
 

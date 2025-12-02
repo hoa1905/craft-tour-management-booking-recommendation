@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Hàm format số tiền
   function formatMoney(amount) {
-    return new Intl.NumberFormat('vi-VN').format(amount) + ' đ';
+    return new Intl.NumberFormat('vi-VN').format(amount) + '₫';
   }
 
   // Hàm tính tổng giá

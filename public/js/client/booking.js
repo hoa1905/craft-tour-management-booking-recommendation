@@ -21,7 +21,7 @@
 		const adult = parseInt(adultInput.value) || 1;
 		const child = parseInt(childInput.value) || 0;
 		const total = (adult * priceAdult) + (child * priceChild);
-		totalPriceEl.textContent = total.toLocaleString('vi-VN') + ' đ';
+		totalPriceEl.textContent = total.toLocaleString('vi-VN') + '₫';
 
 		// Thêm cập nhật cho các trường input hidden
 		hiddenAdultInput.value = adult;
