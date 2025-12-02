@@ -140,7 +140,7 @@
               <i class="bi bi-houses-fill fs-4"></i>
             </div>
           </div>
-          <a href="{{ route('admin.village.index') }}" class="text-decoration-none small mt-3 d-block text-secondary">
+          <a href="{{ route('admin.village.index') }}" class="text-decoration-none small mt-3 d-block text-warning">
             Quản lý làng nghề <i class="bi bi-arrow-right"></i>
           </a>
         </div>
@@ -160,7 +160,7 @@
               <i class="bi bi-calendar-week fs-4"></i>
             </div>
           </div>
-          <div class="small mt-3 text-muted">Chuẩn bị hậu cần/Liên hệ</div>
+          <div class="small mt-3 text-primary">Chuẩn bị hậu cần/Liên hệ</div>
         </div>
       </div>
     </div>
