@@ -15,8 +15,8 @@ class VillageController extends Controller
      */
     public function map(Request $request)
     {
-        // Bắt đầu query với quan hệ 'province' để lấy tên tỉnh
-        $query = Village::with('province');
+        // / Khởi tạo query: Eager load province và lọc status của Village
+        $query = Village::where('status', 'active')->with('province');
 
         // Lọc theo Vùng miền
         $query->when($request->region_id, function ($q) use ($request) {

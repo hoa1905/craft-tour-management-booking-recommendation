@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // --- 1. Khởi tạo các lớp bản đồ  ---
+
   // Lớp Đường phố (OpenStreetMap)
   const street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -23,18 +25,23 @@ document.addEventListener("DOMContentLoaded", function () {
     attribution: 'Map data: © OpenTopoMap contributors'
   });
 
-  // Khởi tạo bản đồ trung tâm Việt Nam
-  const map = L.map('map', {
-    center: [16.047, 107.824],
-    zoom: 6,
-    layers: [street]
-  });
-
-  // Các lớp hành chính Việt Nam
+  // --- 2. Khởi tạo các lớp phủ (Overlays) ---
+  // Khởi tạo LayerGroup trước để nạp vào map
   const tinhLayer = L.layerGroup();
   const xaLayer = L.layerGroup();
 
-  // Tải GeoJSON tỉnh/thành
+  // --- 3. Khởi tạo bản đồ ---
+  const map = L.map('map', {
+    // Trung tâm Việt Nam
+    center: [16.047, 107.824],
+    zoom: 6,
+    // Khai báo street và tinhLayer ở đây để mặc định hiện
+    layers: [street, tinhLayer]
+  });
+
+  // --- 4. Tải dữ liệu GEOJSON ---
+
+  // Tải Tỉnh/Thành (Thêm vào tinhLayer, đã được bật mặc định)
   fetch("/geojson/vietnam_tinh.geojson")
     .then(res => res.json())
     .then(data => {
@@ -45,10 +52,9 @@ document.addEventListener("DOMContentLoaded", function () {
             layer.bindPopup(`<b>${feature.properties.name}</b>`);
         }
       }).addTo(tinhLayer);
-      tinhLayer.addTo(map);
-    });
+    }).catch(err => console.error("Lỗi tải GeoJSON Tỉnh/Thành:", err));
 
-  // Tải GeoJSON phường/xã
+  /// Tải Xã/Phường (Thêm vào xaLayer, mặc định đang tắt)
   fetch("/geojson/vietnam_xa.geojson")
     .then(res => res.json())
     .then(data => {
@@ -59,11 +65,11 @@ document.addEventListener("DOMContentLoaded", function () {
             layer.bindTooltip(feature.properties.name);
         }
       }).addTo(xaLayer);
-      xaLayer.addTo(map);
-    });
+    }).catch(err => console.error("Lỗi tải GeoJSON Xã/Phường:", err));
 
-  // Hiển thị các làng nghề dưới dạng node có ảnh
+  // --- 5. Hiển thị các làng nghề dưới dạng nodes có ảnh ---
   const villages = window.villageData || [];
+  console.log("Đang hiển thị số lượng làng nghề:", villages.length);
 
   villages.forEach(village => {
     if (village.latitude && village.longitude) {
@@ -74,9 +80,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const customIcon = L.divIcon({
         html: iconHTML,
+        // Để trống để dùng class trong HTML
         className: "",
-        iconSize: [25, 25],
-        iconAnchor: [22, 22]
+        // Kích thước phải khớp với(class village-node, Width CSS () + Border * 2)
+        iconSize: [30, 30],
+        // Tâm của icon (để mũi nhọn ghim đúng vị trí)
+        // Là một nửa của iconSize
+        iconAnchor: [15, 15]
       });
 
       const marker = L.marker([village.latitude, village.longitude], {
@@ -96,8 +106,15 @@ document.addEventListener("DOMContentLoaded", function () {
             border-radius:8px;">
         </div>`;
 
-      // Bind popup (click vẫn hoạt động)
+      /* Khi người dùng Click chuột vào marker đó trên bản đồ, Leaflet sẽ tự động:
+        * Tạo ra cái bong bóng chat (popup).
+        * Đổ nội dung popupContent vào trong.
+        * Hiển thị nó ngay phía trên marker.
+      */
       marker.bindPopup(popupContent);
+
+      // Sự kiện chuột
+
       // Hiển thị popup khi hover
       marker.on('mouseover', () => marker.openPopup());
       // Đóng popup khi rời chuột (optional)
@@ -107,10 +124,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Thêm lá cờ Việt Nam cho quần đảo Hoàng Sa và Trường Sa
+  // --- 6. Thêm lá cờ Việt Nam cho quần đảo Hoàng Sa và Trường Sa ---
   const vietnamIcon = L.icon({
     iconUrl: "/images/client/vietnam-flag.jpg",
-    iconSize: [24, 24]
+    // Tỷ lệ lá cờ 3:2
+    iconSize: [45, 30],
+    // Tâm icon để ghim đúng vị trí(Một nửa của iconSize)
+    iconAnchor: [22, 15]
   });
 
   // Hover hiển thị popup
@@ -136,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   const overlayMaps = {
-    "Tỉnh/Thành": tinhLayer,
+    "Tỉnh/Thành": tinhLayer, // Đã được bật mặc định
     "Phường/Xã": xaLayer,
   };
 

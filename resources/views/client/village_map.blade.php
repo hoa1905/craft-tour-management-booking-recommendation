@@ -73,7 +73,12 @@
 
 <script>
   // Truyền dữ liệu từ PHP sang JS cho file village-map.js
-  window.villageData = JSON.parse('@json($villages ?? [])');
+  // cột description chứa nội dung HTML có chứa các ký tự xuống dòng(Enter, Newline) hoặc các ký tự điều khiển đặc biệt nên sẽ  lỗi Biến villageData không có dữ liệu khi Truyền dữ liệu từ PHP sang JS 
+  // Dùng makeHidden để bỏ cột description
+  // Dùng values() để đảm bảo dữ liệu luôn là Mảng [] chứ không bị biến thành Object {}
+  window.villageData = JSON.parse('@json($villages->makeHidden(["description"])->values())');
+
+  console.log("Dữ liệu đã tải thành công:", window.villageData);
 </script>
 
 <script src="{{ asset('js/client/village-map.js') }}"></script>
