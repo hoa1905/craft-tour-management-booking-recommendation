@@ -131,11 +131,38 @@
     </div>
   </div>
 
+  {{-- Hệ khuyến nghị: Gợi ý dành cho bạn --}}
+  <div id="recommended-for-you-section" class="vnt-tintuc vnt-tour-load box-tour" style="display: none;">
+    <div class="wrapper">
+      <div class="style-title-1 lazyloading">
+        <div class="fl">
+          <h2 class="stTitle2">
+            <i class="fas fa-magic me-2"></i> Gợi ý dành cho bạn
+          </h2>
+        </div>
+        <div class="clear"></div>
+      </div>
+
+      <div class="recommendation-message"></div>
+
+      <div class="vhtourkm loadBottom">
+        <div id="recommended-tours-list" class="row">
+          {{-- JavaScript sẽ load tours vào đây --}}
+        </div>
+
+        <div id="recommended-loading" class="text-center" style="padding: 40px; display: none;">
+          <i class="fa fa-spinner fa-spin fa-3x text-primary"></i>
+          <p class="mt-3">Đang tìm tour phù hợp cho bạn...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="vnt-tintuc vnt-tour-load box-tour" data-id="0" data-type="focus">
     <div class="wrapper">
       <div class="style-title-1 lazyloading">
         <div class="fl">
-          <h2 class="stTitle">Tour Hot</h2>
+          <h2 class="stTitle2">Tour Hot</h2>
         </div>
         <div class="clear"></div>
       </div>
@@ -554,4 +581,7 @@
 <script src="{{ asset('js/client/scrollPlugin.min.js') }}"></script>
 <!-- Locale Vietnamese phải load SAU flatpickr thì lịch mới hiện tiếng việt-->
 <script src="{{ asset('js/client/vn.js') }}"></script>
+
+{{-- Recommendation script - QUAN TRỌNG --}}
+<script src="{{ asset('js/client/recommendations.js') }}"></script>
 @endsection

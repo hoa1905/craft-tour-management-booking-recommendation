@@ -292,7 +292,33 @@
 
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+  {{-- Hệ khuyến nghị: Gợi ý dựa trên từ khóa tìm kiếm --}}
+  <div id="search-recommendations-section" class="vnt-tintuc vnt-tour-load box-tour" style="display: none;">
+    <div class="wrapper">
+      <div class="style-title-1 lazyloading">
+        <div class="fl">
+          <h2 class="stTitle">
+            <i class="fas fa-lightbulb me-2"></i>
+            Tour liên quan bạn có thể quan tâm
+          </h2>
+        </div>
+        <div class="clear"></div>
+      </div>
 
+      <div class="recommendation-message"></div>
+
+      <div class="vhtourkm loadBottom">
+        <div id="search-recommendations-list" class="row">
+          {{-- JavaScript sẽ load tours vào đây --}}
+        </div>
+
+        <div id="search-recommendations-loading" class="text-center" style="padding: 40px; display: none;">
+          <i class="fa fa-spinner fa-spin fa-3x text-primary"></i>
+          <p class="mt-3">Đang tìm tour liên quan...</p>
+        </div>
       </div>
     </div>
   </div>
@@ -301,6 +327,8 @@
 
 @section('scripts')
 <script src="{{ asset('js/client/tour-search.js') }}"></script>
+{{-- Recommendation script - QUAN TRỌNG --}}
+<script src="{{ asset('js/client/recommendations.js') }}"></script>
 <script src="{{ asset('js/client/classList.min.js') }}"></script>
 <script src="{{ asset('js/client/jquery.number.min.js') }}"></script>
 <script src="{{ asset('js/client/flatpickr.min.js') }}"></script>

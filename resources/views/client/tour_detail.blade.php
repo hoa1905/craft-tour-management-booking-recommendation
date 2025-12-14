@@ -482,63 +482,28 @@
             </div>
           </div>
 
-          <div id="vnt-load_other" class="mb30 vnt-load-tour">
-            <div class="style-title-1">
-              <div class="fl"><span class="stTitle">Các tour tương tự</span></div>
-              <div class="clear"></div>
-            </div>
-            <div class="vhtourkm loadBottom">
-              <div id="mien-nam-tour-list" class="row">
-                <div class="col-md-3 col-sm-6">
-                  <div class="tour-card">
-                    <a href="">
-                      <div class="tour-image" style="background-image: url('')">
-                        <span class="tour-region"><i class="glyphicon glyphicon-map-marker"></i> fake</span>
-                      </div>
-                    </a>
-
-                    <div class="tour-body">
-                      <h4 class="tour-title">
-                        <a href="">
-                          tour name
-                        </a>
-                      </h4>
-
-                      <div class="tour-price">
-                        1122<span class="currency">₫</span>
-                      </div>
-
-                      <ul class="tour-info list-unstyled">
-                        <li><strong>Khởi hành:</strong> 5</li>
-                        <li><strong>Điểm đến:</strong> Điểm đến</li>
-                        <li><strong>Thời gian:</strong> 7</li>
-                      </ul>
-
-                      <div class="clearfix">
-                        <div class="pull-left">
-                          <strong>Ngày đi:</strong> 1
-                        </div>
-                        <div class="pull-right">
-
-                          <i class="fa fa-plane"></i>
-
-                          <i class="fa fa-bus"></i>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+          {{-- Hệ khuyến nghị các tour tương tự --}}
+          <div id="similar-tours-section" class="mb30 vnt-load-tour" style="display: none;">
+            <div class="wrapper">
+              <div class="style-title-1">
+                <div class="fl">
+                  <span class="stTitle2">
+                    <i class="fas fa-heart me-2"></i>
+                    Các tour tương tự bạn có thể thích
+                  </span>
                 </div>
-              </div>
-              <!-- Nút xem thêm -->
-              <div class="viewall vcenter vfullmb html_nav" style="text-align:center; margin:20px 0;">
-                <a href="javascript:void(0)" class="loadmore" data-offset="8" data-region="Tour Miền Nam">
-                  <span><i class="fa fa-chevron-down"></i> Xem thêm</span>
-                </a>
+                <div class="clear"></div>
               </div>
 
-              <!-- Thông báo khi hết tour -->
-              <div class="no-more" style="text-align:center; display:none; color:gray;">
-                <em>Đã hiển thị tất cả tour</em>
+              <div class="vhtourkm loadBottom">
+                <div id="similar-tours-list" class="row">
+                  {{-- JavaScript sẽ load tours vào đây --}}
+                </div>
+
+                <div id="similar-tours-loading" class="text-center" style="padding: 40px; display: none;">
+                  <i class="fa fa-spinner fa-spin fa-3x text-primary"></i>
+                  <p class="mt-3">Đang tìm tour tương tự...</p>
+                </div>
               </div>
             </div>
           </div>
@@ -554,4 +519,6 @@
 <script src="{{ asset('js/client/plusone.js') }}"></script>
 <script src="{{ asset('js/client/support_fixed.js') }}"></script>
 <script src="{{ asset('js/client/Drog.js') }}"></script>
+{{-- Recommendation script - QUAN TRỌNG --}}
+<script src="{{ asset('js/client/recommendations.js') }}"></script>
 @endsection
