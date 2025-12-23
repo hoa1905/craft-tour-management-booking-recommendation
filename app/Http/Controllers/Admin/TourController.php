@@ -253,10 +253,45 @@ class TourController extends Controller
             // 10. Đồng bộ hóa Lịch khởi hành (One-to-Many)
             // -----------------------------------------------------
             // Cách an toàn nhất: Xóa hết cái cũ, tạo lại từ request
-            $tour->schedules()->delete();
+            // $tour->schedules()->delete();
+            // if ($request->has('schedules')) {
+            //     foreach ($validatedData['schedules'] as $scheduleData) {
+            //         $tour->schedules()->create($scheduleData);
+            //     }
+            // }
+
             if ($request->has('schedules')) {
-                foreach ($validatedData['schedules'] as $scheduleData) {
-                    $tour->schedules()->create($scheduleData);
+                $newSchedules = $validatedData['schedules'];
+                $keepScheduleIds = [];
+
+                foreach ($newSchedules as $data) {
+                    // Sử dụng updateOrCreate để giữ lại các bản ghi cũ nếu đã tồn tại
+                    // Dựa vào start_date và tour_id để xác định bản ghi (hoặc id nếu bạn có gửi lên)
+                    $schedule = $tour->schedules()->updateOrCreate(
+                        [
+                            'start_date' => $data['start_date'],
+                            'end_date'   => $data['end_date']
+                        ],
+                        [
+                            'seats_available' => $data['seats_available']
+                        ]
+                    );
+                    $keepScheduleIds[] = $schedule->schedule_id;
+                }
+
+                // Xóa những lịch trình cũ KHÔNG nằm trong danh sách mới 
+                // VÀ phải kiểm tra xem chúng có Bookings hay chưa để tránh lỗi Foreign Key
+                $schedulesToDelete = $tour->schedules()
+                    ->whereNotIn('schedule_id', $keepScheduleIds)
+                    ->get();
+
+                foreach ($schedulesToDelete as $item) {
+                    // Kiểm tra quan hệ bookings trước khi xóa
+                    if ($item->bookings()->count() == 0) {
+                        $item->delete();
+                    } else {
+                        Log::warning("Không thể xóa lịch khởi hành ID {$item->schedule_id} vì có booking liên quan.");
+                    }
                 }
             }
 
