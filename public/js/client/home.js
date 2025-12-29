@@ -27,14 +27,13 @@ $(function () {
       success: function (data) {
         if (data && data.length > 0) {
           data.forEach(function (tour) {
-            const imageUrl = `/images/client/${tour.image_main}`;
+            const imageUrl = `/images/tours/${tour.image_main}`;
             const detailUrl = `/tour-detail/${tour.tour_id}`; // route detail
             // Thêm dữ liệu mới vào vùng đúng theo slug
             $('#' + slug + '-tour-list').append(`
           <div class="col-md-3 col-sm-6">
             <div class="tour-card">
               <div class="tour-image" style="background-image: url('${imageUrl}');">
-                <span class="tour-badge">TOUR BÁN CHẠY</span>
                 <span class="tour-region"><i class="glyphicon glyphicon-map-marker"></i> ${tour.destination}</span>
               </div>
 
