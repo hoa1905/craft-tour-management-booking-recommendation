@@ -18,8 +18,8 @@
     {{-- Tiêu đề và Nút Submit --}}
     <div class="d-flex justify-content-between align-items-center bg-white p-md-3 rounded-3 shadow-sm mb-4">
       <div>
-        <h3><span class="text-primary">Chỉnh sửa: </span>{{ $village->village_name }}</h3>
-        <p class="text-muted mb-0">Mã tour: {{ $village->village_id }}</p>
+        <h3><span class="text-primary">Chỉnh sửa làng nghề truyền thống: </span>{{ $village->village_name }}</h3>
+        <p class="text-muted mb-0">Mã làng nghề truyền thống: {{ $village->village_id }}</p>
       </div>
       <div>
         <button type="submit" class="btn btn-success btn-lg px-4 d-flex align-items-center justify-content-center">
