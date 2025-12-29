@@ -90,7 +90,7 @@ class TourRequestController extends Controller
         $clientId = Auth::guard('client')->id();
         $requests = TourRequest::where('user_id', $clientId)
             ->orderBy('created_at', 'desc')
-            ->paginate(1);
+            ->paginate(10);
 
         return view('client.tour_request.list', compact('requests'));
     }
