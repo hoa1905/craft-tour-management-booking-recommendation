@@ -145,8 +145,15 @@ window.onpopstate = function () {
 
 // TOUR Ajax tìm kiếm tour
 $(document).ready(function () {
+  // Bắt sự kiện khi người dùng nhấn nút "Tìm tour" hoặc submit form bộ lọc
   $('#formModSearch').on('submit', function (e) {
     e.preventDefault();
+
+    // Ẩn danh sách khuyến nghị (nếu đang hiện) để nhường chỗ cho kết quả tìm kiếm mới
+    $('#search-recommendations-section').slideUp('fast');
+
+    // Hiện lại khung kết quả chuẩn (để hiển thị danh sách DB)
+    $('#standard-search-container').show();
 
     let params = []; // Mảng chứa các cặp key=value
 

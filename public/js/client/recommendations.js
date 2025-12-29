@@ -1,15 +1,21 @@
 /**
- * Hỗ trợ cả khách đã đăng nhập và chưa đăng nhập
+ * Hỗ trợ hệ thống gợi ý tour (Recommendation System)
+ * Tích hợp: Trang chủ, Chi tiết tour, Tìm kiếm tour
  */
 
 const TourRecommendations = {
 
   /**
-   * ===== 1. Hệ khuyến nghị cho trang chủ =====
+   * =================================================================
+   * PHẦN 1: LOGIC GỌI API (CONTROLLER)
+   * =================================================================
+   */
+
+  /**
+   * 1. TRANG CHỦ: Load gợi ý chung hoặc theo lịch sử người dùng
    */
   loadHomeRecommendations() {
     $.ajax({
-      // Route trỏ tới hàm controller
       url: '/api/recommendations/home',
       method: 'GET',
       beforeSend: function () {
@@ -17,6 +23,7 @@ const TourRecommendations = {
       },
       success: (response) => {
         if (response.success && response.tours.length > 0) {
+          // Sử dụng Layout GRID (dọc)
           this.displayRecommendedTours(
             response.tours,
             '#recommended-tours-list',
@@ -24,15 +31,11 @@ const TourRecommendations = {
           );
           $('#recommended-for-you-section').slideDown('slow');
 
-          // Hiển thị thông tin trạng thái
+          // Update trạng thái (Login/Guest)
           if (response.is_logged_in) {
-            $('#recommendation-status').html(
-              '<i class="fa fa-user-check"></i> Gợi ý dựa trên lịch sử của bạn'
-            );
+            $('#recommendation-status').html('<i class="fa fa-user-check"></i> Gợi ý dựa trên lịch sử của bạn');
           } else {
-            $('#recommendation-status').html(
-              '<i class="fa fa-magic"></i> ' + response.message
-            );
+            $('#recommendation-status').html('<i class="fa fa-magic"></i> ' + response.message);
           }
         } else {
           $('#recommended-for-you-section').hide();
@@ -42,13 +45,12 @@ const TourRecommendations = {
       error: (xhr) => {
         console.error('Error loading home recommendations:', xhr);
         $('#recommended-loading').hide();
-        $('#recommended-for-you-section').hide();
       }
     });
   },
 
   /**
-   * ===== 2. GỢI Ý TOUR TƯƠNG TỰ (Trang chi tiết) =====
+   * 2. TRANG CHI TIẾT: Load gợi ý tour tương tự (Content-based)
    */
   loadSimilarTours(tourId) {
     $.ajax({
@@ -59,6 +61,7 @@ const TourRecommendations = {
       },
       success: (response) => {
         if (response.success && response.tours.length > 0) {
+          // Sử dụng Layout GRID dọc
           this.displayRecommendedTours(
             response.tours,
             '#similar-tours-list',
@@ -73,53 +76,61 @@ const TourRecommendations = {
       error: (xhr) => {
         console.error('Error loading similar tours:', xhr);
         $('#similar-tours-loading').hide();
-        $('#similar-tours-section').hide();
       }
     });
   },
 
   /**
-   * ===== 3. GỢI Ý THEO TỪ KHÓA TÌM KIẾM =====
+   * 3. TRANG TÌM KIẾM: Load gợi ý theo từ khóa
+   * Logic: Nếu có gợi ý -> Ẩn kết quả tìm kiếm thường -> Hiện gợi ý
    */
   loadSearchRecommendations(keyword) {
-    if (!keyword || keyword.trim() === '') {
-      return;
-    }
+    if (!keyword || keyword.trim() === '') return;
 
     $.ajax({
       url: '/api/recommendations/search',
       method: 'GET',
       data: { keyword: keyword },
-      beforeSend: function () {
-        $('#search-recommendations-loading').show();
-      },
       success: (response) => {
-        if (response.success && response.tours.length > 0) {
-          this.displayRecommendedTours(
+        // Kiểm tra xem có dữ liệu tour trả về không
+        if (response.success && response.tours && response.tours.length > 0) {
+
+          // A. Sử dụng layout GRID ngang vào div gợi ý
+          this.displaySearchHorizontalTours(
             response.tours,
             '#search-recommendations-list',
             `Gợi ý dựa trên từ khóa: "${response.keyword}"`
           );
-          $('#search-recommendations-section').slideDown('slow');
+
+          // B. ẨN danh sách tour tìm kiếm thông thường (SQL)
+          $('#standard-search-container').hide();
+
+          // C. HIỆN danh sách tour gợi ý (AI)
+          $('#search-recommendations-section').slideDown('fast');
+
         } else {
-          $('#search-recommendations-section').hide();
+          // Nếu AI không tìm thấy, hiện lại thông báo
+          $('#search-recommendations-list').html(`
+            <div class="text-center py-5">
+               <i class="fa fa-search" style="font-size:40px; color:#ddd;"></i>
+               <p class="mt-3">Không tìm thấy tour nào cho từ khóa "<strong>${keyword}</strong>"</p>
+            </div>
+          `);
         }
-        $('#search-recommendations-loading').hide();
       },
       error: (xhr) => {
         console.error('Error loading search recommendations:', xhr);
-        $('#search-recommendations-loading').hide();
+        // Gặp lỗi thì fallback về tìm kiếm thường
+        $('#standard-search-container').show();
       }
     });
   },
 
   /**
-   * ===== 4. TRACKING TOUR ĐÃ XEM =====
-   * Gọi khi user vào trang chi tiết tour
+   * 4. Tracking: Ghi nhận người dùng xem tour
    */
   trackTourView(tourId) {
     if (!tourId) return;
-
     $.ajax({
       url: '/api/recommendations/track-view',
       method: 'POST',
@@ -127,19 +138,21 @@ const TourRecommendations = {
         _token: $('meta[name="csrf-token"]').attr('content'),
         tour_id: tourId
       },
-      success: function (response) {
-        if (response.success) {
-          console.log('Tour view tracked:', tourId);
-        }
-      },
-      error: function (xhr) {
-        console.error('Error tracking tour view:', xhr);
-      }
+      success: function () { /* Console log if needed */ },
+      error: function () { /* Handle error silently */ }
     });
   },
 
+
   /**
-   * ===== HIỂN THỊ DANH SÁCH TOUR =====
+   * =================================================================
+   * PHẦN 2: CÁC HÀM RENDER VIEW (HTML)
+   * =================================================================
+   */
+
+  /**
+   * LAYOUT 1: GRID (CỘT DỌC)
+   * Dùng cho: Trang chủ, Trang chi tiết
    */
   displayRecommendedTours(tours, containerSelector, message = '') {
     let html = '';
@@ -211,63 +224,132 @@ const TourRecommendations = {
   },
 
   /**
-   * ===== FORMAT GIÁ TIỀN =====
+   * LAYOUT 2: HORIZONTAL (NGANG)
+   * Dùng cho: Trang tìm kiếm
+   */
+
+  displaySearchHorizontalTours(tours, containerSelector, message = '') {
+
+    // Update tiêu đề phần gợi ý (nếu có div tiêu đề)
+    if (message && $('#recommendation-title').length > 0) {
+      $('#recommendation-title').text(message);
+    }
+
+    let html = '';
+
+    tours.forEach(tour => {
+      const imageUrl = `/images/tours/${tour.image_main}`;
+      const detailUrl = `/tour-detail/${tour.tour_id}`;
+
+      // 1. Xử lý logic hiển thị Lịch khởi hành
+      const minDate = tour.schedules && tour.schedules.length > 0
+        ? tour.schedules.sort((a, b) => new Date(a.start_date) - new Date(b.start_date))[0].start_date
+        : '---';
+
+      const schedules = tour.schedules && tour.schedules.length > 0
+        ? tour.schedules.map(s => s.start_date).join(', ')
+        : 'Chưa có lịch';
+
+      const scheduleText = schedules.length > 30 ? schedules.substring(0, 27) + '...' : schedules;
+
+      // 2. Icon phương tiện
+      const transportIcon = tour.transport === 'Máy bay' ? '<i class="fa fa-plane"></i>' : '<i class="fa fa-bus"></i>';
+
+      html += `
+        <div class="card mb-4 shadow-sm border-light">
+          <div class="row g-0 align-items-center p-3">
+            
+            <a href="${detailUrl}">
+              <div class="col-md-3 position-relative">
+                <img src="${imageUrl}" class="img-fluid rounded" alt="${tour.tour_name}">
+                
+                <span class="tour-badge">
+                                    <i class="fa fa-magic"></i> Gợi ý
+                                </span>
+              </div>
+            </a>
+
+            <div class="col-md-6 ps-3">
+              <a href="${detailUrl}">
+                <h5 class="fw-bold mb-2 tour-title">${tour.tour_name}</h5>
+              </a>
+              <p class="mb-1"><strong>Điểm đi:</strong> ${tour.departure_point || ''}</p>
+              <p class="mb-1"><strong>Điểm đến:</strong> ${tour.destination || ''}</p>
+              <p class="mb-1"><strong>Thời gian:</strong> ${tour.duration || ''}</p>
+              <p class="mb-0">
+                <strong>Ngày đi:</strong> ${scheduleText} ${transportIcon}
+              </p>
+            </div>
+
+            <div class="col-md-3 text-end">
+              <p class="mb-1"><i class="fa fa-calendar"></i> ${minDate}</p>
+              <p class="mb-1">Giá 1 khách</p>
+              <h4 class="fw-bold tour-price">${this.formatPrice(tour.price_adult)}₫</h4>
+            </div>
+
+          </div>
+        </div>
+      `;
+    });
+
+    $(containerSelector).html(html);
+    $(containerSelector).hide().fadeIn();
+  },
+
+  /**
+   * ===== CÁC HÀM TIỆN ÍCH =====
    */
   formatPrice(price) {
     return new Intl.NumberFormat('vi-VN').format(price);
   },
 
-  /**
-   * ===== LẤY TOUR ID TỪ URL =====
-   */
   getTourIdFromUrl() {
     const pathArray = window.location.pathname.split('/');
     const lastSegment = pathArray[pathArray.length - 1];
     return lastSegment && !isNaN(lastSegment) ? parseInt(lastSegment) : null;
   },
 
-  /**
-   * ===== LẤY TỪ KHÓA TÌM KIẾM TỪ URL =====
-   */
   getSearchKeywordFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
+    // Ưu tiên lấy từ destination (form name) hoặc keyword
     return urlParams.get('destination') || urlParams.get('keyword') || '';
   }
 };
 
-// Export to window
+// Export ra window để gọi từ file view nếu cần
 window.TourRecommendations = TourRecommendations;
 
 /**
- * ===== AUTO-INIT KHI DOM READY =====
+ * ===== KHỞI TẠO (DOCUMENT READY) =====
  */
 $(document).ready(function () {
-
-  // Kiểm tra trang hiện tại và load recommendations phù hợp
   const currentPath = window.location.pathname;
 
-  // === TRANG CHỦ ===
+  // 1. TRANG CHỦ
   if (currentPath === '/' || currentPath === '/home') {
     TourRecommendations.loadHomeRecommendations();
   }
 
-  // === TRANG CHI TIẾT TOUR ===
+  // 2. TRANG CHI TIẾT
   if (currentPath.includes('/tour-detail/')) {
     const tourId = TourRecommendations.getTourIdFromUrl();
     if (tourId) {
-      // Track tour view (lưu vào cookie)
       TourRecommendations.trackTourView(tourId);
-
-      // Load tour tương tự
       TourRecommendations.loadSimilarTours(tourId);
     }
   }
 
-  // === TRANG TÌM KIẾM ===
-  if (currentPath.includes('/tour-search')) {
+  // 3. TRANG TÌM KIẾM
+  // Kiểm tra URL hoặc sự tồn tại của form tìm kiếm
+  if (currentPath.includes('/tour-search') || $('#formModSearch').length > 0) {
     const keyword = TourRecommendations.getSearchKeywordFromUrl();
+    // Chỉ chạy logic gợi ý nếu có từ khóa
     if (keyword) {
       TourRecommendations.loadSearchRecommendations(keyword);
+    } else {
+      // Nếu không có từ khóa (vào trang search), đảm bảo hiện list thường
+      $('#standard-search-container').show();
+      $('#search-recommendations-section').hide();
     }
   }
 });

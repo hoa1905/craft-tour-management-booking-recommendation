@@ -82,12 +82,12 @@
                   <!-- Tham số phân biệt form -->
                   <input type="hidden" name="search_type" value="exact">
                   <div class="box-filter">
-                    <div class="filter-title">TÌM KIẾM TOUR</div>
+                    <div class="filter-title">BỘ LỌC TÌM KIẾM TOUR</div>
                     <div class="item-filter">
                       <div class="tpfindtour">
                         <div class="fichose">
                           <div class="itfindtour">
-                            <div class="chtitle">Điểm Khởi Hành</div>
+                            <div class="chtitle">Điểm khởi hành</div>
                             <div class="chconts">
                               <select class="form-control chosen-select" id="departure" name="departure">
                                 <option value="">Điểm khởi hành ---</option>
@@ -182,41 +182,49 @@
             </div>
           </div>
           <div class="col-md-9 col-sm-12 col-xs-12">
-            <div class="tptooltour hidden-xs hidden-sm">
-              <div class="tlgrip">
-                <div class="xcol">
-                  <div class="tlfind">
-                    @if ($tours->total() > 0)
-                    Kết quả: Tìm thấy <strong class="num_tour">{{ $tours->total() }}</strong> tour phù hợp.
-                    @endif
+
+            {{-- Tour gợi ý hệ khuyến nghị (Mặc định ẩn) --}}
+            <div id="search-recommendations-section" class="tour-list"
+              style="@if(isset($isKeywordSearch) && $isKeywordSearch) display: block; @else display: none; @endif margin-bottom: 25px;">
+              <div class="alert alert-info" role="alert" style="background-color: #d1ecf1; border-color: #bee5eb; color: #0c5460;">
+                <h4 style="margin: 0; font-size: 16px;">
+                  <i class="fa fa-lightbulb-o"></i> <span id="recommendation-title">Kết quả gợi ý tốt nhất cho bạn</span>
+                </h4>
+              </div>
+              <div id="search-recommendations-list"></div>
+            </div>
+
+            {{-- Tour tìm kiếm thông thường không dùng khuyến nghị --}}
+            <div id="standard-search-container"
+              style="@if(isset($isKeywordSearch) && $isKeywordSearch) display: none; @else display: block; @endif">
+
+              <div class="tptooltour hidden-xs hidden-sm">
+                <div class="tlgrip">
+                  <div class="xcol">
+                    <div class="tlfind">
+                      @if ($tours->total() > 0)
+                      Kết quả: Tìm thấy <strong class="num_tour">{{ $tours->total() }}</strong> tour phù hợp.
+                      @endif
+                    </div>
                   </div>
-                </div>
-                <div class="ycol">
-                  <div class="tlsort">
-                    <div class="ssgrip">
-                      <div class="lcol">
-                        <div class="sttext">Sắp xếp:</div>
-                      </div>
-                      <div class="rcol">
-                        <div class="sinfo">
-                          <div class="vnt-box-select">
-                            <div class="vnt-box-select__text"><span>Mới nhất</span>
-                            </div>
-                            <div class="vnt-box-select__list">
-                              <ul>
-                                <li class="ac-sort {{ request('sort') == 0 ? 'active' : '' }}">
-                                  <a href="javascript:void(0)" class="sort-link" data-sort="0">Mới nhất</a>
-                                </li>
-                                <li class="ac-sort {{ request('sort') == 1 ? 'active' : '' }}">
-                                  <a href="javascript:void(0)" class="sort-link" data-sort="1">Giá tăng dần</a>
-                                </li>
-                                <li class="ac-sort {{ request('sort') == 2 ? 'active' : '' }}">
-                                  <a href="javascript:void(0)" class="sort-link" data-sort="2">Giá giảm dần</a>
-                                </li>
-                                <li class="ac-sort {{ request('sort') == 3 ? 'active' : '' }}">
-                                  <a href="javascript:void(0)" class="sort-link" data-sort="3">Ngày khởi hành gần nhất</a>
-                                </li>
-                              </ul>
+                  <div class="ycol">
+                    <div class="tlsort">
+                      <div class="ssgrip">
+                        <div class="lcol">
+                          <div class="sttext">Sắp xếp:</div>
+                        </div>
+                        <div class="rcol">
+                          <div class="sinfo">
+                            <div class="vnt-box-select">
+                              <div class="vnt-box-select__text"><span>Mới nhất</span></div>
+                              <div class="vnt-box-select__list">
+                                <ul>
+                                  <li class="ac-sort {{ request('sort') == 0 ? 'active' : '' }}"><a href="javascript:void(0)" class="sort-link" data-sort="0">Mới nhất</a></li>
+                                  <li class="ac-sort {{ request('sort') == 1 ? 'active' : '' }}"><a href="javascript:void(0)" class="sort-link" data-sort="1">Giá tăng dần</a></li>
+                                  <li class="ac-sort {{ request('sort') == 2 ? 'active' : '' }}"><a href="javascript:void(0)" class="sort-link" data-sort="2">Giá giảm dần</a></li>
+                                  <li class="ac-sort {{ request('sort') == 3 ? 'active' : '' }}"><a href="javascript:void(0)" class="sort-link" data-sort="3">Ngày khởi hành gần nhất</a></li>
+                                </ul>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -225,78 +233,55 @@
                   </div>
                 </div>
               </div>
-            </div>
 
-            {{-- Danh sách tour --}}
-            <div id="tour-list" class="tour-list">
-              @foreach ($tours as $tour)
-              <div class="card mb-4 shadow-sm border-light">
-                <div class="row g-0 align-items-center p-3">
-
-                  {{-- Ảnh --}}
-                  <a href="{{ route('tour.detail', $tour->tour_id) }}">
-                    <div class="col-md-3 position-relative">
-                      <img src="{{ asset('images/tours/' . $tour->image_main) }}" class="img-fluid rounded" alt="{{ $tour->tour_name }}">
-                    </div>
-                  </a>
-
-                  {{-- Nội dung --}}
-                  <div class="col-md-6 ps-3">
+              <div id="tour-list" class="tour-list">
+                @foreach ($tours as $tour)
+                <div class="card mb-4 shadow-sm border-light">
+                  <div class="row g-0 align-items-center p-3">
                     <a href="{{ route('tour.detail', $tour->tour_id) }}">
-                      <h5 class="fw-bold mb-2 tour-title">{{ $tour->tour_name }}</h5>
+                      <div class="col-md-3 position-relative">
+                        <img src="{{ asset('images/tours/' . $tour->image_main) }}" class="img-fluid rounded" alt="{{ $tour->tour_name }}">
+                      </div>
                     </a>
-                    <p class="mb-1"><strong>Điểm đi:</strong> {{ $tour->departure_point}}</p>
-                    <p class="mb-1"><strong>Điểm đến:</strong> {{ $tour->destination }}</p>
-                    <p class="mb-1"><strong>Thời gian:</strong> {{ $tour->duration }}</p>
-                    <p class="mb-0">
-                      <strong>Ngày đi:</strong> @if($tour->schedules->isNotEmpty())
-                      {{ $tour->schedules
-        ->sortBy('start_date')
-        ->map(fn($s) => \Carbon\Carbon::parse($s->start_date)->format('d/m'))
-        ->implode(', ') }}
-                      @else
-                      Chưa có lịch khởi hành
-                      @endif
-
-
-                      @if ($tour->transport === 'Máy bay')
-                      <i class="fa fa-plane"></i>
-                      @else
-                      <i class="fa fa-bus"></i>
-                      @endif
-                    </p>
-                  </div>
-
-                  {{-- Giá --}}
-                  <div class="col-md-3 text-end">
-                    <p class="mb-1">
-                      <i class="fa fa-calendar"></i>
-                      {{ $tour->schedules->isNotEmpty() 
-      ? \Carbon\Carbon::parse($tour->schedules->min('start_date'))->format('d/m/Y') 
-      : '---' 
-  }}
-                    </p>
-
-                    <p class="mb-1">Giá 1 khách</p>
-                    <h4 class="fw-bold tour-price">{{ number_format($tour->price_adult, 0, ',', '.') }}₫</h4>
+                    <div class="col-md-6 ps-3">
+                      <a href="{{ route('tour.detail', $tour->tour_id) }}">
+                        <h5 class="fw-bold mb-2 tour-title">{{ $tour->tour_name }}</h5>
+                      </a>
+                      <p class="mb-1"><strong>Điểm đi:</strong> {{ $tour->departure_point}}</p>
+                      <p class="mb-1"><strong>Điểm đến:</strong> {{ $tour->destination }}</p>
+                      <p class="mb-1"><strong>Thời gian:</strong> {{ $tour->duration }}</p>
+                      <p class="mb-0">
+                        <strong>Ngày đi:</strong>
+                        @if($tour->schedules->isNotEmpty())
+                        {{ $tour->schedules->sortBy('start_date')->map(fn($s) => \Carbon\Carbon::parse($s->start_date)->format('d/m'))->implode(', ') }}
+                        @else
+                        Chưa có lịch khởi hành
+                        @endif
+                        @if ($tour->transport === 'Máy bay') <i class="fa fa-plane"></i> @else <i class="fa fa-bus"></i> @endif
+                      </p>
+                    </div>
+                    <div class="col-md-3 text-end">
+                      <p class="mb-1"><i class="fa fa-calendar"></i> {{ $tour->schedules->isNotEmpty() ? \Carbon\Carbon::parse($tour->schedules->min('start_date'))->format('d/m/Y') : '---' }}</p>
+                      <p class="mb-1">Giá 1 khách</p>
+                      <h4 class="fw-bold tour-price">{{ number_format($tour->price_adult, 0, ',', '.') }}₫</h4>
+                    </div>
                   </div>
                 </div>
+                @endforeach
               </div>
-              @endforeach
-            </div>
 
-            {{-- Phân trang --}}
-            <div class="pagination-wrapper mt-4">
-              {{ $tours->links('vendor.pagination.custom-pagination') }}
-            </div>
+              {{-- Phân trang --}}
+              <div class="pagination-wrapper mt-4">
+                {{ $tours->links('vendor.pagination.custom-pagination') }}
+              </div>
 
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  {{-- Hệ khuyến nghị: Gợi ý dựa trên từ khóa tìm kiếm --}}
-  <div id="search-recommendations-section" class="vnt-tintuc vnt-tour-load box-tour" style="display: none;">
+    {{-- Hệ khuyến nghị: Gợi ý dựa trên từ khóa tìm kiếm --}}
+    <!-- <div id="search-recommendations-section" class="vnt-tintuc vnt-tour-load box-tour" style="display: none;">
     <div class="wrapper">
       <div class="style-title-1 lazyloading">
         <div class="fl">
@@ -321,26 +306,26 @@
         </div>
       </div>
     </div>
+  </div> -->
   </div>
-</div>
-@endsection
+  @endsection
 
-@section('scripts')
-<script src="{{ asset('js/client/tour-search.js') }}"></script>
-{{-- Recommendation script - QUAN TRỌNG --}}
-<script src="{{ asset('js/client/recommendations.js') }}"></script>
-<script src="{{ asset('js/client/classList.min.js') }}"></script>
-<script src="{{ asset('js/client/jquery.number.min.js') }}"></script>
-<script src="{{ asset('js/client/flatpickr.min.js') }}"></script>
-<script src="{{ asset('js/client/rangePlugin.min.js') }}"></script>
-<script src="{{ asset('js/client/scrollPlugin.min.js') }}"></script>
-<script src="{{ asset('js/client/monthSelect.js') }}"></script>
-<script src="{{ asset('js/client/monthSelectindex.js') }}"></script>
-<!-- Locale Vietnamese phải load SAU flatpickr thì lịch mới hiện tiếng việt-->
-<script src="{{ asset('js/client/vn.js') }}"></script>
-<!-- Các JS custom gọi flatpickr -->
-<script>
-  // Khởi tạo lịch và Price slider
-  vnTTour.initFilter();
-</script>
-@endsection
+  @section('scripts')
+  <script src="{{ asset('js/client/tour-search.js') }}"></script>
+  {{-- Recommendation script - QUAN TRỌNG --}}
+  <script src="{{ asset('js/client/recommendations.js') }}"></script>
+  <script src="{{ asset('js/client/classList.min.js') }}"></script>
+  <script src="{{ asset('js/client/jquery.number.min.js') }}"></script>
+  <script src="{{ asset('js/client/flatpickr.min.js') }}"></script>
+  <script src="{{ asset('js/client/rangePlugin.min.js') }}"></script>
+  <script src="{{ asset('js/client/scrollPlugin.min.js') }}"></script>
+  <script src="{{ asset('js/client/monthSelect.js') }}"></script>
+  <script src="{{ asset('js/client/monthSelectindex.js') }}"></script>
+  <!-- Locale Vietnamese phải load SAU flatpickr thì lịch mới hiện tiếng việt-->
+  <script src="{{ asset('js/client/vn.js') }}"></script>
+  <!-- Các JS custom gọi flatpickr -->
+  <script>
+    // Khởi tạo lịch và Price slider
+    vnTTour.initFilter();
+  </script>
+  @endsection
