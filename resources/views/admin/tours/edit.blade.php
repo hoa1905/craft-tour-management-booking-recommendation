@@ -18,7 +18,7 @@
     {{-- Tiêu đề và Nút Submit --}}
     <div class="d-flex justify-content-between align-items-center bg-white p-md-3 rounded-3 shadow-sm mb-4">
       <div>
-        <h3><span class="text-primary">Chi tiết tour: </span>{{ $tour->tour_name }}</h3>
+        <h3><span class="text-primary">Chỉnh sửa tour: </span>{{ $tour->tour_name }}</h3>
         <p class="text-muted mb-0">Mã tour: {{ $tour->tour_id }}</p>
       </div>
       <div>
