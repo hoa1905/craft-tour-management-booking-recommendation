@@ -303,7 +303,7 @@ class AdminVillageController extends Controller
             DB::commit();
 
             // Trả về thông báo thành công (status)
-            return redirect()->route('admin.village.index')->with('status', 'Đã xóa làng nghề thành công!');
+            return redirect()->back()->with('status', 'Đã xóa làng nghề thành công!');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Lỗi xóa làng nghề: ' . $e->getMessage());
