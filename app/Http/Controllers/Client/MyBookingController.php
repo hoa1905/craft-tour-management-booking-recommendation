@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\TourSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -72,6 +73,20 @@ class MyBookingController extends Controller
             }
 
             $booking->save();
+
+            // Trả lại chỗ ngồi nếu có lịch trình
+            if ($booking->schedule_id) {
+                // Tính tổng số ghế cần trả
+                $seatsToReturn = $booking->adult_quantity + $booking->child_quantity;
+
+                // Cộng lại số chỗ vào bảng tour_schedules
+                // Sử dụng hàm increment của Eloquent để cộng dồn an toàn
+                TourSchedule::where('schedule_id', $booking->schedule_id)
+                    ->increment('seats_available', $seatsToReturn);
+
+                Log::info("Đã hoàn lại $seatsToReturn chỗ cho lịch trình ID: " . $booking->schedule_id);
+            }
+
             DB::commit();
             return back()->with('success', $message);
         } catch (\Exception $e) {

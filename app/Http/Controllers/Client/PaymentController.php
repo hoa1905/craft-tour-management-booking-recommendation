@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\TourRequest;
+use App\Models\TourSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -47,6 +48,29 @@ class PaymentController extends Controller
         // DB::transaction sẽ tự động commit nếu thành công,
         // hoặc rollback nếu có lỗi (exception)
         return DB::transaction(function () use ($bookingData, $paymentMethod, $bookingStatus, $paymentResponse) {
+            // --- KIỂM TRA VÀ TRỪ CHỖ ---
+            // Chỉ thực hiện nếu đây là đặt tour theo lịch trình có sẵn
+            if (!empty($bookingData['schedule_id'])) {
+                $totalGuests = (int)$bookingData['adult_quantity'] + (int)$bookingData['child_quantity'];
+
+                // lockForUpdate(): Khóa dòng dữ liệu này lại, ngăn 2 người đặt cùng lúc gây sai số
+                $schedule = TourSchedule::where('schedule_id', $bookingData['schedule_id'])
+                    ->lockForUpdate()
+                    ->first();
+
+                if (!$schedule) {
+                    throw new \Exception('Lịch trình không tồn tại hoặc đã bị hủy.');
+                }
+
+                // Kiểm tra số chỗ còn lại
+                if ($schedule->seats_available < $totalGuests) {
+                    throw new \Exception('Rất tiếc, số chỗ còn lại không đủ (Chỉ còn: ' . $schedule->seats_available . ' chỗ).');
+                }
+
+                // Trừ số chỗ
+                $schedule->decrement('seats_available', $totalGuests);
+            }
+
             // 1. Tạo Booking
             $booking = Booking::create([
                 'user_id' => Auth::guard('client')->id(),
