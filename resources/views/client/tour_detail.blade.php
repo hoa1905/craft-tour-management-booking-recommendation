@@ -114,6 +114,7 @@
                                   @foreach($tour->schedules->sortBy('start_date') as $schedule)
                                   <li class="{{ $loop->first ? 'active' : '' }}"
                                     data-schedule-id="{{ $schedule->schedule_id }}"
+                                    data-seats="{{ $schedule->seats_available ?? 0 }}"
                                     end-date="{{ \Carbon\Carbon::parse($schedule->end_date)->format('d/m/Y') }}"
                                     start-date="{{ \Carbon\Carbon::parse($schedule->start_date)->format('d/m/Y') }}">
                                     {{ \Carbon\Carbon::parse($schedule->start_date)->format('d/m') }}
@@ -124,6 +125,12 @@
                                   @endif
                                 </ul>
 
+                              </div>
+
+                              {{-- THAY ĐỔI 2: Thêm khu vực hiển thị số chỗ còn lại ngay dưới danh sách ngày --}}
+                              <div class="seats-status" style="margin-top: 10px; font-size: 14px;">
+                                <span style="font-weight: bold;">Tình trạng: </span>
+                                <span id="seats-display" style="color: #28a745; font-weight: bold;">Đang kiểm tra...</span>
                               </div>
                             </div>
                           </div>

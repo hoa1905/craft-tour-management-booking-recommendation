@@ -65,6 +65,39 @@ document.addEventListener('DOMContentLoaded', function () {
   const totalPriceElement = document.querySelector('.total-price');
   const bookTourBtn = document.querySelector('.book-tour');
 
+  // Element hiển thị số chỗ
+  const seatsDisplay = document.getElementById('seats-display');
+  // Biến lưu số chỗ tối đa của ngày hiện tại
+  let maxSeats = 0;
+
+  // --- HÀM CẬP NHẬT SỐ CHỖ ---
+  function updateSeatStatus() {
+    const selectedDateElement = document.querySelector('.ckchose ul li.active');
+
+    if (selectedDateElement) {
+      // Lấy số chỗ từ data-seats
+      const seats = parseInt(selectedDateElement.getAttribute('data-seats')) || 0;
+      maxSeats = seats; // Cập nhật biến toàn cục để dùng validate lúc nhập số lượng
+
+      if (seats > 0) {
+        seatsDisplay.textContent = `Còn ${seats} chỗ nhận`;
+        seatsDisplay.style.color = '#28a745'; // Màu xanh
+        document.querySelector('.book-tour').classList.remove('disabled');
+      } else {
+        seatsDisplay.textContent = 'Đã hết chỗ';
+        seatsDisplay.style.color = '#d82727'; // Màu đỏ
+        // Tùy chọn: Disable nút đặt tour nếu hết chỗ
+        // document.querySelector('.book-tour').classList.add('disabled');
+      }
+    } else {
+      seatsDisplay.textContent = 'Vui lòng chọn ngày';
+      maxSeats = 0;
+    }
+  }
+
+  // --- GỌI HÀM KHI LOAD TRANG ---
+  updateSeatStatus();
+
   // Hàm format số tiền
   function formatMoney(amount) {
     return new Intl.NumberFormat('vi-VN').format(amount) + '₫';
@@ -74,6 +107,21 @@ document.addEventListener('DOMContentLoaded', function () {
   function calculateTotal() {
     const adultQty = parseInt(adultQuantityInput.value) || 0;
     const childQty = parseInt(childQuantityInput.value) || 0;
+    const totalPeople = adultQty + childQty;
+
+    // Kiểm tra nếu tổng số người vượt quá số chỗ còn lại
+    if (totalPeople > maxSeats && maxSeats > 0) {
+      alert(`Ngày khởi hành này chỉ còn nhận ${maxSeats} khách!`);
+
+      // Reset về giá trị hợp lệ (Ví dụ: ưu tiên người lớn)
+      if (adultQty > maxSeats) {
+        adultQuantityInput.value = maxSeats;
+        childQuantityInput.value = 0;
+      } else {
+        childQuantityInput.value = maxSeats - adultQty;
+      }
+      return calculateTotal(); // Tính lại
+    }
 
     const totalAdult = adultQty * priceAdult;
     const totalChild = childQty * priceChild;
@@ -82,8 +130,8 @@ document.addEventListener('DOMContentLoaded', function () {
     totalPriceElement.textContent = formatMoney(grandTotal);
 
     return {
-      adultQty,
-      childQty,
+      adultQty: parseInt(adultQuantityInput.value) || 0,
+      childQty: parseInt(childQuantityInput.value) || 0,
       grandTotal
     };
   }
@@ -162,6 +210,8 @@ document.addEventListener('DOMContentLoaded', function () {
         i.classList.remove('active');
       });
       this.classList.add('active');
+      // Gọi hàm cập nhật số chỗ khi click
+      updateSeatStatus();
     });
   });
 
@@ -182,6 +232,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const scheduleId = selectedDateElement ? selectedDateElement.getAttribute('data-schedule-id') : null;
     const selectedStartDate = selectedDateElement ? selectedDateElement.getAttribute('start-date') : null;
     const endDate = selectedDateElement ? selectedDateElement.getAttribute('end-date') : null;
+    const seatsAvailable = selectedDateElement ? selectedDateElement.getAttribute('data-seats') : null;
 
     if (!window.isLoggedIn) {
       if ($('.vnt-popup-login').length) {
@@ -200,6 +251,7 @@ document.addEventListener('DOMContentLoaded', function () {
       tour_image: tourImage,
       start_date: selectedStartDate,
       end_date: endDate,
+      seats_available: seatsAvailable,
       adult_quantity: result.adultQty,
       child_quantity: result.childQty,
       price_adult_at_booking: priceAdult,

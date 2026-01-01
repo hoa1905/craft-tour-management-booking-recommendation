@@ -5,6 +5,9 @@
 	const totalPriceEl = document.getElementById('ext_total_price');
 	const priceAdult = parseInt(document.querySelector('.i-price').dataset.price);
 	const priceChild = parseInt(document.querySelector('.i-price_child').dataset.price);
+	// Lấy giá trị số chỗ còn lại
+	const seatsAvailableInput = document.getElementById('seats_available');
+	const seatsAvailable = seatsAvailableInput ? parseInt(seatsAvailableInput.value) : 999;
 
 	// Lấy các input hidden
 	const hiddenAdultInput = document.querySelector('.adult_quantity_hidden');
@@ -29,18 +32,61 @@
 		hiddenTotalPriceInput.value = total;
 	}
 
-	// Giới hạn chỉ nhập số & xử lý khi nhập 0
+	// Hàm kiểm tra giới hạn chỗ
+	// Trả về false nếu vượt quá giới hạn
+	function checkSeatLimit(newAdultQty, newChildQty) {
+		const totalGuests = newAdultQty + newChildQty;
+		if (totalGuests > seatsAvailable) {
+			alert(`Ngày khởi hành này chỉ còn nhận ${seatsAvailable} khách!`);
+			return false;
+		}
+		return true;
+	}
+
+	// Giới hạn chỉ nhập số & xử lý khi nhập tay
 	function validateInput(input, minValue = 0) {
-		input.addEventListener('input', function () {
-			// Loại bỏ ký tự không phải số
-			this.value = this.value.replace(/[^0-9]/g, '');
-			// Nếu trống thì đặt lại giá trị tối thiểu
-			if (this.value === '') this.value = minValue;
-			// Nếu nhập 0 ở số lượng người lớn => đặt về 1
+		input.addEventListener('change', function () {
+			// 1. Validate số cơ bản
+			let value = parseInt(this.value) || minValue;
+			if (value < minValue) value = minValue;
+
+			// 2. Lấy giá trị hiện tại của ô kia để tính tổng
+			const currentAdult = parseInt(adultInput.value) || 0;
+			const currentChild = parseInt(childInput.value) || 0;
+
+			let proposedAdult, proposedChild;
+
+			if (this.classList.contains('adult_quantity')) {
+				proposedAdult = value;
+				proposedChild = currentChild;
+			} else {
+				proposedAdult = currentAdult;
+				proposedChild = value;
+			}
+
+			// 3. Kiểm tra giới hạn
+			if (!checkSeatLimit(proposedAdult, proposedChild)) {
+				// Nếu vượt quá, tính toán số lượng tối đa có thể nhập cho ô này
+				const otherQty = this.classList.contains('adult_quantity') ? currentChild : currentAdult;
+				let maxAllowed = seatsAvailable - otherQty;
+				if (maxAllowed < minValue) maxAllowed = minValue;
+
+				this.value = maxAllowed; // Reset về giá trị tối đa cho phép
+			} else {
+				this.value = value;
+			}
+
+			// Riêng người lớn không được < 1 (trừ khi hết chỗ hoàn toàn thì xử lý server)
 			if (this.classList.contains('adult_quantity') && parseInt(this.value) < 1) {
 				this.value = 1;
 			}
+
 			updateTotal();
+		});
+
+		// Chặn nhập ký tự chữ
+		input.addEventListener('input', function () {
+			this.value = this.value.replace(/[^0-9]/g, '');
 		});
 	}
 
@@ -51,9 +97,27 @@
 
 		btnUp.addEventListener('click', function () {
 			let value = parseInt(input.value) || minValue;
-			value++;
-			input.value = value;
-			updateTotal();
+			const nextValue = value + 1;
+
+			// Tính tổng dự kiến
+			const currentAdult = parseInt(adultInput.value) || 0;
+			const currentChild = parseInt(childInput.value) || 0;
+
+			let proposedAdult, proposedChild;
+
+			if (input.classList.contains('adult_quantity')) {
+				proposedAdult = nextValue;
+				proposedChild = currentChild;
+			} else {
+				proposedAdult = currentAdult;
+				proposedChild = nextValue;
+			}
+
+			// Kiểm tra xem tăng lên có vượt quá không
+			if (checkSeatLimit(proposedAdult, proposedChild)) {
+				input.value = nextValue;
+				updateTotal();
+			}
 		});
 
 		btnDown.addEventListener('click', function () {
@@ -61,6 +125,7 @@
 			value = Math.max(value - 1, minValue);
 			// số lượng người lớn phải >= 1
 			if (input.classList.contains('adult_quantity') && value < 1) value = 1;
+
 			input.value = value;
 			updateTotal();
 		});
@@ -87,22 +152,28 @@
 
 	// Kiểm tra form trước khi gửi
 	function validateForm() {
+		// 1. Kiểm tra số chỗ lần cuối (đề phòng hack html)
+		const adult = parseInt(adultInput.value) || 0;
+		const child = parseInt(childInput.value) || 0;
+		if (!checkSeatLimit(adult, child)) {
+			return false;
+		}
+
 		let valid = true;
 		const requiredFields = ['full_name', 'phone', 'email', 'address'];
 
 		// Kiểm tra các trường bắt buộc (required)
-		// (Kiểm tra xem có trường nào bị rỗng không)
 		requiredFields.forEach(id => {
 			const field = document.getElementById(id);
 			if (!field.value.trim()) {
-				field.classList.add('is-invalid'); // CSS Làm đỏ field
+				field.classList.add('is-invalid');
 				valid = false;
 			} else {
 				field.classList.remove('is-invalid');
 			}
 		});
 
-		// Nếu có trường bắt buộc bị trống, hiển thị lỗi chung
+		// Nếu có trường bắt buộc bị trống
 		if (!valid) {
 			toastr.error('Vui lòng nhập đầy đủ thông tin bắt buộc trước khi thanh toán!');
 			return false;

@@ -131,8 +131,9 @@
               <input type="hidden" name="price_adult_at_booking" class="price_adult_at_booking_hidden" value="{{ $bookingData['price_adult_at_booking'] }}">
               <input type="hidden" name="price_child_at_booking" class="price_child_at_booking_hidden" value="{{ $bookingData['price_child_at_booking'] }}">
               <input type="hidden" name="total_price" id="hidden_total_price" value="{{ $bookingData['total_price'] }}">
+              <input type="hidden" id="seats_available" value="{{ $bookingData['seats_available'] ?? 999 }}">
 
-              {{-- ... (Phần còn lại của form: Họ tên, SĐT, Email, Địa chỉ) --}}
+              {{-- Phần còn lại của form: Họ tên, SĐT, Email, Địa chỉ --}}
               <div class="box-detail">
                 <div class="hTitle large">Thông tin đặt tour</div>
                 <div class="mb15">
