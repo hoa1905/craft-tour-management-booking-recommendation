@@ -7,6 +7,12 @@
   z-index: 1050;
 }
 
+/* Khi #ai-chatbot-widget có chứa phần tử #chatbot-window đang mang class .fullscreen 
+   thì tìm nút #chatbot-toggle-button bên trong và ẩn nó đi */
+#ai-chatbot-widget:has(#chatbot-window.fullscreen) #chatbot-toggle-button {
+    display: none !important;
+}
+
 #chatbot-toggle-button {
     position: fixed;
     bottom: 20px;

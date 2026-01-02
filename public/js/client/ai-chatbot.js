@@ -177,7 +177,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // 3. Khi nhấn nút X trên khung chat chính
   closeButton.addEventListener('click', function () {
+    // Ẩn khung chat
     chatWindow.style.display = 'none';
+
+    // Xóa class fullscreen để CSS :has trong file ai-chatbot.csskhông còn tác dụng (GIF chatbot sẽ hiện lại)
+    chatWindow.classList.remove('fullscreen');
+
+    // Reset icon nút phóng to về trạng thái ban đầu (để lần sau mở lên icon đúng)
+    fullscreenIcon.classList.remove('fa-compress');
+    fullscreenIcon.classList.add('fa-expand');
+    fullscreenButton.title = "Toàn màn hình";
   });
 
   //4. Sự kiện click nút full screen
