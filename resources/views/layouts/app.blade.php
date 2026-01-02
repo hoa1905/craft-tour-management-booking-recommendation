@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="{{ asset('css/client/screen.css') }}">
   <link rel="stylesheet" href="{{ asset('css/client/main.css') }}">
   <link rel="stylesheet" href="{{ asset('css/client/update.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/client/ai-chatbox.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/client/ai-chatbot.css') }}">
   <!-- JS Config (truyền biến sang JS) -->
   <script language="javascript">
     var ROOT = "";
@@ -58,7 +58,7 @@
   <script src="{{ asset('js/client/core.js') }}"></script>
   <script src="{{ asset('js/client/javascript.js') }}"></script>
   <script src="{{ asset('js/client/update.js') }}"></script>
-  <script src="{{ asset('js/client/ai-chatbox.js') }}"></script>
+  <script src="{{ asset('js/client/ai-chatbot.js') }}"></script>
 
   @yield('head')
 </head>
@@ -535,41 +535,41 @@
     </div>
   </footer>
 
-  {{--Chatbox AI --}}
-  <div id="ai-chatbox-widget">
-    <button id="chatbox-toggle-button">
-      <i class="fas fa-robot"></i>
+  {{--chatbot AI --}}
+  <div id="ai-chatbot-widget">
+    <button id="chatbot-toggle-button">
+      <img src="https://agents.fpt.ai/live-chat/img/chatbot-icon.gif" alt="Chatbot Icon">
     </button>
 
     {{-- Khung thông báo chào mời --}}
-    <div id="chatbox-greeting" style="display: none;"> {{-- Ban đầu ẩn --}}
+    <div id="chatbot-greeting" style="display: none;"> {{-- Ban đầu ẩn --}}
       <span class="greeting-text"></span> {{-- Nơi hiển thị text --}}
       <button class="greeting-close">&times;</button> {{-- Nút X --}}
     </div>
 
-    {{-- Khung chatbox (ban đầu bị ẩn) --}}
-    <div id="chatbox-window" style="display: none;">
-      {{-- Header của chatbox --}}
-      <div class="chatbox-header">
-        <span>AI Assistant</span>
+    {{-- Khung chatbot (ban đầu bị ẩn) --}}
+    <div id="chatbot-window" style="display: none;">
+      {{-- Header của chatbot --}}
+      <div class="chatbot-header">
+        <span>Trợ lý AI</span>
         <div>
-          <button class="chatbox-toggle-fullscreen" title="Toàn màn hình">
+          <button class="chatbot-toggle-fullscreen" title="Toàn màn hình">
             <i class="fas fa-expand"></i>
           </button>
-          <button class="chatbox-close">&times;</button>
+          <button class="chatbot-close">&times;</button>
         </div>
       </div>
 
       {{-- Phần hiển thị nội dung chat --}}
-      <div class="chatbox-body" id="chatbox-message-body">
+      <div class="chatbot-body" id="chatbot-message-body">
         <p class="ai-message">Xin chào! Tôi là trợ lý AI, tôi có thể giúp gì cho bạn?</p>
         {{-- Tin nhắn sẽ được thêm vào đây --}}
       </div>
 
       {{-- Phần nhập liệu và nút gửi --}}
-      <div class="chatbox-footer">
-        <input type="text" id="chatbox-input" placeholder="Nhập tin nhắn..." />
-        <button id="chatbox-send-button"><i class="fas fa-paper-plane"></i></button>
+      <div class="chatbot-footer">
+        <input type="text" id="chatbot-input" placeholder="Nhập tin nhắn..." />
+        <button id="chatbot-send-button"><i class="fas fa-paper-plane"></i></button>
       </div>
     </div>
   </div>

@@ -1,62 +1,56 @@
-
-#ai-chatbox-widget {
-  position: fixed;
+#ai-chatbot-widget {
   /* Giữ cố định ở góc */
+  position: fixed;
   bottom: 50px;
   right: 20px;
-  z-index: 1050;
   /* Đảm bảo nổi lên trên */
+  z-index: 1050;
 }
 
-#chatbox-toggle-button {
-  background-color: #007bff;
-  /* Màu xanh dương (có thể đổi) */
-  color: white;
-  border: none;
-  border-radius: 50%;
-  /* Bo tròn */
-  width: 60px;
-  height: 60px;
-  font-size: 28px;
-  /* Kích thước icon */
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s;
+#chatbot-toggle-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    /* Nền trong suốt để hiện GIF */
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    /* Luôn nổi lên trên cùng */
+    z-index: 9999;
+    padding: 0;
+    overflow: visible;
+    transition: transform 0.3s ease;
 }
 
-#chatbox-toggle-button:hover {
-  background-color: #0056b3;
-  /* Màu xanh đậm hơn khi hover */
+#chatbot-toggle-button:hover {
+  transform: scale(1.1);
 }
 
 /* khung chat */
-#chatbox-window {
+#chatbot-window {
   position: absolute;
   bottom: 80px;
   right: 0;
   width: 350px;
-  /* responsive */
   max-width: 95vw;
   height: 450px;
-  /* responsive */
   max-height: 80vh;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   display: flex;
-  /* Sử dụng flexbox để xếp header, body, footer */
-  flex-direction: column;
   /* Xếp dọc */
-  overflow: hidden;
+  flex-direction: column;
   /* Tránh nội dung tràn ra ngoài */
+  overflow: hidden;
 }
 
-.chatbox-header {
-  background-color: #f8f9fa;
-  /* Màu nền header */
+.chatbot-header {
+  background-color: #fa9835;
+  color: #fff;
   padding: 10px 15px;
   border-bottom: 1px solid #dee2e6;
   display: flex;
@@ -65,17 +59,19 @@
   font-weight: bold;
 }
 
-.chatbox-close {
+.chatbot-close {
   background: none;
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #6c757d;
-  /* Màu nút đóng */
+  color: #fff;
   padding: 0 5px;
 }
+.chatbot-close:hover {
+  color: #333;
+}
 
-.chatbox-body {
+.chatbot-body {
   flex-grow: 1;
   padding: 15px;
   overflow-y: auto;
@@ -84,8 +80,8 @@
   flex-direction: column;
 }
 
-/* Style cho tin nhắn (ví dụ) */
-.chatbox-body p {
+/* Style cho tin nhắn */
+.chatbot-body p {
   padding: 8px 12px;
   border-radius: 15px;
   margin-bottom: 10px;
@@ -94,28 +90,26 @@
   line-height: 1.5;
 }
 
-.chatbox-body .ai-message {
+.chatbot-body .ai-message {
   background-color: #fff;
-  /* Nền trắng (mặc định) */
   align-self: flex-start;
 }
 
-.chatbox-body .user-message {
+.chatbot-body .user-message {
   background-color: #d1eaff;
-  /* Nền xanh nhạt cho user */
-  align-self: flex-end;
   /* Căn phải */
+  align-self: flex-end;
   text-align: left;
 }
 
-.chatbox-body .ai-thinking {
+.chatbot-body .ai-thinking {
   background-color: #f0f0f0;
   align-self: flex-start;
   font-style: italic;
   color: #555;
 }
 
-.chatbox-footer {
+.chatbot-footer {
   padding: 10px 15px;
   border-top: 1px solid #dee2e6;
   display: flex;
@@ -123,20 +117,18 @@
   background-color: #f8f9fa;
 }
 
-.chatbox-footer input[type="text"] {
-  flex-grow: 1;
+.chatbot-footer input[type="text"] {
   /* Input chiếm hết phần còn lại */
+  flex-grow: 1;
   border: 1px solid #ced4da;
   border-radius: 20px;
-  /* Bo tròn ô input */
   padding: 8px 12px;
   margin-right: 10px;
   outline: none;
 }
 
-.chatbox-footer button {
-  background-color: #007bff;
-  /* Màu nút gửi */
+.chatbot-footer button {
+  background-color: #fa9835;
   color: white;
   border: none;
   border-radius: 50%;
@@ -149,19 +141,16 @@
   justify-content: center;
 }
 
-.chatbox-footer button:hover {
-  background-color: #0056b3;
+.chatbot-footer button:hover {
+  background-color: #ef9e1b;
 }
 
-/* ================================================ */
-/* CSS MỚI CHO THÔNG BÁO CHÀO MỜI */
-/* ================================================ */
-#chatbox-greeting {
+#chatbot-greeting {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   right: 70px;
-  background-color: #fde0e0;
+  background-color: #fa9835;
   color: #333;
   padding: 10px 30px 10px 15px;
   border-radius: 15px;
@@ -170,8 +159,8 @@
   font-size: 14px;
   display: flex;
   align-items: center;
-  opacity: 0;
   /* Ban đầu ẩn */
+  opacity: 0;
   transition: opacity 0.5s ease-in-out;
   pointer-events: none;
 }
@@ -193,7 +182,6 @@
   cursor: pointer;
   padding: 0;
   pointer-events: all;
-  /* Dịch chuyển nhẹ để nó nằm ngay trên góc (tùy chọn) */
   transform: translate(30%, -30%);
 }
 
@@ -202,8 +190,8 @@
   background: rgba(255, 255, 255, 0.9);
 }
 
-/* Thêm mũi tên nhỏ trỏ vào nút tròn (tùy chọn) */
-#chatbox-greeting::after {
+/* Mũi tên nhỏ trỏ vào nút tròn */
+#chatbot-greeting::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -213,59 +201,51 @@
   height: 0;
   border-style: solid;
   border-width: 8px 0 8px 8px;
-  border-color: transparent transparent transparent #fde0e0;
+  border-color: transparent transparent transparent #fa9835;
 }
 
 /* Class để hiện greeting */
-#chatbox-greeting.visible {
-  opacity: 1;
+#chatbot-greeting.visible {
   /* Cho phép click khi hiện */
+  opacity: 1;
   pointer-events: all;
 }
 
-
-/* ================================================ */
-/* CSS MỚI CHO NÚT FULLSCREEN */
-/* ================================================ */
-
-.chatbox-header div {
+.chatbot-header div {
   display: flex;
   align-items: center;
 }
 
-.chatbox-toggle-fullscreen {
+.chatbot-toggle-fullscreen {
   background: none;
   border: none;
   font-size: 16px;
-  /* Kích thước icon */
   cursor: pointer;
-  color: #6c757d;
+  color: #fff;
   padding: 0 5px;
   margin-right: 5px;
-  /* Khoảng cách với nút X */
 }
 
-.chatbox-toggle-fullscreen:hover {
+.chatbot-toggle-fullscreen:hover {
   color: #333;
-  /* Đậm hơn khi hover */
 }
 
 /* Đây là class sẽ được bật/tắt bằng JS */
-#chatbox-window.fullscreen {
+#chatbot-window.fullscreen {
+  /* fixed đè lên mọi thứ */
   position: fixed;
-  /* Quan trọng: Đổi thành fixed để đè lên mọi thứ */
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  /* Reset các giá trị cũ */
   bottom: auto;
   /* Reset các giá trị cũ */
   right: auto;
-  /* Reset các giá trị cũ */
-  border-radius: 0;
   /* Bỏ bo góc */
-  max-width: 100%;
+  border-radius: 0;
   /* Đảm bảo ghi đè max-width responsive */
-  max-height: 100%;
+  max-width: 100%;
   /* Đảm bảo ghi đè max-height responsive */
+  max-height: 100%;
 }

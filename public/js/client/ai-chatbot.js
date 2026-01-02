@@ -1,19 +1,19 @@
 document.addEventListener('DOMContentLoaded', function () {
   // Biến cho Lời chào (Greeting)
-  const toggleButton = document.getElementById('chatbox-toggle-button');
-  const greetingBox = document.getElementById('chatbox-greeting');
+  const toggleButton = document.getElementById('chatbot-toggle-button');
+  const greetingBox = document.getElementById('chatbot-greeting');
   const greetingText = greetingBox.querySelector('.greeting-text');
   const greetingClose = greetingBox.querySelector('.greeting-close');
 
   // Biến cho Khung chat chính (Window)
-  const chatWindow = document.getElementById('chatbox-window');
-  const closeButton = chatWindow.querySelector('.chatbox-close');
-  const chatBody = document.getElementById('chatbox-message-body');
-  const chatInput = document.getElementById('chatbox-input');
-  const sendButton = document.getElementById('chatbox-send-button');
+  const chatWindow = document.getElementById('chatbot-window');
+  const closeButton = chatWindow.querySelector('.chatbot-close');
+  const chatBody = document.getElementById('chatbot-message-body');
+  const chatInput = document.getElementById('chatbot-input');
+  const sendButton = document.getElementById('chatbot-send-button');
 
   // Toàn màn hình chat
-  const fullscreenButton = chatWindow.querySelector('.chatbox-toggle-fullscreen');
+  const fullscreenButton = chatWindow.querySelector('.chatbot-toggle-fullscreen');
   const fullscreenIcon = fullscreenButton.querySelector('i');
 
   // --- LOGIC CHO LỜI CHÀO (GREETING) ---
