@@ -205,7 +205,7 @@ def get_tour_recommendations():
 
     Query Parameters:
         tour_id (int): ID of the tour
-        limit (int): Number of recommendations (default: 6)
+        limit (int): Number of recommendations (default: 4)
 
     Returns:
         JSON: List of recommended tour IDs
@@ -288,7 +288,7 @@ def get_user_recommendations():
 
     Query Parameters:
         user_id (int): ID of the user
-        limit (int): Number of recommendations (default: 6)
+        limit (int): Number of recommendations (default: 4)
 
     Returns:
         JSON: List of recommended tour IDs
@@ -447,13 +447,13 @@ def search_tours():
 
     Query Parameters:
         keyword (str): Search keyword
-        limit (int): Number of results (default: 9)
+        limit (int): Number of results (default: 4)
 
     Returns:
         JSON: List of matching tour IDs
     """
     keyword = request.args.get("keyword")
-    limit = int(request.args.get("limit", 9))
+    limit = int(request.args.get("limit", 4))
 
     if not keyword:
         return jsonify({"success": False, "error": "Missing keyword parameter"}), 400

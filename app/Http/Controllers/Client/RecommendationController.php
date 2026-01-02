@@ -35,7 +35,7 @@ class RecommendationController extends Controller
 
         $response = Http::timeout(10)->get("{$this->apiBaseUrl}/user-recommendations", [
           'user_id' => $userId,
-          'limit' => 6
+          'limit' => 4
         ]);
 
         if ($response->successful()) {
@@ -50,12 +50,12 @@ class RecommendationController extends Controller
 
         // Nếu có lịch sử. Gọi API Python
         if (!empty($viewedTours)) {
-          // Lấy tour tương tự với tour cuối xem
-          $lastViewedTourId = end($viewedTours);
+          // tour vừa xem gần nhất nằm ở đầu mảng
+          $lastViewedTourId = $viewedTours[0];
 
           $response = Http::timeout(10)->get("{$this->apiBaseUrl}/tour-recommendations", [
             'tour_id' => $lastViewedTourId,
-            'limit' => 6
+            'limit' => 4
           ]);
 
           if ($response->successful()) {
@@ -65,12 +65,13 @@ class RecommendationController extends Controller
         }
       }
 
-      // Nếu danh sách ID rỗng (Do khách mới, hoặc API lỗi, hoặc không tìm thấy tour phù hợp) -> Trả về rỗng
+      // Nếu danh sách ID rỗng (Do khách mới, hoặc API lỗi, hoặc không tìm thấy tour phù hợp). Trả về rỗng
       if (empty($tourIds)) {
         return response()->json([
           'success' => true,
           'tours' => [],
-          'count' => 0, // Báo về 0 để JS ẩn giao diện
+          // Báo về 0 để JS ẩn giao diện
+          'count' => 0,
           'message' => 'Không có gợi ý phù hợp'
         ]);
       }
@@ -85,7 +86,7 @@ class RecommendationController extends Controller
       ]);
     } catch (\Exception $e) {
       Log::error('Home Recommendations Error: ' . $e->getMessage());
-      // Gặp lỗi hệ thống cũng trả về rỗng để ẩn đi, không làm phiền khách
+      // Gặp lỗi hệ thống cũng trả về rỗng để ẩn đi
       return response()->json([
         'success' => false,
         'tours' => [],
@@ -149,7 +150,7 @@ class RecommendationController extends Controller
     try {
       $response = Http::timeout(10)->get("{$this->apiBaseUrl}/search-tours", [
         'keyword' => $keyword,
-        'limit' => 10
+        'limit' => 4
       ]);
 
       if ($response->successful()) {
@@ -195,7 +196,7 @@ class RecommendationController extends Controller
     // Lấy danh sách tour đã xem từ cookie
     $viewedTours = $this->getViewedToursFromCookie($request);
 
-    // Thêm tour mới vào đầu (nếu chưa có)
+    // Thêm tour mới vào đầu mảng (nếu chưa có)
     if (!in_array($tourId, $viewedTours)) {
       array_unshift($viewedTours, $tourId);
     }
@@ -204,14 +205,10 @@ class RecommendationController extends Controller
     $viewedTours = array_slice($viewedTours, 0, 10);
 
     // Lưu vào cookie (30 ngày)
-    $cookie = cookie('viewed_tours', json_encode($viewedTours), 43200); // 30 days
+    $cookie = cookie('viewed_tours', json_encode($viewedTours), 43200); // 43200 phút = 30 ngày
 
     return response()->json(['success' => true])->cookie($cookie);
   }
-
-  /**
-   * === PRIVATE HELPERS ===
-   */
 
   /**
    * Lấy danh sách tour đã xem từ Cookie

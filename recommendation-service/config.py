@@ -25,7 +25,7 @@ class Config:
     DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
     # ===== RECOMMENDATION SETTINGS =====
-    DEFAULT_LIMIT = int(os.getenv("DEFAULT_LIMIT", 6))
+    DEFAULT_LIMIT = int(os.getenv("DEFAULT_LIMIT", 4))
     MAX_LIMIT = int(os.getenv("MAX_LIMIT", 20))
 
     @property
