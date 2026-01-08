@@ -73,6 +73,10 @@ Route::prefix('')->group(function () {
     ->prefix('payment')
     ->name('payment.')
     ->group(function () {
+      Route::post('/office', 'officePayment')->name('officePayment');
+      Route::post('/paypal', 'paypal')->name('paypal');
+      Route::post('/vnpay', 'vnpayPayment')->name('vnpay');
+
       // PayPal Callbacks
       Route::get('/paypal/success', 'paypalSuccess')->name('paypalSuccess');
       Route::get('/paypal/cancel', 'paypalCancel')->name('paypalCancel');
@@ -128,16 +132,6 @@ Route::prefix('')->group(function () {
         Route::put('/{id}', 'update')->name('update');
         Route::post('/{id}/cancel', 'cancel')->name('cancel');
         Route::get('/{id}/checkout', 'checkout')->name('checkout');
-      });
-
-    // Thanh toán
-    Route::controller(PaymentController::class)
-      ->prefix('payment')
-      ->name('payment.')
-      ->group(function () {
-        Route::post('/office', 'officePayment')->name('officePayment');
-        Route::post('/paypal', 'paypal')->name('paypal');
-        Route::post('/vnpay', 'vnpayPayment')->name('vnpay');
       });
 
     // Đánh giá

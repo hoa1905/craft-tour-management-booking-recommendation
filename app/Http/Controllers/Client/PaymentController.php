@@ -302,7 +302,7 @@ class PaymentController extends Controller
         $vnp_TxnRef = (string) $booking->booking_id; // Mã đơn hàng của bạn (trường vnp_TxnRef phải là chuỗi)
         $vnp_OrderInfo = "Thanh toan don hang tour " . $booking->booking_id;
         $vnp_OrderType = 'other';
-        $vnp_Amount = $booking->total_price * 100; // VNPAY yêu cầu nhân 100
+        $vnp_Amount = $booking->total_price * 100; // VNPAY yêu cầu nhân 100 (phải là số nguyên, không được là số thực)
         $vnp_Locale = 'vn';
         $vnp_BankCode = ''; // Trống để VNPAY hiển thị cổng chọn ngân hàng
         $vnp_IpAddr = $request->ip();
@@ -381,9 +381,30 @@ class PaymentController extends Controller
 
         if ($secureHash == $vnp_SecureHash) {
             if ($request->vnp_ResponseCode == '00') {
-                // Chỉ hiển thị, không cập nhật DB ở đây
-                return redirect()->route('account.myBookings')
-                    ->with('success', 'Giao dịch VNPAY thành công! Đang chờ xác nhận cuối cùng...');
+               // --- THANH TOÁN THÀNH CÔNG ---
+            
+            // [MỚI] CẬP NHẬT DATABASE NGAY TẠI ĐÂY
+            $booking_id = $request->vnp_TxnRef; // Lấy mã đơn hàng
+            
+            $booking = Booking::find($booking_id);
+            $payment = Payment::where('booking_id', $booking_id)->first();
+
+            if ($booking && $booking->status == 'waiting_payment') {
+                // Cập nhật trạng thái Booking
+                $booking->status = 'paid';
+                $booking->save();
+
+                // Cập nhật trạng thái Payment
+                if ($payment) {
+                    $payment->status = 'success';
+                    $payment->transaction_id = $request->vnp_TransactionNo; // Lưu mã GD VNPAY
+                    $payment->save();
+                }
+            }
+            // ------------------------------------------------
+
+            return redirect()->route('account.myBookings')
+                ->with('success', 'Thanh toán VNPAY thành công!');
             } else {
                 return redirect()->route('booking')
                     ->with('error', 'Giao dịch VNPAY không thành công. Mã lỗi: ' . $request->vnp_ResponseCode);
