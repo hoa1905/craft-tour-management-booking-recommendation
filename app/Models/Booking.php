@@ -105,34 +105,44 @@ class Booking extends Model
 
     /**
      * Accessor: Kiểm tra xem đơn hàng có được phép hủy hay không.
-     *
+     *Logic: 
+     * 1. Trạng thái không phải là (Hoàn thành, Đang đi, Đã hủy, Đã hoàn tiền).
+     * 2. Ngày hiện tại phải trước ngày đi 7 ngày.
+     * 
      * @return bool
      */
     public function getIsCancelableAttribute()
     {
-        // 1. Lấy trạng thái từ payment (ưu tiên) hoặc booking
-        $paymentStatus = $this->payment?->status; // 'success', 'waiting_payment', 'failed', 'pending_refund', 'refunded'
-        $bookingStatus = $this->status; // 'waiting_payment', 'paid', 'active', 'completed', 'canceled'
-
-        // 2. Xác định trạng thái hiện tại
-        $isWaitingPayment = ($bookingStatus === 'waiting_payment' || $paymentStatus === 'waiting_payment');
-        $isPaid = ($paymentStatus === 'success'); // 'paid' là khi payment đã 'success'
-
-        // 3. Chỉ cho phép hủy nếu là CHỜ THANH TOÁN hoặc ĐÃ THANH TOÁN
-        if (!$isWaitingPayment && !$isPaid) {
-            return false; // Không thể hủy nếu đã 'active', 'completed', 'canceled', 'refunded'
+        // 1. Danh sách các trạng thái không được phép hủy
+        $blockedStatuses = ['active', 'completed', 'canceled', 'refunded', 'pending_refund'];
+        
+        if (in_array($this->status, $blockedStatuses)) {
+            return false;
         }
 
-        // 4. Kiểm tra logic ngày (TRƯỚC 7 NGÀY)
-        if (!$this->schedule || !$this->schedule->start_date) {
-            return false; // Không có lịch trình
+        // 2. Lấy ngày đi của tour từ lịch trình hoặc yêu cầu tour
+        $startDate = null;
+
+        // Trường hợp 1: Tour thường (có lịch trình)
+        if ($this->schedule) {
+            $startDate = $this->schedule->start_date;
+        } 
+        // Trường hợp 2: Tour theo yêu cầu (lấy ngày từ request)
+        elseif ($this->tourRequest) {
+            $startDate = $this->tourRequest->start_date;
         }
 
-        // Lấy ngày bắt đầu
-        $startDate = $this->schedule->start_date;
+        // Nếu không xác định được ngày đi, Không cho hủy để an toàn
+        if (!$startDate) {
+            return false;
+        }
 
-        // Cho phép hủy nếu ngày hiện tại còn TRƯỚC 7 ngày so với ngày khởi hành
-        return now()->lt($startDate->subDays(7));
+        // 3. Kiểm tra thời gian (Luật 7 ngày)
+        // Dùng copy() để không làm thay đổi biến gốc $startDate khi tính toán
+        $deadline = $startDate->copy()->subDays(7); 
+
+        // Cho phép hủy nếu: Hiện tại < Hạn chót (tức là còn sớm hơn 7 ngày)
+        return now()->lt($deadline);
     }
 
     /**
@@ -150,7 +160,7 @@ class Booking extends Model
         if ($this->tourRequest) {
             $name = "Tour theo yêu cầu: " . $this->tourRequest->desired_destination;
 
-            // Logic lấy tên các làng nghề (Giống hệt logic bạn viết trong controller)
+            // Logic lấy tên các làng nghề
             if (!empty($this->tourRequest->village_ids)) {
                 // Lấy danh sách tên làng dựa trên mảng ID
                 $villageNames = Village::whereIn('village_id', $this->tourRequest->village_ids)
