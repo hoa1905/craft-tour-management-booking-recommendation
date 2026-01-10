@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\{Session, Auth, Log};
+use Illuminate\Support\Facades\{Session, Log};
 use Gemini\Laravel\Facades\Gemini;
 
 use Gemini\Data\Tool;
@@ -12,7 +12,9 @@ use Gemini\Data\FunctionDeclaration;
 use Gemini\Data\Schema as GeminiSchema; 
 use Gemini\Enums\DataType;
 
-use App\Mcp\Tools\{SearchTourTool, CheckBookingTool, RecommendTourTool, RealtimeSearchTool};
+use App\Mcp\Tools\{SearchTourTool, CheckBookingTool, RecommendTourTool, RealtimeSearchTool, SearchVillageTool};
+use Gemini\Data\Content;
+use Gemini\Enums\Role;
 use Laravel\Mcp\Request as McpRequest;
 
 class ChatbotController extends Controller
@@ -27,39 +29,44 @@ class ChatbotController extends Controller
     public function handleChat(Request $request)
     {
         $userMessage = $request->input('message');
+        // lấy lịch sử từ session, truyền vào Gemini để duy trì ngữ cảnh
+        $rawHistory = Session::get('chat_history', []);
         $history = [];
+        foreach ($rawHistory as $msg) {
+            $roleEnum = ($msg['role'] === 'user') ? Role::USER : Role::MODEL;
+            $history[] = Content::parse(part: $msg['content'], role: $roleEnum);
+        }
 
         try {
-            // Khởi tạo Chat Session
+            $systemInstruction = "Bạn là trợ lý du lịch. Nhiệm vụ của bạn là hỗ trợ khách hàng tìm tour." .
+            "QUY TẮC TRẢ LỜI QUAN TRỌNG:\n" .
+            "1. Khi giới thiệu tour, BẮT BUỘC phải cung cấp đường link chi tiết.\n" .
+            "2. Định dạng link theo cú pháp Markdown: [Tên Tour - Xem chi tiết](URL).\n" .
+            "3. Ví dụ: Bạn nên xem thử [Tour Làng Gốm Bát Tràng](http://yourdomain.com/tour/1) nhé.\n" .
+            "4. Giọng điệu thân thiện, mời gọi khách đặt tour.";
+
             $chat = Gemini::generativeModel(model: $this->model)
+                ->withSystemInstruction(Content::parse(part: $systemInstruction))
                 ->withTool($this->getGeminiToolsDefinition())
+                 // Truyền lịch sử vào đây
                 ->startChat(history: $history);
 
-            // Gửi tin nhắn
             $response = $chat->sendMessage($userMessage);
 
-            // 2. Lấy function call từ phần đầu tiên của response
-            // Gemini trả về response dạng các "parts". Function call nằm trong part đầu tiên.
+            // Lấy function call an toàn
             $parts = $response->parts();
             $firstPart = $parts[0] ?? null;
             $functionCall = $firstPart ? $firstPart->functionCall : null;
 
             if ($functionCall) {
-                // AI muốn gọi Tool
+                // Trường hợp AI gọi Tool
                 $toolName = $functionCall->name;
-                 // args này thường đã là mảng hoặc object
                 $toolArgs = $functionCall->args;
 
-                // === LOG ===
-                Log::info("AI QUYẾT ĐỊNH GỌI TOOL:", [
-                    'Tool Name' => $toolName,
-                    'Arguments' => $toolArgs
-                ]);
+                Log::info("AI GỌI TOOL:", ['Name' => $toolName, 'Args' => $toolArgs]);
 
                 // Thực thi Tool Logic
                 $toolResult = $this->executeMcpToolClass($toolName, $toolArgs);
-
-                // Ghi log kết quả trả về từ Tool
                 Log::info("KẾT QUẢ TỪ TOOL:", ['Result' => substr($toolResult, 0, 100) . '...']);
 
                 // Gửi kết quả về cho AI
@@ -67,19 +74,28 @@ class ChatbotController extends Controller
                     "Kết quả từ Tool (System Context): " . $toolResult
                 );
                 
-                $aiReply = $finalResponse->text();
+                // lấy text an toàn, nối chuỗi từ các parts để tránh lỗi
+                $aiReply = '';
+                foreach ($finalResponse->parts() as $part) {
+                    $aiReply .= $part->text ?? '';
+                }
+
             } else {
-                // AI trả lời bình thường
-                $aiReply = $response->text();
+                // Trương hợp AI trả lời bình thường
+                $aiReply = '';
+                foreach ($response->parts() as $part) {
+                    $aiReply .= $part->text ?? '';
+                }
             }
 
+            // Lưu lịch sử
             $this->saveToHistory($userMessage, $aiReply);
 
             return response()->json(['reply' => $aiReply]);
 
         } catch (\Exception $e) {
             Log::error($e);
-            return response()->json(['error' => 'Lỗi: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Lỗi hệ thống: ' . $e->getMessage()], 500);
         }
     }
 
@@ -113,10 +129,16 @@ class ChatbotController extends Controller
                 // 2. Tool kiểm tra đơn hàng
                 new FunctionDeclaration(
                     name: 'check_booking',
-                    description: 'Kiểm tra đơn hàng của tôi',
+                    description: 'Kiểm tra lịch sử đơn hàng. Có thể tìm đơn hàng theo trạng thái cụ thể (hủy, thành công...).',
                     parameters: new GeminiSchema(
                         type: DataType::OBJECT,
-                        properties: []
+                        properties: [
+                            'status' => new GeminiSchema(
+                                type: DataType::STRING,
+                                description: 'Trạng thái đơn hàng cần tìm (VD: canceled, paid, pending)".'
+                            ),
+                        ],
+                        required: [] // Không bắt buộc, nếu không có sẽ lấy danh sách chung
                     )
                 ),
 
@@ -145,6 +167,26 @@ class ChatbotController extends Controller
                         required: ['query']
                     )
                 ),
+                
+                // 5. Tool tìm kiếm làng nghề
+                new FunctionDeclaration(
+                name: 'search_villages',
+                description: 'Tìm kiếm làng nghề theo tên hoặc khu vực (Miền Bắc, Trung, Nam)',
+                parameters: new GeminiSchema(
+                    type: DataType::OBJECT,
+                    properties: [
+                        'keyword' => new GeminiSchema(
+                            type: DataType::STRING,
+                            description: 'Tên làng nghề (Ví dụ: Gốm, Lụa)'
+                        ),
+                        'region' => new GeminiSchema(
+                            type: DataType::STRING,
+                            description: 'Khu vực địa lý (Ví dụ: Miền Bắc, Huế)'
+                        ),
+                    ],
+                    required: []
+                )
+            ),
             ]
         );
     }
@@ -156,6 +198,7 @@ class ChatbotController extends Controller
             'check_booking' => new CheckBookingTool(),
             'recommend_tours' => new RecommendTourTool(),
             'realtime_search' => new RealtimeSearchTool(),
+            'search_villages' => new SearchVillageTool(),
             default => null
         };
 

@@ -25,7 +25,7 @@ class SearchTourTool extends Tool
         // 1. Validate: Cho phép keyword null nếu có tìm theo giá
         $validated = $request->validate([
             'keyword' => 'nullable|string',
-            'max_price' => 'nullable|numeric' // Thêm tham số giá
+            'max_price' => 'nullable|numeric'
         ]);
 
         $query = Tour::query();
@@ -40,13 +40,25 @@ class SearchTourTool extends Tool
             $query->where('price_adult', '<=', $validated['max_price']);
         }
 
-        $tours = $query->limit(3)->get(['tour_name', 'price_adult', 'description']);
+        // Lấy dữ liệu
+    $tours = $query->limit(4)->get(['tour_id', 'tour_name', 'price_adult', 'description']);
 
-        if ($tours->isEmpty()) {
-            return Response::text("Không tìm thấy tour nào phù hợp yêu cầu.");
-        }
+    if ($tours->isEmpty()) {
+        return Response::text("Không tìm thấy tour nào phù hợp.");
+    }
 
-        return Response::text($tours->toJson());
+    // Tạo link chi tiết cho từng tour
+    $result = $tours->map(function ($tour) {
+        return [
+            'name' => $tour->tour_name,
+            'price' => number_format($tour->price_adult) . ' VNĐ',
+            'link' => route('tour.detail', ['id' => $tour->tour_id]),
+            'desc' => $tour->description
+        ];
+    });
+
+    // Trả về JSON chứa Link
+    return Response::text($result->toJson());
     }
 
     /**

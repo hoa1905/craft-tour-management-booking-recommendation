@@ -6,6 +6,7 @@ use App\Mcp\Tools\CheckBookingTool;
 use App\Mcp\Tools\RealtimeSearchTool;
 use App\Mcp\Tools\RecommendTourTool;
 use App\Mcp\Tools\SearchTourTool;
+use App\Mcp\Tools\SearchVillageTool;
 use Laravel\Mcp\Server;
 
 class TourAssistantServer extends Server
@@ -37,6 +38,7 @@ class TourAssistantServer extends Server
         CheckBookingTool::class,
         RecommendTourTool::class,
         RealtimeSearchTool::class,
+        SearchVillageTool::class,
     ];
 
     /**
