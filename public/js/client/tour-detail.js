@@ -89,9 +89,21 @@ document.addEventListener('DOMContentLoaded', function () {
         // Tùy chọn: Disable nút đặt tour nếu hết chỗ
         // document.querySelector('.book-tour').classList.add('disabled');
       }
+
+      document.querySelector('.book-tour').classList.remove('disabled');
+      document.querySelector('.book-tour').style.pointerEvents = 'auto'; // Cho phép click
+      document.querySelector('.book-tour').style.opacity = '1';
     } else {
-      seatsDisplay.textContent = 'Vui lòng chọn ngày';
+      // KHI KHÔNG CÓ NGÀY NÀO ĐƯỢC CHỌN (Do hết lịch hoặc chưa load)
+      seatsDisplay.textContent = 'Vui lòng liên hệ';
+      seatsDisplay.style.color = '#d82727';
       maxSeats = 0;
+      
+      // Disable nút đặt tour
+      const btnBook = document.querySelector('.book-tour');
+      btnBook.classList.add('disabled');
+      btnBook.style.pointerEvents = 'none'; // Chặn click
+      btnBook.style.opacity = '0.5'; // Làm mờ
     }
   }
 

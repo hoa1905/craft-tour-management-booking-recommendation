@@ -111,20 +111,36 @@
                               <div class="ckchose clchoose">
                                 <ul>
                                   @if($tour->schedules->isNotEmpty())
-                                  @foreach($tour->schedules->sortBy('start_date') as $schedule)
-                                  <li class="{{ $loop->first ? 'active' : '' }}"
-                                    data-schedule-id="{{ $schedule->schedule_id }}"
-                                    data-seats="{{ $schedule->seats_available ?? 0 }}"
-                                    end-date="{{ \Carbon\Carbon::parse($schedule->end_date)->format('d/m/Y') }}"
-                                    start-date="{{ \Carbon\Carbon::parse($schedule->start_date)->format('d/m/Y') }}">
-                                    {{ \Carbon\Carbon::parse($schedule->start_date)->format('d/m') }}
-                                  </li>
-                                  @endforeach
+                                    @php
+                                      // 1. Lọc lấy các lịch trình tương lai hoặc hôm nay
+                                      // Sử dụng startOfDay() để so sánh chính xác theo ngày, bỏ qua giờ phút
+                                      $futureSchedules = $tour->schedules->filter(function($schedule) {
+                                          return \Carbon\Carbon::parse($schedule->start_date)->startOfDay()->gte(now()->startOfDay());
+                                      })->sortBy('start_date');
+                                    @endphp
+
+                                    {{-- 2. Kiểm tra xem sau khi lọc còn lịch nào không --}}
+                                    @if($futureSchedules->isNotEmpty())
+                                      @foreach($futureSchedules as $schedule)
+                                        {{-- $loop->first sẽ tự động nhận diện phần tử đầu tiên của danh sách ĐÃ LỌC để gán class active --}}
+                                        <li class="{{ $loop->first ? 'active' : '' }}"
+                                            data-schedule-id="{{ $schedule->schedule_id }}"
+                                            data-seats="{{ $schedule->seats_available ?? 0 }}"
+                                            end-date="{{ \Carbon\Carbon::parse($schedule->end_date)->format('d/m/Y') }}"
+                                            start-date="{{ \Carbon\Carbon::parse($schedule->start_date)->format('d/m/Y') }}">
+                                            {{ \Carbon\Carbon::parse($schedule->start_date)->format('d/m') }}
+                                        </li>
+                                      @endforeach
+                                    @else
+                                      {{-- Trường hợp có lịch trong DB nhưng toàn là ngày quá khứ --}}
+                                      <li class="disabled" style="cursor: not-allowed; opacity: 0.6;">Đã hết lịch</li>
+                                    @endif
+
                                   @else
-                                  <li>Chưa có lịch khởi hành</li>
+                                    {{-- Trường hợp DB chưa có lịch nào --}}
+                                    <li>Chưa có lịch khởi hành</li>
                                   @endif
                                 </ul>
-
                               </div>
 
                               {{-- THAY ĐỔI 2: Thêm khu vực hiển thị số chỗ còn lại ngay dưới danh sách ngày --}}
