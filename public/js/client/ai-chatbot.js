@@ -86,18 +86,34 @@ document.addEventListener('DOMContentLoaded', function () {
     }, currentGreeting.duration); // Thời gian hiển thị
   }
 
-  // Logic gửi/nhận tin nhắn (chat API)
-  function addMessage(message, senderClass) {
-    const p = document.createElement('p');
+  // Logic hiển thị tin nhắn trong khung chat
+  function addMessage(message, senderClass, isHtml = false) {
+    const div = document.createElement('div');
     // Dùng innerHTML để render các thẻ <br> nếu AI trả về
-    p.innerHTML = message.replace(/\n/g, '<br>');
-    p.className = senderClass;
+    div.className = senderClass;
     if (senderClass === 'ai-thinking') {
-      p.id = 'ai-thinking-message';
+      div.id = 'ai-thinking-message';
     }
-    chatBody.appendChild(p);
+    // Xử lý hiển thị
+    if (isHtml) {
+        // Nếu là HTML (từ AI đã parse), gán trực tiếp
+        div.innerHTML = message;
+    } else {
+        // Nếu là tin nhắn người dùng, replace xuống dòng và chống XSS cơ bản
+        // (Lưu ý: Bạn có thể dùng textContent nếu không muốn user gửi HTML)
+        div.innerHTML = message.replace(/\n/g, '<br>');
+    }
+
+    // Mở tất cả link trong tab mới
+    const links = div.querySelectorAll('a');
+    links.forEach(link => {
+        link.setAttribute('target', '_blank'); // Mở tab mới
+        link.setAttribute('rel', 'noopener noreferrer'); // Bảo mật (tránh lỗi security)
+    });
+
+    chatBody.appendChild(div);
     chatBody.scrollTop = chatBody.scrollHeight;
-    return p;
+    return div;
   }
 
   function removeThinking() {
@@ -120,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function () {
     chatInput.value = '';
 
     // 3. Hiển thị "Đang nghĩ..."
-    addMessage("Đang suy nghĩ...", 'ai-thinking');
+    addMessage("Đang suy nghĩ...", 'ai-thinking', false);
 
     try {
       // 4. Gửi đến MCP Server (Laravel)
@@ -143,8 +159,20 @@ document.addEventListener('DOMContentLoaded', function () {
       // 5. Xóa "Đang nghĩ..."
       removeThinking();
 
-      // 6. Hiển thị trả lời của AI
-      addMessage(data.reply, 'ai-message');
+      let aiContent = data.reply;
+
+      // Kiểm tra xem thư viện marked đã được load chưa
+      if (typeof marked !== 'undefined') {
+          // Parse Markdown sang HTML (Biến [Link](url) thành <a href="url">Link</a>)
+          aiContent = marked.parse(data.reply);
+          
+          // Hiển thị tin nhắn AI với cờ isHtml = true
+          addMessage(aiContent, 'ai-message', true);
+      } else {
+          // Fallback nếu quên chưa chèn script marked.js
+          console.warn('Chưa load thư viện marked.js!');
+          addMessage(data.reply, 'ai-message', false);
+      }
 
     } catch (error) {
       console.error(error);

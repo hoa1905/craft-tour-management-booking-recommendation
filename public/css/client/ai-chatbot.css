@@ -255,3 +255,77 @@
   /* Đảm bảo ghi đè max-height responsive */
   max-height: 100%;
 }
+
+
+/* Màu link trong tin nhắn của Bot */
+.ai-message a {
+    color: #007bff; /* Màu xanh dương */
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.ai-message a:hover {
+    color: #0056b3;
+}
+
+/* Fix lỗi nếu danh sách (ul/ol) bị lệch */
+.ai-message ul, .ai-message ol {
+    margin-left: 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* 1. Khung chứa danh sách tin nhắn */
+#chatbot-message-body {
+    display: flex; /* Dùng Flexbox để dễ căn trái phải */
+    flex-direction: column; /* Xếp theo cột dọc */
+    gap: 10px; /* Khoảng cách giữa các tin nhắn */
+    padding: 10px;
+    overflow-y: auto; /* Cho phép cuộn nếu dài */
+    height: 300px; /* Hoặc chiều cao tùy chỉnh của bạn */
+}
+
+/* 2. Style chung cho cả tin nhắn User và AI */
+.user-message, .ai-message {
+    max-width: 80%; /* Không bao giờ chiếm hết chiều ngang */
+    padding: 10px 15px; /* Tạo khoảng thoáng cho chữ */
+    border-radius: 15px; /* Bo tròn các góc */
+    font-size: 14px;
+    line-height: 1.5; /* Giãn dòng cho dễ đọc */
+    word-wrap: break-word; /* Tự xuống dòng nếu chữ quá dài */
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Đổ bóng nhẹ cho đẹp */
+    height: auto; /* Quan trọng: Để div tự giãn theo nội dung */
+}
+
+/* 3. Style riêng cho tin nhắn của User (Bên phải) */
+.user-message {
+    align-self: flex-end; /* Đẩy sang phải */
+    background-color: #0084ff; /* Màu xanh Messenger (hoặc màu tùy chọn) */
+    border-bottom-right-radius: 2px; /* Góc nhọn ở chỗ đuôi tin nhắn */
+    margin-left: auto; /* Đảm bảo đẩy hẳn sang phải nếu không dùng flex */
+}
+
+/* 4. Style riêng cho tin nhắn của AI (Bên trái) */
+.ai-message {
+    align-self: flex-start; /* Đẩy sang trái */
+    background-color: #f1f0f0; /* Màu xám nhạt */
+    color: #333; /* Chữ màu đen */
+    border-bottom-left-radius: 2px; /* Góc nhọn bên trái */
+    margin-right: auto;
+}
+
+/* (Tùy chọn) Style cho thẻ link và danh sách trong tin nhắn AI */
+.ai-message ul {
+    margin: 5px 0 5px 20px; /* Thụt đầu dòng cho danh sách */
+    padding: 0;
+}
+
+.ai-message a {
+    color: #007bff;
+    font-weight: bold;
+    text-decoration: none;
+}
+.ai-message a:hover {
+    text-decoration: underline;
+}

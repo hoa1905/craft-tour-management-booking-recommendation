@@ -59,6 +59,7 @@
   <script src="{{ asset('js/client/javascript.js') }}"></script>
   <script src="{{ asset('js/client/update.js') }}"></script>
   <script src="{{ asset('js/client/ai-chatbot.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
   @yield('head')
 </head>
