@@ -201,13 +201,19 @@
                 <div class="clearfix">
                   <div class="pull-left">
                     <strong>Ngày đi:</strong>
-                    @if($tour->schedules->isNotEmpty())
-                    {{ $tour->schedules
-        ->sortBy('start_date')
-        ->map(fn($s) => \Carbon\Carbon::parse($s->start_date)->format('d/m'))
-        ->implode(', ') }}
+                    @php
+                        // Lọc lấy các ngày tương lai hoặc hôm nay
+                        $futureSchedules = $tour->schedules->filter(function($s) {
+                            return \Carbon\Carbon::parse($s->start_date)->startOfDay()->gte(now()->startOfDay());
+                        })->sortBy('start_date');
+                    @endphp
+
+                    @if($futureSchedules->isNotEmpty())
+                        {{ $futureSchedules
+                            ->map(fn($s) => \Carbon\Carbon::parse($s->start_date)->format('d/m'))
+                            ->implode(', ') }}
                     @else
-                    Chưa có lịch khởi hành
+                        <span style="color: #999; font-style: italic;">Đang cập nhật lịch</span>
                     @endif
                   </div>
                   <div class="pull-right">
@@ -301,13 +307,19 @@
               <div class="clearfix">
                 <div class="pull-left">
                   <strong>Ngày đi:</strong>
-                  @if($tour->schedules->isNotEmpty())
-                  {{ $tour->schedules
-        ->sortBy('start_date')
-        ->map(fn($s) => \Carbon\Carbon::parse($s->start_date)->format('d/m'))
-        ->implode(', ') }}
+                  @php
+                      // Lọc lấy các ngày tương lai hoặc hôm nay
+                      $futureSchedules = $tour->schedules->filter(function($s) {
+                          return \Carbon\Carbon::parse($s->start_date)->startOfDay()->gte(now()->startOfDay());
+                      })->sortBy('start_date');
+                  @endphp
+
+                  @if($futureSchedules->isNotEmpty())
+                      {{ $futureSchedules
+                          ->map(fn($s) => \Carbon\Carbon::parse($s->start_date)->format('d/m'))
+                          ->implode(', ') }}
                   @else
-                  Chưa có lịch khởi hành
+                      <span style="color: #999; font-style: italic;">Đang cập nhật lịch</span>
                   @endif
                 </div>
 
@@ -415,13 +427,20 @@
 
               <div class="clearfix">
                 <div class="pull-left">
-                  <strong>Ngày đi:</strong> @if($tour->schedules->isNotEmpty())
-                  {{ $tour->schedules
-        ->sortBy('start_date')
-        ->map(fn($s) => \Carbon\Carbon::parse($s->start_date)->format('d/m'))
-        ->implode(', ') }}
+                  <strong>Ngày đi:</strong>
+                  @php
+                      // Lọc lấy các ngày tương lai hoặc hôm nay
+                      $futureSchedules = $tour->schedules->filter(function($s) {
+                          return \Carbon\Carbon::parse($s->start_date)->startOfDay()->gte(now()->startOfDay());
+                      })->sortBy('start_date');
+                  @endphp
+
+                  @if($futureSchedules->isNotEmpty())
+                      {{ $futureSchedules
+                          ->map(fn($s) => \Carbon\Carbon::parse($s->start_date)->format('d/m'))
+                          ->implode(', ') }}
                   @else
-                  Chưa có lịch khởi hành
+                      <span style="color: #999; font-style: italic;">Đang cập nhật lịch</span>
                   @endif
                 </div>
                 <div class="pull-right">
@@ -527,13 +546,20 @@
 
               <div class="clearfix">
                 <div class="pull-left">
-                  <strong>Ngày đi:</strong> @if($tour->schedules->isNotEmpty())
-                  {{ $tour->schedules
-        ->sortBy('start_date')
-        ->map(fn($s) => \Carbon\Carbon::parse($s->start_date)->format('d/m'))
-        ->implode(', ') }}
+                  <strong>Ngày đi:</strong> 
+                  @php
+                      // Lọc lấy các ngày tương lai hoặc hôm nay
+                      $futureSchedules = $tour->schedules->filter(function($s) {
+                          return \Carbon\Carbon::parse($s->start_date)->startOfDay()->gte(now()->startOfDay());
+                      })->sortBy('start_date');
+                  @endphp
+
+                  @if($futureSchedules->isNotEmpty())
+                      {{ $futureSchedules
+                          ->map(fn($s) => \Carbon\Carbon::parse($s->start_date)->format('d/m'))
+                          ->implode(', ') }}
                   @else
-                  Chưa có lịch khởi hành
+                      <span style="color: #999; font-style: italic;">Đang cập nhật lịch</span>
                   @endif
                 </div>
                 <div class="pull-right">
