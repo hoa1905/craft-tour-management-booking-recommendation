@@ -12,7 +12,7 @@ def test_connection():
     """Test database connection and display table statistics"""
 
     print("=" * 60)
-    print("🔍 Testing Database Connection")
+    print("Testing Database Connection")
     print("=" * 60)
 
     # Display configuration
@@ -30,11 +30,11 @@ def test_connection():
             # Test basic query
             result = conn.execute(text("SELECT VERSION()"))
             mysql_version = result.fetchone()[0]
-            print(f"✅ MySQL Version: {mysql_version}")
+            print(f"MySQL Version: {mysql_version}")
             print()
 
             # Test each table
-            print("📊 Table Statistics:")
+            print("Table Statistics:")
             print("-" * 60)
 
             tables = [
@@ -63,7 +63,7 @@ def test_connection():
 
             # Test specific queries for recommendations
             print()
-            print("🔍 Recommendation Data Check:")
+            print("Recommendation Data Check:")
             print("-" * 60)
 
             # Check active tours
@@ -96,25 +96,25 @@ def test_connection():
         engine.dispose()
 
         print()
-        print("✅ TEST PASSED! Database is ready for recommendation service.")
+        print("TEST PASSED! Database is ready for recommendation service.")
         print()
-        print("🚀 You can now run:")
-        print("   python main.py")
+        print("You can now run:")
+        print("python main.py")
         print()
         return True
 
     except Exception as e:
         print()
-        print(f"❌ TEST FAILED: {e}")
+        print(f"TEST FAILED: {e}")
         print()
-        print("💡 Troubleshooting:")
-        print("   1. Check if MySQL is running")
-        print("   2. Verify .env file configuration")
-        print("   3. Confirm database exists:")
-        print(f"      CREATE DATABASE {config.DB_NAME};")
-        print("   4. Check user permissions:")
+        print("Troubleshooting:")
+        print("1. Check if MySQL is running")
+        print("2. Verify .env file configuration")
+        print("3. Confirm database exists:")
+        print(f"CREATE DATABASE {config.DB_NAME};")
+        print("4. Check user permissions:")
         print(
-            f"      GRANT ALL ON {config.DB_NAME}.* TO '{config.DB_USER}'@'localhost';"
+            f"GRANT ALL ON {config.DB_NAME}.* TO '{config.DB_USER}'@'localhost';"
         )
         print()
         return False

@@ -76,7 +76,7 @@ VIETNAMESE_STOPWORDS = [
 ]
 
 
-# ===== Kết nối cơ sở dữ liệu =====
+# ===== DATABASE CONNECTION =====
 def create_connection():
     """Create database connection with error handling"""
     try:
@@ -147,7 +147,7 @@ def combine_features(row):
     return " ".join([str(row[f]) for f in features if f in row and pd.notnull(row[f])])
 
 
-# Hàm tiền xử lý văn bản
+# ===== TEXT PROCESSING =====
 def preprocess_text(text):
     """
     Tiền xử lý văn bản bằng cách loại bỏ stop words và giữ lại các từ quan trọng.
@@ -159,27 +159,25 @@ def preprocess_text(text):
     if pd.isnull(text):
         return ""
 
-    # Chuyển thành chữ thường
+    # Convert to lowercase
     text = str(text).lower()
 
     try:
-        # Tokenize văn bản
+        # Tokenize text
         tokens = word_tokenize(text)
     except:
         tokens = text.split()
 
-    # Loại bỏ stop words
+    # Remove stop words and non-alphanumeric tokens
     processed = [
         word for word in tokens if word not in VIETNAMESE_STOPWORDS and word.isalnum()
     ]
 
-    # Kết hợp lại thành chuỗi
+    # Join processed tokens back into a string
     return " ".join(processed)
 
 
 # ===== API ENDPOINTS =====
-
-
 @app.route("/api/health", methods=["GET"])
 def health_check():
     """Health check endpoint"""
@@ -529,7 +527,7 @@ def search_tours():
 # ===== MAIN =====
 if __name__ == "__main__":
     print("=" * 60)
-    print("🚀 Craft Tour Recommendation Service")
+    print("Craft Tour Recommendation Service")
     print("=" * 60)
     print(f"Database: {config.DB_NAME}")
     print(f"Running on: http://{config.API_HOST}:{config.API_PORT}")
